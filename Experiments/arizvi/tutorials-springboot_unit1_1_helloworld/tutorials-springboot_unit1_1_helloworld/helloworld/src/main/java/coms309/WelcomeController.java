@@ -9,16 +9,16 @@ class WelcomeController {
 
     @GetMapping("/")
     public String welcome() {
-        return "Hello and welcome from Aelia's laptop";
+        return "Please specify if you want a hello or a bye, followed by your name";
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/hello/{name}")
     public String welcome(@PathVariable String name) {
-        return "Hello and welcome from the world of Windows: " + name;
-    }
-    @GetMapping("/{name}")
-    public String bye(@PathVariable String name) {
-        return "bye: " + name;
+        return "Hello and welcome: " + name;
     }
 
+    @GetMapping("/bye/{name}")
+    public String bye(@PathVariable String name) {
+        return "Okay bye: " + name;
+    }
 }
