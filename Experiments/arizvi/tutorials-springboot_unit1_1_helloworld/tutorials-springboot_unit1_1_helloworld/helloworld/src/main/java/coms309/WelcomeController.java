@@ -16,4 +16,9 @@ class WelcomeController {
     public String welcome(@PathVariable String name) {
         return "Hello and welcome from the world of Windows: " + name;
     }
+    @GetMapping("/{name}")
+    public String bye(@PathVariable String name) {
+        return "bye: " + name;
+    }
+
 }
