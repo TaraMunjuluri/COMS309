@@ -102,8 +102,15 @@ public class PeopleController {
     // Note: To DELETE we use delete method
     
     @DeleteMapping("/people/{firstName}")
-    public HashMap<String, Person> deletePerson(@PathVariable String firstName) {
+    public HashMap<String, Person> deletePersonFirst(@PathVariable String firstName) {
         peopleList.remove(firstName);
+        return peopleList;
+    }
+
+//    new function for deleting by last name
+    @DeleteMapping("/people/{lastName}")
+    public HashMap<String, Person> deletePersonLast(@PathVariable String lastName) {
+        peopleList.remove(lastName);
         return peopleList;
     }
 }
