@@ -18,6 +18,7 @@
         android:textSize="50dp"
         android:textColor="#FF69B4">
 
+
 </TextView>
 
     <ImageView
