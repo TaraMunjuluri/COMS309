@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".MainActivity"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:text="0"
+        android:textColor="#388E3C"
+        android:textSize="96sp"
+        android:textStyle="bold"></TextView>
+
+    <Button
+        android:id="@+id/counter_increase_btn"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:backgroundTint="#101010"
+        android:text="Increase"
+        android:textColor="#FFA000"
+        android:textSize="34sp"
+        tools:iconSize="34sp"></Button>
+
+    <Button
+        android:id="@+id/counter_decrease_btn"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#0D0C0C"
+        android:text="Decrease"
+        android:textColor="#FFA000"
+        android:textSize="34sp"></Button>
+
+    <Button
+        android:id="@+id/counter_back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="#0097A7"
+        android:text="Back"
+        android:textSize="34sp">
+
+    </Button>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
