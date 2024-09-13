@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
 
         builder.show();
     }
-
     private void openConfirmationActivity() {
         Intent intent = new Intent(MainActivity.this, ConfirmationActivity.class);
         startActivity(intent);

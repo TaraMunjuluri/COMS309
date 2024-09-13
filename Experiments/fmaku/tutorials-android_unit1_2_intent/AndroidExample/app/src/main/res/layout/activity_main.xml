@@ -28,7 +28,6 @@
         android:textSize="20sp"
         android:textColor="#ffffff">
     </Button>
-
     <Button
         android:id="@+id/find_tutor_btn"
         android:layout_width="wrap_content"
