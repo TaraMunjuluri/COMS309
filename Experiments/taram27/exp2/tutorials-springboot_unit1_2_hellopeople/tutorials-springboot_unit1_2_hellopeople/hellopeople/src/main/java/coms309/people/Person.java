@@ -17,18 +17,15 @@ public class Person {
 
     private String telephone;
 
-    private int age;
-
     public Person(){
         
     }
 
-    public Person(String firstName, String lastName, String address, String telephone, int age){
+    public Person(String firstName, String lastName, String address, String telephone){
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.telephone = telephone;
-        this.age = age;
     }
 
     public String getFirstName() {
@@ -63,13 +60,6 @@ public class Person {
         this.telephone = telephone;
     }
 
-    public int getAge() {
-        return this.age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
     @Override
     public String toString() {
         return firstName + " " 

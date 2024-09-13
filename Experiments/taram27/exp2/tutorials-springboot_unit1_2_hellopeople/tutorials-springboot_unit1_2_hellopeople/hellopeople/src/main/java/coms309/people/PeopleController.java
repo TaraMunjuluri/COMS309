@@ -1,6 +1,5 @@
 package coms309.people;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.HashMap;
@@ -51,26 +49,8 @@ public class PeopleController {
     public  String createPerson(@RequestBody Person person) {
         System.out.println(person);
         peopleList.put(person.getFirstName(), person);
-        peopleList.put(person.getLastName(), person);
-        peopleList.put(person.getAddress(), person);
-        peopleList.put(person.getTelephone(), person);
-        if(person.getAge() >= 30 && person.getAge() < 40){
-            return "New person "+ person.getFirstName() + " " + person.getLastName() + " Saved with address " + person.getAddress() + " and number: " + person.getTelephone() + ". You're in your 30's? How's your back?";
-        }
-        else if(person.getAge() >= 40 && person.getAge() < 50){
-            return "New person "+ person.getFirstName() + " " + person.getLastName() + " Saved with address " + person.getAddress() + " and number: " + person.getTelephone() + ". You're in your 40's? Don't look a day over 35!";
-
-        }
-        else if(person.getAge() >= 50 && person.getAge() < 60) {
-            return "New person " + person.getFirstName() + " " + person.getLastName() + " Saved with address " + person.getAddress() + " and number: " + person.getTelephone() + ". You're in your 50's? That's half a century!";
-
-        }
-        else{
-            return "New person "+ person.getFirstName() + " " + person.getLastName() + " Saved with address " + person.getAddress() + " and number: " + person.getTelephone() + ".";
-
-        }
+        return "New person "+ person.getFirstName() + " Saved";
     }
-
 
     // THIS IS THE READ OPERATION
     // Springboot gets the PATHVARIABLE from the URL
@@ -84,6 +64,14 @@ public class PeopleController {
         return p;
     }
 
+    //New create
+    @PostMapping("/people/fullname")
+    public HashMap<String, Person> createPersonByFullName(@RequestBody Person person) {
+        String fullName = person.getFirstName() + " " + person.getLastName();
+        peopleList.put(fullName, person);
+        System.out.println("Created person with full name: " + fullName);
+        return peopleList; // Returns the updated list of people
+    }
     // THIS IS THE UPDATE OPERATION
     // We extract the person from the HashMap and modify it.
     // Springboot automatically converts the Person to JSON format
@@ -91,22 +79,10 @@ public class PeopleController {
     // Here we are returning what we sent to the method
     // in this case because of @ResponseBody
     // Note: To UPDATE we use PUT method
-
-//    @PutMapping("/people/{firstName}")
-//    public Person updatePerson(@PathVariable String firstName, @RequestBody Person p) {
-//        peopleList.replace(firstName, p);
-//        return peopleList.get(firstName);
-//    }
-
     @PutMapping("/people/{firstName}")
     public Person updatePerson(@PathVariable String firstName, @RequestBody Person p) {
-        if (peopleList.containsKey(firstName)) {
-            System.out.println("Updating person: " + firstName);
-            peopleList.replace(firstName, p);
-            return peopleList.get(firstName);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found");
-        }
+        peopleList.replace(firstName, p);
+        return peopleList.get(firstName);
     }
 
     // THIS IS THE DELETE OPERATION
@@ -116,11 +92,9 @@ public class PeopleController {
     // Note: To DELETE we use delete method
     
     @DeleteMapping("/people/{firstName}")
-    public HashMap<String, Person> deletePersonFirst(@PathVariable String firstName) {
+    public HashMap<String, Person> deletePerson(@PathVariable String firstName) {
         peopleList.remove(firstName);
         return peopleList;
     }
-
-
 }
 
