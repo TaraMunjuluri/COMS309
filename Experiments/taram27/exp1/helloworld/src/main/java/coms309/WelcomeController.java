@@ -21,6 +21,17 @@ class WelcomeController {
     }
     @GetMapping("/{name}")
     public String welcome(@PathVariable String name) {
-        return "Hello and welcome:Q " + name;
+        return "Hello and welcome:" + name;
+    }
+    @GetMapping("/multiply/{num1}/{num2}")
+    public String multiply(@PathVariable double num1, @PathVariable double num2) {
+        double result = num1 * num2;
+        return "Calculation of multiplying " + num1 + " and " + num2 + " is: " + result;
+    }
+
+    @GetMapping("/subtract/{num1}/{num2}")
+    public String subtract(@PathVariable double num1, @PathVariable double num2) {
+        double result = num1 - num2;
+        return "Calculation of subtracting " + num2 + " from " + num1 + " is: " + result;
     }
 }
