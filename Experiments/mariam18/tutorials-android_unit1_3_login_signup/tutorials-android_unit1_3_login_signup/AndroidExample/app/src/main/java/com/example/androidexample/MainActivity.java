@@ -3,12 +3,11 @@ package com.example.androidexample;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,10 +16,16 @@ public class MainActivity extends AppCompatActivity {
     private Button loginButton;     // define login button variable
     private Button signupButton;    // define signup button variable
 
+    private SharedPreferences sharedPreferences;
+    private static final String PREFS_NAME = "LoginPrefs";  // Preferences file name
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);             // link to Main activity XML
+
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
         /* initialize UI elements */
         messageText = findViewById(R.id.main_msg_txt);      // link to message textview in the Main activity XML
@@ -28,16 +33,19 @@ public class MainActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.main_login_btn);    // link to login button in the Main activity XML
         signupButton = findViewById(R.id.main_signup_btn);  // link to signup button in the Main activity XML
 
-        /* extract data passed into this activity from another activity */
-        Bundle extras = getIntent().getExtras();
-        if(extras == null) {
-            messageText.setText("Home Page");
-            usernameText.setVisibility(View.INVISIBLE);             // set username text invisible initially
+        // Check if the username was saved in SharedPreferences
+        String savedUsername = sharedPreferences.getString("USERNAME", null);
+        if (savedUsername != null) {
+            // If a username is saved, display it and hide login/signup buttons
+            messageText.setText("Welcome Back");
+            usernameText.setText(savedUsername);
+            usernameText.setVisibility(View.VISIBLE);
+            loginButton.setVisibility(View.INVISIBLE);
+            signupButton.setVisibility(View.INVISIBLE);
         } else {
-            messageText.setText("Welcome");
-            usernameText.setText(extras.getString("USERNAME")); // this will come from LoginActivity
-            loginButton.setVisibility(View.INVISIBLE);              // set login button invisible
-            signupButton.setVisibility(View.INVISIBLE);             // set signup button invisible
+            // No username saved, show login/signup buttons
+            messageText.setText("Home Page");
+            usernameText.setVisibility(View.INVISIBLE);
         }
 
         /* click listener on login button pressed */
