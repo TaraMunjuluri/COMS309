@@ -54,7 +54,21 @@ public class PeopleController {
         peopleList.put(person.getLastName(), person);
         peopleList.put(person.getAddress(), person);
         peopleList.put(person.getTelephone(), person);
-        return "New person "+ person.getFirstName() + " " + person.getLastName() + " Saved with address " + person.getAddress();
+        if(person.getAge() >= 30 && person.getAge() < 40){
+            return "New person "+ person.getFirstName() + " " + person.getLastName() + " Saved with address " + person.getAddress() + " and number: " + person.getTelephone() + ". You're in your 30's? How's your back?";
+        }
+        else if(person.getAge() >= 40 && person.getAge() < 50){
+            return "New person "+ person.getFirstName() + " " + person.getLastName() + " Saved with address " + person.getAddress() + " and number: " + person.getTelephone() + ". You're in your 40's? Don't look a day over 35!";
+
+        }
+        else if(person.getAge() >= 50 && person.getAge() < 60) {
+            return "New person " + person.getFirstName() + " " + person.getLastName() + " Saved with address " + person.getAddress() + " and number: " + person.getTelephone() + ". You're in your 50's? That's half a century!";
+
+        }
+        else{
+            return "New person "+ person.getFirstName() + " " + person.getLastName() + " Saved with address " + person.getAddress() + " and number: " + person.getTelephone() + ".";
+
+        }
     }
 
 
@@ -107,11 +121,6 @@ public class PeopleController {
         return peopleList;
     }
 
-//    new function for deleting by last name
-    @DeleteMapping("/people/{lastName}")
-    public HashMap<String, Person> deletePersonLast(@PathVariable String lastName) {
-        peopleList.remove(lastName);
-        return peopleList;
-    }
+
 }
 
