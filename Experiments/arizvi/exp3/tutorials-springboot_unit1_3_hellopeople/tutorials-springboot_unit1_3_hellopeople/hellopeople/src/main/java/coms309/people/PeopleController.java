@@ -124,6 +124,8 @@ public class PeopleController {
         }
     }
 
+    
+
 //    method that allows updating only certain fields of a person’s data (e.g., just the address or telephone number
     @PutMapping("/people/{firstName}/updateAttributes")
     public Person updatePersonAttributes(@PathVariable String firstName, @RequestBody HashMap<String, Object> updates) {
