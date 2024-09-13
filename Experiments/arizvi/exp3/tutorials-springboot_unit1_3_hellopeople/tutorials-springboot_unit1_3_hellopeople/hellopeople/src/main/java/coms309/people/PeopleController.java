@@ -109,6 +109,46 @@ public class PeopleController {
         }
     }
 
+//    update method that takes both the first name and the last name in the path and updates the person based on those values
+    @PutMapping("/people/{firstName}/{lastName}")
+    public Person updatePersonByFullName(
+            @PathVariable String firstName,
+            @PathVariable String lastName,
+            @RequestBody Person p) {
+
+        if (peopleList.containsKey(firstName) && peopleList.get(firstName).getLastName().equals(lastName)) {
+            peopleList.replace(firstName, p);
+            return peopleList.get(firstName);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found with given first and last name");
+        }
+    }
+
+//    method that allows updating only certain fields of a person’s data (e.g., just the address or telephone number
+    @PutMapping("/people/{firstName}/updateAttributes")
+    public Person updatePersonAttributes(@PathVariable String firstName, @RequestBody HashMap<String, Object> updates) {
+        if (peopleList.containsKey(firstName)) {
+            Person p = peopleList.get(firstName);
+
+            // Update specific attributes if they exist in the request body
+            if (updates.containsKey("lastName")) {
+                p.setLastName((String) updates.get("lastName"));
+            }
+            if (updates.containsKey("address")) {
+                p.setAddress((String) updates.get("address"));
+            }
+            if (updates.containsKey("telephone")) {
+                p.setTelephone((String) updates.get("telephone"));
+            }
+            // Add more fields as needed
+
+            peopleList.replace(firstName, p);
+            return p;
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found");
+        }
+    }
+
     // THIS IS THE DELETE OPERATION
     // Springboot gets the PATHVARIABLE from the URL
     // We return the entire list -- converted to JSON

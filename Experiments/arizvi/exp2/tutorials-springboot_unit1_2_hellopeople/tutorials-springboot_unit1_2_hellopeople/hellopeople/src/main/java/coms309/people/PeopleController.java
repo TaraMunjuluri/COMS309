@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
-
+import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import java.util.HashMap;
 
@@ -92,6 +95,27 @@ public class PeopleController {
             return peopleList.get(firstName);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found");
+        }
+    }
+
+    //  Get People by Age using @RequestParam (READ Operation)
+    @GetMapping("/peopleByAge")
+    public List<Person> getPeopleByAge(@RequestParam int age) {
+        return peopleList.values()
+                .stream()
+                .filter(person -> person.getAge() == age)
+                .collect(Collectors.toList());
+    }
+
+    //  Update Address by First Name using @RequestParam (UPDATE Operation)
+    @PutMapping("/updateAddress")
+    public String updateAddress(@RequestParam String firstName, @RequestParam String newAddress) {
+        Person person = peopleList.get(firstName);
+        if (person != null) {
+            person.setAddress(newAddress);
+            return "Address updated for " + firstName;
+        } else {
+            return "Person not found";
         }
     }
 
