@@ -51,9 +51,7 @@ public class PeopleController {
     public  String createPerson(@RequestBody Person person) {
         System.out.println(person);
         peopleList.put(person.getFirstName(), person);
-        peopleList.put(person.getLastName(), person);
-        peopleList.put(person.getAddress(), person);
-        peopleList.put(person.getTelephone(), person);
+
         if(person.getAge() >= 30 && person.getAge() < 40){
             return "New person "+ person.getFirstName() + " " + person.getLastName() + " Saved with address " + person.getAddress() + " and number: " + person.getTelephone() + ". You're in your 30's? How's your back?";
         }

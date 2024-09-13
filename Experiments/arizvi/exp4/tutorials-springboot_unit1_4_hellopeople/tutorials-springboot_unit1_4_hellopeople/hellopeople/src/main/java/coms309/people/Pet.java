@@ -3,18 +3,18 @@ package coms309.people;
 public class Pet {
     private String firstName;
 
-    private String address;
+    private String color;
 
-    private int age;
+    private String type;
 
     public Pet(){
 
     }
 
-    public Pet(String firstName, String address, String telephone, int age){
+    public Pet(String firstName, String color, String type){
         this.firstName = firstName;
-        this.address = address;
-        this.age = age;
+        this.color = color;
+        this.type = type;
     }
 
     public String getFirstName() {
@@ -27,26 +27,26 @@ public class Pet {
 
 
 
-    public String getAddress() {
-        return this.address;
+    public  String getColor() {
+        return this.color;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setColor(String color) {
+        this.color = color;
     }
 
 
 
-    public int getAge() {
-        return this.age;
+    public  String getType() {
+        return this.type;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setType(String type) {
+        this.type = type;
     }
     @Override
     public String toString() {
         return firstName + " "
-                + address + " ";
+                + color + " ";
     }
 }
