@@ -29,4 +29,14 @@
         android:textColor="#ffffff">
     </Button>
 
+    <Button
+        android:id="@+id/find_tutor_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Find Tutor"
+        android:layout_below="@id/main_counter_btn"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
 </androidx.appcompat.widget.LinearLayoutCompat>
