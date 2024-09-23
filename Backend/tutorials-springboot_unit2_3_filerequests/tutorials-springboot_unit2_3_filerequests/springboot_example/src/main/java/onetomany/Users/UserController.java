@@ -119,6 +119,12 @@ public class UserController {
         return success;
     }
 
+
+    @GetMapping(path = "/users/search")
+    List<User> searchUsers(@RequestParam("username") String username) {
+        return userRepository.findByUsernameContainingIgnoreCase(username);
+    }
+
     /**
      * The Response Entity type is set as <Resource>, which can handle files and images very well
      * additional header have to be set to tell the front end what type of conent is being sent from the 
