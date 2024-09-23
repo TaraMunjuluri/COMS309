@@ -8,22 +8,12 @@
     tools:context=".LookingFor">
 
     <Button
-        android:id="@+id/btnMenteeRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="56dp"
-        android:text="Find Mentee"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnMentorRequest" />
-
-    <Button
         android:id="@+id/btnFriendRequest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="192dp"
+        android:layout_marginTop="252dp"
+        android:backgroundTint="@color/caribbeanCurrent"
         android:text="Find Friends"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
@@ -35,10 +25,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="@color/airForceBlue"
         android:text="Join Study Group"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnFriendRequest" />
 
@@ -47,11 +38,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="@color/cambridgeBlue"
         android:text="Find Mentor"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.482"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnStudyGrpRequest" />
+
+
+    <Button
+        android:id="@+id/btnMenteeRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/timberwolf"
+        android:text="Find Mentee"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnMentorRequest" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
