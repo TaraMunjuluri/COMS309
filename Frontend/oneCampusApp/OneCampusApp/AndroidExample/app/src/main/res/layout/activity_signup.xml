@@ -10,13 +10,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Signup Example"
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="80dp"
-        android:textSize="30dp"
-        android:textColor="#fc0303">
-    </TextView>
+        android:text="Enter Your Info"
+        android:textColor="#8403FC"
+        android:textSize="30dp"></TextView>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -72,11 +71,13 @@
         android:layout_gravity="center"
         android:orientation="horizontal">
 
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="70sp"
             android:text="confirm\npassword: "
             android:textSize="20dp"
+            android:padding="12dp"
             android:textColor="#000000">
         </TextView>
 
@@ -102,20 +103,20 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
+            android:backgroundTint="#0097A7"
             android:text="Login"
-            android:textSize="20sp"
-            android:textColor="#ffffff">
-        </Button>
+            android:textColor="#ffffff"
+            android:textSize="20sp"></Button>
 
         <Button
             android:id="@+id/signup_signup_btn"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:backgroundTint="#0097A7"
             android:text="Signup"
-            android:textSize="20sp"
-            android:textColor="#ffffff">
-        </Button>
+            android:textColor="#ffffff"
+            android:textSize="20sp"></Button>
 
     </LinearLayout>
 
