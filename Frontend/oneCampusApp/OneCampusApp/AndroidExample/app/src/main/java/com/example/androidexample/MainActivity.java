@@ -1,12 +1,17 @@
 package com.example.androidexample;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.graphics.Canvas;
+import android.util.AttributeSet;
 
 import org.w3c.dom.Text;
 
@@ -31,7 +36,15 @@ public class MainActivity extends AppCompatActivity {
         /* extract data passed into this activity from another activity */
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
+            TextPaint paint = messageText.getPaint();
+            paint.setStyle(Paint.Style.STROKE); // Set the paint style to STROKE
+            paint.setStrokeWidth(5); // Set stroke width
+            messageText.setTextColor(Color.BLACK); // Stroke color (black)
+            messageText.setText("Welcome to OneCampus"); // Apply the text with stroke
+            paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            messageText.setTextColor(Color.WHITE);
             messageText.setText("Welcome to OneCampus");
+
             usernameText.setVisibility(View.INVISIBLE);             // set username text invisible initially
         } else {
             messageText.setText("Welcome to OneCampus");

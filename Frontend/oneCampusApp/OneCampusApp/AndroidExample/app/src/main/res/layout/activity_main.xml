@@ -15,10 +15,11 @@
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="50dp"
+        android:fontFamily="@font/oswald_semibold"
         android:text="Welcome to OneCampus"
         android:textColor="#FFFFFF"
-        android:fontFamily="@font/oswald_semibold"
-        android:textSize="30dp"></TextView>
+        android:textSize="40dp"
+        tools:includeFontPadding="true"></TextView>
 
     <TextView
         android:id="@+id/main_username_txt"
