@@ -31,10 +31,10 @@ public class MainActivity extends AppCompatActivity {
         /* extract data passed into this activity from another activity */
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
-            messageText.setText("Home Page");
+            messageText.setText("Welcome to OneCampus");
             usernameText.setVisibility(View.INVISIBLE);             // set username text invisible initially
         } else {
-            messageText.setText("Welcome");
+            messageText.setText("Welcome to OneCampus");
             usernameText.setText(extras.getString("USERNAME")); // this will come from LoginActivity
             loginButton.setVisibility(View.INVISIBLE);              // set login button invisible
             signupButton.setVisibility(View.INVISIBLE);             // set signup button invisible

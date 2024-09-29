@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="#97B1A6"
+    android:background="#F4D98C"
     android:orientation="vertical"
     tools:context=".MainActivity">
+
 
     <TextView
         android:id="@+id/main_msg_txt"
@@ -14,8 +15,9 @@
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="50dp"
-        android:text="Welcome"
-        android:textColor="#A503FC"
+        android:text="Welcome to OneCampus"
+        android:textColor="#FFFFFF"
+        android:fontFamily="@font/oswald_semibold"
         android:textSize="30dp"></TextView>
 
     <TextView
