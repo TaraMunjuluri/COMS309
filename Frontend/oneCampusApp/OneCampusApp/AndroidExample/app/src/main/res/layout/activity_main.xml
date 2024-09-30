@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4D98C"
+    android:background="#EFC773"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -38,7 +38,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:backgroundTint="#0097A7"
+        android:backgroundTint="#047885"
         android:text="Login"
         android:textColor="#ffffff"
         android:textSize="20sp"></Button>
@@ -48,7 +48,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:backgroundTint="#0097A7"
+        android:backgroundTint="#047885"
         android:text="Signup"
         android:textColor="#ffffff"
         android:textSize="20sp"></Button>
