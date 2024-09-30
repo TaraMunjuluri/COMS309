@@ -4,6 +4,7 @@ import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -153,5 +154,5 @@ public class User {
     public void setExtenstion(String extenstion) {
         this.extenstion = extenstion;
     }
-    
+
 }

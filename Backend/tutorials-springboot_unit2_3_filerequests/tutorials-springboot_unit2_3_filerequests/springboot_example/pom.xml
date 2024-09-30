@@ -39,7 +39,11 @@
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
 
-
+    <!-- dependency for security -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
 
     <!-- The H2 database dependency -->
     <dependency>
