@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EFC773"
+    android:background="#C9C5BA"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -13,9 +13,9 @@
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="150dp"
+        android:fontFamily="@font/oswald_semibold"
         android:text="Login"
         android:textColor="#F6F3F3"
-        android:fontFamily="@font/oswald_semibold"
         android:textSize="30dp"></TextView>
 
     <LinearLayout
