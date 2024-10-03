@@ -28,8 +28,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/oswald_semibold"
             android:text="username: "
-            android:textColor="#FBF8F8"
+            android:textColor="#FFFFFF"
             android:textSize="20dp"></TextView>
 
         <EditText
@@ -49,6 +50,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/oswald_semibold"
             android:text="password: "
             android:textColor="#FFFFFF"
             android:textSize="20dp"></TextView>
@@ -70,8 +72,9 @@
 
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="70sp"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/oswald_semibold"
             android:padding="12dp"
             android:text="confirm\npassword: "
             android:textColor="#FFFFFF"
