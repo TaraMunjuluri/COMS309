@@ -1,4 +1,4 @@
 package com.example.androidexample;
 
-public class StudyGrpActivity {
+public class FindMentorActivity {
 }

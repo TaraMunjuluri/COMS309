@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class LookingFor extends AppCompatActivity implements View.OnClickListener{
 
-    private Button friendsBtn, studyGrpBtn, mentorBtn, menteeBtn;
+    private Button friendsBtn, mentorBtn, menteeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,13 +18,11 @@ public class LookingFor extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.lookingfor);
 
         friendsBtn = findViewById(R.id.btnFriendRequest);
-        studyGrpBtn = findViewById(R.id.btnStudyGrpRequest);
-        mentorBtn = findViewById(R.id.btnMentorRequest);
-        menteeBtn = findViewById(R.id.btnMenteeRequest);
+        mentorBtn = findViewById(R.id.btnFindMentorRequest);
+        menteeBtn = findViewById(R.id.btnFindMenteeRequest);
 
         /* button click listeners */
         friendsBtn.setOnClickListener(this);
-        studyGrpBtn.setOnClickListener(this);
         mentorBtn.setOnClickListener(this);
         menteeBtn.setOnClickListener(this);
     }
@@ -34,12 +32,10 @@ public class LookingFor extends AppCompatActivity implements View.OnClickListene
         int id = v.getId();
         if (id == R.id.btnFriendRequest) {
             startActivity(new Intent(LookingFor.this, FriendActivity.class));
-        } else if (id == R.id.btnStudyGrpRequest) {
-            startActivity(new Intent(LookingFor.this, StudyGrpActivity.class));
-        } else if (id == R.id.btnMentorRequest) {
-            startActivity(new Intent(LookingFor.this, MentorActivity.class));
-        } else if (id == R.id.btnMenteeRequest) {
-            startActivity(new Intent(LookingFor.this, MenteeActivity.class));
+        } else if (id == R.id.btnFindMentorRequest) {
+            startActivity(new Intent(LookingFor.this, FindMentorActivity.class));
+        } else if (id == R.id.btnFindMenteeRequest) {
+            startActivity(new Intent(LookingFor.this, FindMenteeActivity.class));
         }
     }
 }

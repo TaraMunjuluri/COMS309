@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                /* when signup button is pressed, use intent to switch to Signup Activity */
+                /* when login button is pressed, use intent to switch to Signup Activity */
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
                 startActivity(intent);  // go to SignupActivity
             }

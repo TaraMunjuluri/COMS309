@@ -21,6 +21,12 @@
         <activity
             android:name=".LookingFor"/>
         <activity
+            android:name=".FindMenteeActivity"/>
+        <activity
+            android:name=".FindMentorActivity"/>
+        <activity
+            android:name=".FriendActivity"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
