@@ -44,9 +44,9 @@ class WelcomeController {
     }
 
     // 3. Update Operation using @PathVariable and @RequestBody (Update message for a specific person)
-    @PutMapping("/updateMessage/{name}")
-    public String updateMessage(@PathVariable String name, @RequestBody String newMessage) {
+    public String updateMessage(@PathVariable String name, @RequestBody HashMap<String, String> messageData) {
         if (nameMessages.containsKey(name)) {
+            String newMessage = messageData.get("message");
             nameMessages.put(name, newMessage);
             return "Message for " + name + " updated successfully!";
         } else {
