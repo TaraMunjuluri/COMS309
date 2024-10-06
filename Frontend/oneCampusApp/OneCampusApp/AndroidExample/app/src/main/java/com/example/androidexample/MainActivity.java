@@ -36,15 +36,7 @@ public class MainActivity extends AppCompatActivity {
         /* extract data passed into this activity from another activity */
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
-            TextPaint paint = messageText.getPaint();
-            paint.setStyle(Paint.Style.STROKE); // Set the paint style to STROKE
-            paint.setStrokeWidth(5); // Set stroke width
-            messageText.setTextColor(Color.BLACK); // Stroke color (black)
             messageText.setText("Welcome to OneCampus"); // Apply the text with stroke
-            paint.setStyle(Paint.Style.FILL_AND_STROKE);
-            messageText.setTextColor(Color.WHITE);
-            messageText.setText("Welcome to OneCampus");
-
             usernameText.setVisibility(View.INVISIBLE);             // set username text invisible initially
         } else {
             messageText.setText("Welcome to OneCampus");

@@ -17,7 +17,7 @@
         android:layout_marginBottom="50dp"
         android:fontFamily="@font/oswald_semibold"
         android:text="Welcome to OneCampus"
-        android:textColor="#FFFFFF"
+        android:textColor="#121010"
         android:textSize="40dp"
         tools:includeFontPadding="true"></TextView>
 
