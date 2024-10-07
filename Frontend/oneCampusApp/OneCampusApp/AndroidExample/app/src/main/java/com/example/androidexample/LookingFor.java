@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 public class LookingFor extends AppCompatActivity implements View.OnClickListener{
 
     private Button friendsBtn, mentorBtn, menteeBtn;
@@ -35,7 +33,7 @@ public class LookingFor extends AppCompatActivity implements View.OnClickListene
         } else if (id == R.id.btnFindMentorRequest) {
             startActivity(new Intent(LookingFor.this, FindMentorActivity.class));
         } else if (id == R.id.btnFindMenteeRequest) {
-            startActivity(new Intent(LookingFor.this, FindMenteeActivity.class));
+            startActivity(new Intent(LookingFor.this, BeMentorActivity.class));
         }
     }
 }

@@ -19,7 +19,7 @@
         android:layout_width="300dp"
         android:layout_height="80dp"
         android:backgroundTint="@color/airForceBlue"
-        android:text="FIND A MENTOR"
+        android:text="BE A MENTEE"
         android:layout_marginBottom="20dp" /> <!-- Adds space below this button -->
 
     <Button
@@ -27,7 +27,7 @@
         android:layout_width="300dp"
         android:layout_height="80dp"
         android:backgroundTint="@color/cambridgeBlue"
-        android:text="FIND A MENTEE"
+        android:text="BE A MENTOR"
         android:layout_marginBottom="20dp" /> <!-- Adds space below this button -->
 
 

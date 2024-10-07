@@ -21,7 +21,7 @@
         <activity
             android:name=".LookingFor"/>
         <activity
-            android:name=".FindMenteeActivity"/>
+            android:name=".BeMentorActivity"/>
         <activity
             android:name=".FindMentorActivity"/>
         <activity
