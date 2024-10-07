@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class LookingFor extends AppCompatActivity implements View.OnClickListener{
 
-    private Button friendsBtn, mentorBtn, menteeBtn;
+    private Button friendsBtn, beMenteeBtn, beMentorBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,13 +16,13 @@ public class LookingFor extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.lookingfor);
 
         friendsBtn = findViewById(R.id.btnFriendRequest);
-        mentorBtn = findViewById(R.id.btnFindMentorRequest);
-        menteeBtn = findViewById(R.id.btnFindMenteeRequest);
+        beMenteeBtn = findViewById(R.id.btnBeMenteeRequest);
+        beMentorBtn = findViewById(R.id.btnBeMentorRequest);
 
         /* button click listeners */
         friendsBtn.setOnClickListener(this);
-        mentorBtn.setOnClickListener(this);
-        menteeBtn.setOnClickListener(this);
+        beMenteeBtn.setOnClickListener(this);
+        beMentorBtn.setOnClickListener(this);
     }
 
     @Override
@@ -30,9 +30,9 @@ public class LookingFor extends AppCompatActivity implements View.OnClickListene
         int id = v.getId();
         if (id == R.id.btnFriendRequest) {
             startActivity(new Intent(LookingFor.this, FriendActivity.class));
-        } else if (id == R.id.btnFindMentorRequest) {
-            startActivity(new Intent(LookingFor.this, FindMentorActivity.class));
-        } else if (id == R.id.btnFindMenteeRequest) {
+        } else if (id == R.id.btnBeMenteeRequest) {
+            startActivity(new Intent(LookingFor.this, BeMenteeActivity.class));
+        } else if (id == R.id.btnBeMentorRequest) {
             startActivity(new Intent(LookingFor.this, BeMentorActivity.class));
         }
     }

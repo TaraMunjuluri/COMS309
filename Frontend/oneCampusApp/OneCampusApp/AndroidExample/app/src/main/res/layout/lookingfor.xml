@@ -15,7 +15,7 @@
         android:layout_marginBottom="20dp"/>
 
     <Button
-        android:id="@+id/btnFindMentorRequest"
+        android:id="@+id/btnBeMenteeRequest"
         android:layout_width="300dp"
         android:layout_height="80dp"
         android:backgroundTint="@color/airForceBlue"
@@ -23,7 +23,7 @@
         android:layout_marginBottom="20dp" /> <!-- Adds space below this button -->
 
     <Button
-        android:id="@+id/btnFindMenteeRequest"
+        android:id="@+id/btnBeMentorRequest"
         android:layout_width="300dp"
         android:layout_height="80dp"
         android:backgroundTint="@color/cambridgeBlue"

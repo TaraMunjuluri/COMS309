@@ -18,7 +18,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BeMentorActivity extends AppCompatActivity {
+public class BeMenteeActivity extends AppCompatActivity {
 
     private EditText etMajor;
     private Spinner spinnerClassification, spinnerMentorArea;
@@ -28,7 +28,7 @@ public class BeMentorActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bementor);
+        setContentView(R.layout.bementee);
 
         // Initialize UI components
         etMajor = findViewById(R.id.et_major);
@@ -96,14 +96,14 @@ public class BeMentorActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(BeMentorActivity.this, "Form Submitted Successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BeMenteeActivity.this, "Form Submitted Successfully", Toast.LENGTH_SHORT).show();
                     }
                 },
 
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(BeMentorActivity.this, "Failed to submit form", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BeMenteeActivity.this, "Failed to submit form", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
