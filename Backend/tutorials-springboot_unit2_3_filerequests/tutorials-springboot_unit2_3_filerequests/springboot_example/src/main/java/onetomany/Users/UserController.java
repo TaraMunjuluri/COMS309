@@ -303,6 +303,9 @@ public class UserController {
         if (userRepository.findByEmailId(user.getEmailId()) != null) {
             return new ResponseEntity<>("Email is already registered", HttpStatus.BAD_REQUEST);
         }
+        if (userRepository.findByUsername(user.getUsername()) != null) {
+            return new ResponseEntity<>("Username is already registered", HttpStatus.BAD_REQUEST);
+        }
 
         // Save the user with the plain text password
         userRepository.save(user);
