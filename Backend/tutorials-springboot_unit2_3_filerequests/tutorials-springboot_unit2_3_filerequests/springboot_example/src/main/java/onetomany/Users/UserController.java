@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import onetomany.Laptops.Laptop;
 import onetomany.Laptops.LaptopRepository;
 
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
@@ -246,15 +245,15 @@ public class UserController {
     }
 
     //code section for ip address to be used by frontend
-    @GetMapping("/ip-address")
-    public ResponseEntity<String> getIpAddress() {
-        try {
-            InetAddress ip = InetAddress.getLocalHost();
-            return new ResponseEntity<>(ip.getHostAddress(), HttpStatus.OK);
-        } catch (UnknownHostException e) {
-            return new ResponseEntity<>("Could not determine IP address", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @GetMapping("/ip-address")
+//    public ResponseEntity<String> getIpAddress() {
+//        try {
+//            InetAddress ip = InetAddress.getLocalHost();
+//            return new ResponseEntity<>(ip.getHostAddress(), HttpStatus.OK);
+//        } catch (UnknownHostException e) {
+//            return new ResponseEntity<>("Could not determine IP address", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
     @PostMapping(path = "/users")
     String createUser(@RequestParam("avatar") MultipartFile avatar, @RequestParam("user") String userString) throws Exception {
         if (userString == null)
