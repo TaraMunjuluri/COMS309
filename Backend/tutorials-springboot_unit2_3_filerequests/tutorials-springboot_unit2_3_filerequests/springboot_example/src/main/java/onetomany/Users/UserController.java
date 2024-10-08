@@ -312,7 +312,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user) {
-        User existingUser = userRepository.findByEmailId(user.getEmailId());
+        User existingUser = userRepository.findByEmailIdOrUsername(user.getUsername());
         if (existingUser == null || !user.getPassword().equals(existingUser.getPassword())) {
             return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
         }
