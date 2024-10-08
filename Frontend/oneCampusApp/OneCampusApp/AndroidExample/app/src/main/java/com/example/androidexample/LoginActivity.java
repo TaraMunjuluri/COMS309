@@ -125,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;
     private RequestQueue requestQueue;
-    private static final String LOGIN_URL = "http://coms-3090-033.class.las.iastate.edu:8080/login"; // Replace with your actual login endpoint
+    private static final String LOGIN_URL = "http:coms-3090-033.class.las.iastate.edu:8080/login"; // Replace with your actual login endpoint
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
