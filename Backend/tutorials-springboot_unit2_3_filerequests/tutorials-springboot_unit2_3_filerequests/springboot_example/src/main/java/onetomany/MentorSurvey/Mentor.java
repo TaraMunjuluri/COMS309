@@ -9,7 +9,7 @@ public class Mentor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int userId;
+    private int userId; // Reference to the User
     private String major;
 
     @Enumerated(EnumType.STRING)
@@ -19,9 +19,10 @@ public class Mentor {
     private AreaOfMentorship areaOfMentorship;
 
     // Default constructor
-    public Mentor() {}
+    public Mentor() {
+    }
 
-    // Constructor with 4 arguments (userId, major, classification, areaOfMentorship)
+    // Constructor with fields (userId, major, classification, areaOfMentorship)
     public Mentor(int userId, String major, Classification classification, AreaOfMentorship areaOfMentorship) {
         this.userId = userId;
         this.major = major;
@@ -85,4 +86,5 @@ public class Mentor {
         EDUCATION,
         GENERAL
     }
+
 }

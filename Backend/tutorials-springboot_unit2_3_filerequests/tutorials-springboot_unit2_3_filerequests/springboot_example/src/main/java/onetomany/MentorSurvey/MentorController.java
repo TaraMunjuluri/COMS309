@@ -12,28 +12,19 @@ public class MentorController {
     @Autowired
     MentorRepository mentorRepository;
 
-    // Create a new mentor based on user inputs
+    // Create a new mentor based on JSON input
     @PostMapping("/create")
-    public ResponseEntity<String> createMentor(@RequestParam("userId") int userId,
-                                               @RequestParam("major") String major,
-                                               @RequestParam("classification") Mentor.Classification classification,
-                                               @RequestParam("areaOfMentorship") Mentor.AreaOfMentorship areaOfMentorship) {
+    public ResponseEntity<String> createMentor(@RequestBody Mentor mentor) {
 
         // Check if the user is already a mentor
-        Mentor existingMentor = mentorRepository.findByUserId(userId);
+        Mentor existingMentor = mentorRepository.findByUserId(mentor.getUserId());
         if (existingMentor != null) {
             return new ResponseEntity<>("User is already a mentor", HttpStatus.CONFLICT);
         }
 
         // Create and save a new mentor
-        Mentor mentor = new Mentor(userId, major, classification, areaOfMentorship);
         mentorRepository.save(mentor);
 
         return new ResponseEntity<>("Mentor created successfully", HttpStatus.CREATED);
     }
-
-
-
-
-
 }
