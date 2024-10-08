@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="caribbeanCurrent">#407078</color>
+    <color name="airForceBlue">#698996</color>
+    <color name="cambridgeBlue">#97B1A6</color>
+    <color name="timberwolf">#C9C5BA</color>
+    <color name="teaRose">#EBBAB9</color>
+
+
+
+
 </resources>
