@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText usernameEditText;
-    private EditText emailEditText;
+//    private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
     private Button signupButton;
@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         usernameEditText = findViewById(R.id.login_username_edt);
-        emailEditText = findViewById(R.id.login_email_edt);
+//        emailEditText = findViewById(R.id.login_email_edt);
         passwordEditText = findViewById(R.id.login_password_edt);
         loginButton = findViewById(R.id.login_login_btn);
         signupButton = findViewById(R.id.login_signup_btn);
