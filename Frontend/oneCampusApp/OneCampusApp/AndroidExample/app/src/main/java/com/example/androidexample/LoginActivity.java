@@ -43,9 +43,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = emailEditText.getText().toString();
+                String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-                loginUser(email, password);
+                loginUser(username, password);
             }
         });
 
@@ -58,10 +58,10 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void loginUser(String email, String password) {
+    private void loginUser(String username, String password) {
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("emailId", email);
+            jsonBody.put("username", username);
             jsonBody.put("password", password);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, LookingFor.class);
-                        intent.putExtra("EMAIL", email);
+                        intent.putExtra("USERNAME", username);
                         startActivity(intent);
 
                     }
