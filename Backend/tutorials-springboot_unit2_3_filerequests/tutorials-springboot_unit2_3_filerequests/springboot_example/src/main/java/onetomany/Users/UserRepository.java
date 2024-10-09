@@ -22,9 +22,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     default User findByEmailIdOrUsername(String identifier) {
         User user = findByUsername(identifier);
-        if (user == null) {
-            user = findByEmailId(identifier);
-        }
+//        if (user == null) {
+//            user = findByEmailId(identifier);
+//        }
         return user;
     }
 //    Optional<User> findByUsername(String username);  // find user by exact username
