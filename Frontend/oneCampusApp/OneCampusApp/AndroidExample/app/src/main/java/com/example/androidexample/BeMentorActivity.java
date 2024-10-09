@@ -78,15 +78,23 @@ public class BeMentorActivity extends AppCompatActivity {
         // Create a JSON object with the form data
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("major", major);
-            jsonBody.put("classification", classification);
-            jsonBody.put("mentorArea", mentorArea);
-        }
-        catch (JSONException e) {
+            // Add user object with the id
+            JSONObject userObject = new JSONObject();
+            userObject.put("id", 5);  // Replace 4 with the actual user ID if dynamic
+
+            jsonBody.put("user", userObject);
+            jsonBody.put("major", major);  // Ensure input matches expected format ("Computer Science")
+            jsonBody.put("classification", classification.toUpperCase());  // Convert to uppercase, e.g., "JUNIOR"
+            jsonBody.put("areaOfMentorship", mentorArea.toUpperCase());  // Convert to uppercase, e.g., "CAREER"
+
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        String url = "http://coms-3090-033.class.las.lastate.edu:8080/mentor/create";
+        //String url = "http://coms-3090-033.class.las.lastate.edu:8080/mentor/create";
+        String url = "http://10.90.74.238:8080/mentor/create";
+
+
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST,
@@ -109,5 +117,6 @@ public class BeMentorActivity extends AppCompatActivity {
         );
         mQueue.add(request);
     }
+
 }
 
