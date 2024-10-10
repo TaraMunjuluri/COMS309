@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -87,8 +86,7 @@ import java.net.UnknownHostException;
 //    @PostMapping("/signup")
 //    public ResponseEntity<String> signup(@RequestBody User user) {
 //        if (userRepository.findByEmailId(user.getEmailId()) != null) {
-//            return new R
-//            esponseEntity<>("Email is already registered", HttpStatus.BAD_REQUEST);
+//            return new ResponseEntity<>("Email is already registered", HttpStatus.BAD_REQUEST);
 //        }
 //
 //        user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -196,7 +194,6 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.rowset.serial.SerialBlob;
 
@@ -289,104 +286,64 @@ public class UserController {
 //
 //        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
 //    }
-
-
-    //latest signup
-//    @PostMapping("/signup")
-//    public ResponseEntity<Map<String, Object>> signup(@RequestBody User user) {
-//        Map<String, Object> response = new HashMap<>();
 //
-//        if (userRepository.findByEmailId(user.getEmailId()) != null) {
-////            return new ResponseEntity<>("Email is already registered", HttpStatus.BAD_REQUEST);
-//            response.put("message", "Email is already registered");
-//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//        }
-//        if (userRepository.findByUsername(user.getUsername()) != null) {
-////            return new ResponseEntity<>("Username is already registered", HttpStatus.BAD_REQUEST);
-//            response.put("message", "Username is already registered");
-//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//    @PostMapping("/login")
+//    public ResponseEntity<String> login(@RequestBody User user) {
+//        User existingUser = userRepository.findByEmailId(user.getEmailId());
+//        if (existingUser == null || !user.getPassword().equals(existingUser.getPassword())) { // Compare raw passwords
+//            return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
 //        }
 //
-//        // Save the user with the plain text password
-//        userRepository.save(user);
-//        response.put("message", "User registered successfully");
-//        response.put("userId", user.getId());
-//
-////        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
-//        return new ResponseEntity<>(response, HttpStatus.CREATED);
+//        return new ResponseEntity<>("Login successful", HttpStatus.OK);
 //    }
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, Object>> signup(@RequestBody User user) {
+    public ResponseEntity<String> signup(@RequestBody User user) {
         if (userRepository.findByEmailId(user.getEmailId()) != null) {
-            return new ResponseEntity<>(failureResponse("Email is already registered"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Email is already registered", HttpStatus.BAD_REQUEST);
         }
         if (userRepository.findByUsername(user.getUsername()) != null) {
-            return new ResponseEntity<>(failureResponse("Username is already registered"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Username is already registered", HttpStatus.BAD_REQUEST);
         }
 
         // Save the user with the plain text password
         userRepository.save(user);
 
-        // Return a JSON response instead of a plain string
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Signup successful");
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
     }
 
-    // Helper method for failure responses
-    private Map<String, Object> failureResponse(String message) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", message);
-        return response;
-    }
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody User user, HttpServletRequest request) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<String> login(@RequestBody User user) {
         User existingUser = userRepository.findByEmailIdOrUsername(user.getUsername());
         if (existingUser == null || !user.getPassword().equals(existingUser.getPassword())) {
-//            return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
-            response.put("message", "Invalid credentials");
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
         }
-//        HttpSession session = request.getSession();
-//        session.setAttribute("user", existingUser);
 
-//        return new ResponseEntity<>("Login successful", HttpStatus.OK);
-        response.put("message", "Login successful");
-        response.put("user", existingUser);  // Optionally include user details in response
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>("Login successful", HttpStatus.OK);
     }
+    @PostMapping("/auth/login")
+    public ResponseEntity<String> loginWithSession(@RequestBody User user, HttpServletRequest request) {
+        User existingUser = userRepository.findByEmailId(user.getEmailId());
+        if (existingUser == null || !user.getPassword().equals(existingUser.getPassword())) { // Compare raw passwords
+            return new ResponseEntity<>(failure, HttpStatus.UNAUTHORIZED);
+        }
 
-//    @PostMapping("/auth/login")
-//    public ResponseEntity<String> loginWithSession(@RequestBody User user, HttpServletRequest request) {
-//        User existingUser = userRepository.findByEmailId(user.getEmailId());
-//        if (existingUser == null || !user.getPassword().equals(existingUser.getPassword())) { // Compare raw passwords
-//            return new ResponseEntity<>(failure, HttpStatus.UNAUTHORIZED);
-//        }
-//
-//        // Create a session for the logged-in user
-//        HttpSession session = request.getSession();
-//        session.setAttribute("user", existingUser);
-//
-//        return new ResponseEntity<>(success, HttpStatus.OK);
-//    }
+        // Create a session for the logged-in user
+        HttpSession session = request.getSession();
+        session.setAttribute("user", existingUser);
+
+        return new ResponseEntity<>(success, HttpStatus.OK);
+    }
 
     // Logout endpoint to invalidate the session
     @PostMapping("/auth/logout")
-    public ResponseEntity<Map<String, Object>> logout(HttpServletRequest request) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<String> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
-            response.put("message", "Logout successful");
-        }else{
-            response.put("message", "No active session found");
         }
-//        return new ResponseEntity<>("{\"message\":\"Logout successful\"}", HttpStatus.OK);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>("{\"message\":\"Logout successful\"}", HttpStatus.OK);
     }
-
 
     @PutMapping("/users/{id}")
     User updateUser(@PathVariable int id, @RequestBody User request){
