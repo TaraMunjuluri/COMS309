@@ -1,4 +1,5 @@
 package com.example.androidexample;
+import android.util.Log;
 
 import android.os.Bundle;
 import android.view.View;
@@ -64,6 +65,7 @@ public class BeMentorActivity extends AppCompatActivity {
 //
 //                Toast.makeText(FindMenteeActivity.this, "Form Submitted", Toast.LENGTH_SHORT).show();
                 sendFormData();
+                finish();
             }
         });
     }
@@ -78,11 +80,9 @@ public class BeMentorActivity extends AppCompatActivity {
         // Create a JSON object with the form data
         JSONObject jsonBody = new JSONObject();
         try {
-            // Add user object with the id
-            JSONObject userObject = new JSONObject();
-            userObject.put("id", 5);  // Replace 4 with the actual user ID if dynamic
+            // Add userId directly (replace with dynamic user ID if needed)
+            jsonBody.put("userId", 40);  // Assuming you want to send "userId": 8
 
-            jsonBody.put("user", userObject);
             jsonBody.put("major", major);  // Ensure input matches expected format ("Computer Science")
             jsonBody.put("classification", classification.toUpperCase());  // Convert to uppercase, e.g., "JUNIOR"
             jsonBody.put("areaOfMentorship", mentorArea.toUpperCase());  // Convert to uppercase, e.g., "CAREER"
@@ -91,10 +91,7 @@ public class BeMentorActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //String url = "http://coms-3090-033.class.las.lastate.edu:8080/mentor/create";
         String url = "http://10.90.74.238:8080/mentor/create";
-
-
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST,
@@ -111,12 +108,17 @@ public class BeMentorActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(BeMentorActivity.this, "Failed to submit form", Toast.LENGTH_SHORT).show();
+                        if (error.networkResponse != null) {
+                            int statusCode = error.networkResponse.statusCode;
+                            String responseBody = new String(error.networkResponse.data);
+                            Log.e("Error", "Status Code: " + statusCode + ", Response: " + responseBody);
+                        }
                     }
                 }
         );
         mQueue.add(request);
     }
+
 
 }
 
