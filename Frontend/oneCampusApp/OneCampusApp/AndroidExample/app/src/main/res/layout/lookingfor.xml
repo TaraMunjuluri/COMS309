@@ -1,62 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LookingFor">
+    android:orientation="vertical"
+    android:gravity="center"> <!-- Centers all child elements vertically and horizontally -->
 
     <Button
         android:id="@+id/btnFriendRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="252dp"
+        android:layout_width="300dp"
+        android:layout_height="80dp"
         android:backgroundTint="@color/caribbeanCurrent"
-        android:text="FIND FRIENDS"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="FIND FRIENDS/STUDY BUDDY"
+        android:layout_marginBottom="20dp"/>
 
     <Button
-        android:id="@+id/btnStudyGrpRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="40dp"
+        android:id="@+id/btnBeMenteeRequest"
+        android:layout_width="300dp"
+        android:layout_height="80dp"
         android:backgroundTint="@color/airForceBlue"
-        android:text="FIND STUDY BUDDY"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnFriendRequest" />
+        android:text="BE A MENTEE"
+        android:layout_marginBottom="20dp" /> <!-- Adds space below this button -->
 
     <Button
-        android:id="@+id/btnMentorRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="40dp"
+        android:id="@+id/btnBeMentorRequest"
+        android:layout_width="300dp"
+        android:layout_height="80dp"
         android:backgroundTint="@color/cambridgeBlue"
-        android:text="FIND A MENTOR"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnStudyGrpRequest" />
+        android:text="BE A MENTOR"
+        android:layout_marginBottom="20dp" /> <!-- Adds space below this button -->
 
 
-    <Button
-        android:id="@+id/btnMenteeRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="@color/timberwolf"
-        android:text="FIND A MENTEE"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnMentorRequest" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
