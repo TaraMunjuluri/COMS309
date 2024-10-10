@@ -87,7 +87,8 @@ import java.net.UnknownHostException;
 //    @PostMapping("/signup")
 //    public ResponseEntity<String> signup(@RequestBody User user) {
 //        if (userRepository.findByEmailId(user.getEmailId()) != null) {
-//            return new ResponseEntity<>("Email is already registered", HttpStatus.BAD_REQUEST);
+//            return new R
+//            esponseEntity<>("Email is already registered", HttpStatus.BAD_REQUEST);
 //        }
 //
 //        user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -340,7 +341,7 @@ public class UserController {
         return response;
     }
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody User user, HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
         User existingUser = userRepository.findByEmailIdOrUsername(user.getUsername());
         if (existingUser == null || !user.getPassword().equals(existingUser.getPassword())) {
@@ -348,7 +349,8 @@ public class UserController {
             response.put("message", "Invalid credentials");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
-
+//        HttpSession session = request.getSession();
+//        session.setAttribute("user", existingUser);
 
 //        return new ResponseEntity<>("Login successful", HttpStatus.OK);
         response.put("message", "Login successful");
@@ -356,19 +358,19 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/auth/login")
-    public ResponseEntity<String> loginWithSession(@RequestBody User user, HttpServletRequest request) {
-        User existingUser = userRepository.findByEmailId(user.getEmailId());
-        if (existingUser == null || !user.getPassword().equals(existingUser.getPassword())) { // Compare raw passwords
-            return new ResponseEntity<>(failure, HttpStatus.UNAUTHORIZED);
-        }
-
-        // Create a session for the logged-in user
-        HttpSession session = request.getSession();
-        session.setAttribute("user", existingUser);
-
-        return new ResponseEntity<>(success, HttpStatus.OK);
-    }
+//    @PostMapping("/auth/login")
+//    public ResponseEntity<String> loginWithSession(@RequestBody User user, HttpServletRequest request) {
+//        User existingUser = userRepository.findByEmailId(user.getEmailId());
+//        if (existingUser == null || !user.getPassword().equals(existingUser.getPassword())) { // Compare raw passwords
+//            return new ResponseEntity<>(failure, HttpStatus.UNAUTHORIZED);
+//        }
+//
+//        // Create a session for the logged-in user
+//        HttpSession session = request.getSession();
+//        session.setAttribute("user", existingUser);
+//
+//        return new ResponseEntity<>(success, HttpStatus.OK);
+//    }
 
     // Logout endpoint to invalidate the session
     @PostMapping("/auth/logout")
