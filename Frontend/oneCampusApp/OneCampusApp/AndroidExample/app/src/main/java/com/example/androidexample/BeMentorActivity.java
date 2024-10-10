@@ -1,6 +1,6 @@
 package com.example.androidexample;
-import android.util.Log;
 
+import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.SharedPreferences;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.android.volley.toolbox.HttpHeaderParser;
 
 public class BeMentorActivity extends AppCompatActivity {
 
@@ -40,7 +41,6 @@ public class BeMentorActivity extends AppCompatActivity {
         // Initialize the Volley request queue
         mQueue = Volley.newRequestQueue(this);
 
-
         // Set up classification spinner
         ArrayAdapter<CharSequence> classificationAdapter = ArrayAdapter.createFromResource(this,
                 R.array.classification_options, android.R.layout.simple_spinner_item);
@@ -57,13 +57,6 @@ public class BeMentorActivity extends AppCompatActivity {
         btnSubmitForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String major = etMajor.getText().toString();
-//                String classification = spinnerClassification.getSelectedItem().toString();
-//                String mentorArea = spinnerMentorArea.getSelectedItem().toString();
-//
-//                // TODO: Handle the form data, like saving it to the database or passing it to another activity
-//
-//                Toast.makeText(FindMenteeActivity.this, "Form Submitted", Toast.LENGTH_SHORT).show();
                 sendFormData();
                 finish();
             }
@@ -72,6 +65,18 @@ public class BeMentorActivity extends AppCompatActivity {
 
     // Function to send the form data as JSON to the backend
     private void sendFormData() {
+        // Retrieve the session or token from SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String fullSessionId = sharedPreferences.getString("sessionId", null); // Fetch the session ID
+
+        String sessionId;
+        if (fullSessionId != null) {
+            // Extract only the JSESSIONID part before the semicolon
+            sessionId = fullSessionId.split(";")[0]; // This extracts "JSESSIONID=D96D5BB22C27B0C04232A9DE8424455B"
+        } else {
+            Toast.makeText(BeMentorActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return; // Exit if session ID is null
+        }
 
         String major = etMajor.getText().toString();
         String classification = spinnerClassification.getSelectedItem().toString();
@@ -80,13 +85,9 @@ public class BeMentorActivity extends AppCompatActivity {
         // Create a JSON object with the form data
         JSONObject jsonBody = new JSONObject();
         try {
-            // Add userId directly (replace with dynamic user ID if needed)
-            jsonBody.put("userId", 40);  // Assuming you want to send "userId": 8
-
-            jsonBody.put("major", major);  // Ensure input matches expected format ("Computer Science")
-            jsonBody.put("classification", classification.toUpperCase());  // Convert to uppercase, e.g., "JUNIOR"
-            jsonBody.put("areaOfMentorship", mentorArea.toUpperCase());  // Convert to uppercase, e.g., "CAREER"
-
+            jsonBody.put("major", major);
+            jsonBody.put("classification", classification.toUpperCase());
+            jsonBody.put("areaOfMentorship", mentorArea.toUpperCase());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -97,14 +98,12 @@ public class BeMentorActivity extends AppCompatActivity {
                 Request.Method.POST,
                 url,
                 jsonBody,
-
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Toast.makeText(BeMentorActivity.this, "Form Submitted Successfully", Toast.LENGTH_SHORT).show();
                     }
                 },
-
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -115,10 +114,17 @@ public class BeMentorActivity extends AppCompatActivity {
                         }
                     }
                 }
-        );
+        ) {
+            @Override
+            public java.util.Map<String, String> getHeaders() {
+                java.util.Map<String, String> headers = new java.util.HashMap<>();
+                headers.put("Cookie", sessionId);  // Pass the properly formatted session ID
+                return headers;
+            }
+        };
+
         mQueue.add(request);
     }
 
 
 }
-
