@@ -1,5 +1,7 @@
 package onetomany.MentorSurvey;
 
+import onetomany.Users.User;
+
 import javax.persistence.*;
 
 @Entity
@@ -8,8 +10,11 @@ public class Mentor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne // Establishes the relationship between Mentor and User
+    @JoinColumn(name = "user_id", nullable = false) // Creates the foreign key column for user in the mentor table
+    private User user;  // This should match the field you're trying to query in the repository
 
-    private int userId; // Reference to the User
+    //private int userId; // Reference to the User
     private String major;
 
     @Enumerated(EnumType.STRING)
@@ -24,7 +29,7 @@ public class Mentor {
 
     // Constructor with fields (userId, major, classification, areaOfMentorship)
     public Mentor(int userId, String major, Classification classification, AreaOfMentorship areaOfMentorship) {
-        this.userId = userId;
+        this.user = user;
         this.major = major;
         this.classification = classification;
         this.areaOfMentorship = areaOfMentorship;
@@ -39,12 +44,12 @@ public class Mentor {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getMajor() {
@@ -71,7 +76,6 @@ public class Mentor {
         this.areaOfMentorship = areaOfMentorship;
     }
 
-    // Enum for Classification
     public enum Classification {
         FRESHMAN,
         SOPHOMORE,
@@ -80,11 +84,9 @@ public class Mentor {
         GRADUATE_STUDENT
     }
 
-    // Enum for Area of Mentorship
     public enum AreaOfMentorship {
         CAREER,
         EDUCATION,
         GENERAL
     }
-
 }
