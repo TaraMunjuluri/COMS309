@@ -288,17 +288,7 @@ public class UserController {
 //
 //        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
 //    }
-//
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody User user) {
-//        User existingUser = userRepository.findByEmailId(user.getEmailId());
-//        if (existingUser == null || !user.getPassword().equals(existingUser.getPassword())) { // Compare raw passwords
-//        if (existingUser == null || !user.getPassword().equals(existingUser.getPassword())) { // Compare raw passwords
-//            return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
-//        }
-//
-//        return new ResponseEntity<>("Login successful", HttpStatus.OK);
-//    }
+
 
     //latest signup
 //    @PostMapping("/signup")
