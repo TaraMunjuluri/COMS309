@@ -31,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import onetomany.Laptops.Laptop;
 import onetomany.Laptops.LaptopRepository;
 
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
