@@ -1,5 +1,7 @@
 package com.example.androidexample;
+import static com.google.android.material.color.utilities.MaterialDynamicColors.error;
 
+import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -8,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.SharedPreferences;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.android.volley.toolbox.HttpHeaderParser;
 
 public class BeMenteeActivity extends AppCompatActivity {
 
@@ -64,13 +68,25 @@ public class BeMenteeActivity extends AppCompatActivity {
 //
 //                Toast.makeText(FindMenteeActivity.this, "Form Submitted", Toast.LENGTH_SHORT).show();
                 sendFormData();
+                finish();
             }
         });
     }
 
     // Function to send the form data as JSON to the backend
     private void sendFormData() {
+        // Retrieve the session or token from SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String fullSessionId = sharedPreferences.getString("sessionId", null); // Fetch the session ID
 
+        String sessionId;
+        if (fullSessionId != null) {
+            // Extract only the JSESSIONID part before the semicolon
+            sessionId = fullSessionId.split(";")[0]; // This extracts "JSESSIONID=D96D5BB22C27B0C04232A9DE8424455B"
+        } else {
+            Toast.makeText(BeMenteeActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return; // Exit if session ID is null
+        }
         String major = etMajor.getText().toString();
         String classification = spinnerClassification.getSelectedItem().toString();
         String mentorArea = spinnerMentorArea.getSelectedItem().toString();
@@ -79,14 +95,14 @@ public class BeMenteeActivity extends AppCompatActivity {
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("major", major);
-            jsonBody.put("classification", classification);
-            jsonBody.put("mentorArea", mentorArea);
-        }
-        catch (JSONException e) {
+            jsonBody.put("classification", classification.toUpperCase());
+            jsonBody.put("areaOfMenteeship", mentorArea.toUpperCase());
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        String url = "http://coms-3090-033.class.las.lastate.edu:8080/mentor/create";
+        String url = "http://10.90.74.238:8080/mentee/create";
+
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST,
@@ -99,15 +115,25 @@ public class BeMenteeActivity extends AppCompatActivity {
                         Toast.makeText(BeMenteeActivity.this, "Form Submitted Successfully", Toast.LENGTH_SHORT).show();
                     }
                 },
-
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(BeMenteeActivity.this, "Failed to submit form", Toast.LENGTH_SHORT).show();
+                        if (error.networkResponse != null) {
+                            int statusCode = error.networkResponse.statusCode;
+                            String responseBody = new String(error.networkResponse.data);
+                            Log.e("Error", "Status Code: " + statusCode + ", Response: " + responseBody);
+                        }
                     }
                 }
-        );
+        ) {
+            @Override
+            public java.util.Map<String, String> getHeaders() {
+                java.util.Map<String, String> headers = new java.util.HashMap<>();
+                headers.put("Cookie", sessionId);  // Pass the properly formatted session ID
+                return headers;
+            }
+        };
+
         mQueue.add(request);
     }
 }
-
