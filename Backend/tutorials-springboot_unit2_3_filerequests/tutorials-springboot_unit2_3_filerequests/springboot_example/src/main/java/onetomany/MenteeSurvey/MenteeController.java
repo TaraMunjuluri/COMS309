@@ -2,6 +2,7 @@ package onetomany.MenteeSurvey;
 
 import onetomany.MenteeSurvey.Mentee;
 import onetomany.MenteeSurvey.MenteeRepository;
+import onetomany.MentorSurvey.Mentor;
 import onetomany.Users.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @RequestMapping("/mentee")
@@ -41,5 +43,10 @@ public class MenteeController {
         menteeRepository.save(mentee);
 
         return new ResponseEntity<>("Mentee created successfully", HttpStatus.CREATED);
+    }
+    @GetMapping("/all")
+    public ResponseEntity<List<Mentee>> getAllMentees() {
+        List<Mentee> mentee = menteeRepository.findAll();
+        return ResponseEntity.ok(mentee);
     }
 }

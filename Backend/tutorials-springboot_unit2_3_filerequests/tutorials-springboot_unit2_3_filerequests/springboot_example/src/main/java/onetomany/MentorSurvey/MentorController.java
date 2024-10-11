@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @RequestMapping("/mentor")
@@ -40,4 +41,12 @@ public class MentorController {
 
         return new ResponseEntity<>("Mentor created successfully", HttpStatus.CREATED);
     }
+    // Get all mentors
+    @GetMapping("/all")
+    public ResponseEntity<List<Mentor>> getAllMentors() {
+        List<Mentor> mentors = mentorRepository.findAll();
+        return ResponseEntity.ok(mentors);
+    }
+
+
 }
