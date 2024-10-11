@@ -48,5 +48,25 @@ public class MentorController {
         return ResponseEntity.ok(mentors);
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteMentor(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("loggedInUser") == null) {
+            return new ResponseEntity<>("User not logged in", HttpStatus.UNAUTHORIZED);
+        }
+
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+        // Find the existing mentor record for the logged-in user
+        Mentor existingMentor = mentorRepository.findByUser(loggedInUser);
+        if (existingMentor == null) {
+            return new ResponseEntity<>("Mentor not found", HttpStatus.NOT_FOUND);
+        }
+
+        // Delete the mentor record
+        mentorRepository.delete(existingMentor);
+
+        return new ResponseEntity<>("Mentor deleted successfully", HttpStatus.OK);
+    }
 
 }
