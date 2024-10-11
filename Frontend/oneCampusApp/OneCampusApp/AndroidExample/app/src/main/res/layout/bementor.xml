@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/white"> <!-- Add a background color -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center">
+
+        <!-- Major Input -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="What is your major?"
+            android:textSize="18sp"
+            android:textColor="@color/airForceBlue"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_major"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your major"
+            android:inputType="text"
+            android:textColor="@color/caribbeanCurrent"
+            android:background="@drawable/edit_text_background"
+            android:padding="10dp" />
+
+        <!-- Classification Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="What is your classification?"
+            android:textSize="18sp"
+            android:textColor="@color/airForceBlue"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+            android:id="@+id/spinner_classification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner_background"
+            android:padding="10dp" />
+
+        <!-- Mentoring Area Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="What area do you want to mentor in?"
+            android:textSize="18sp"
+            android:textColor="@color/airForceBlue"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+            android:id="@+id/spinner_mentor_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner_background"
+            android:padding="10dp" />
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/btn_submit_form"
+            android:layout_width="300dp"
+            android:layout_height="80dp"
+            android:text="Submit"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/airForceBlue"
+            android:layout_marginTop="32dp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

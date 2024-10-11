@@ -2,6 +2,7 @@ package com.example.androidexample;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -71,11 +72,21 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        // Store session ID from response headers (assuming the server sends a session cookie)
+                        String sessionId = response.optString("sessionId", null); // Adjust based on your backend's response structure
+
+                        if (sessionId != null) {
+                            // Save the session ID in SharedPreferences
+                            SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("sessionId", sessionId);
+                            editor.apply();
+                        }
+
                         Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, LookingFor.class);
                         intent.putExtra("USERNAME", username);
                         startActivity(intent);
-
                     }
                 },
                 new Response.ErrorListener() {
@@ -87,8 +98,24 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+                }) {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(com.android.volley.NetworkResponse response) {
+                // Extract session ID from headers
+                String sessionId = response.headers.get("Set-Cookie");  // Adjust if necessary for your backend
+
+                if (sessionId != null) {
+                    SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("sessionId", sessionId);
+                    editor.apply();
+                }
+
+                return super.parseNetworkResponse(response);
+            }
+        };
 
         requestQueue.add(jsonObjectRequest);
     }
+
 }

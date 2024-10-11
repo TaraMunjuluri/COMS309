@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 public class LookingFor extends AppCompatActivity implements View.OnClickListener{
 
-    private Button friendsBtn, studyGrpBtn, mentorBtn, menteeBtn;
+    private Button friendsBtn, beMenteeBtn, beMentorBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,15 +16,13 @@ public class LookingFor extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.lookingfor);
 
         friendsBtn = findViewById(R.id.btnFriendRequest);
-        studyGrpBtn = findViewById(R.id.btnStudyGrpRequest);
-        mentorBtn = findViewById(R.id.btnMentorRequest);
-        menteeBtn = findViewById(R.id.btnMenteeRequest);
+        beMenteeBtn = findViewById(R.id.btnBeMenteeRequest);
+        beMentorBtn = findViewById(R.id.btnBeMentorRequest);
 
         /* button click listeners */
         friendsBtn.setOnClickListener(this);
-        studyGrpBtn.setOnClickListener(this);
-        mentorBtn.setOnClickListener(this);
-        menteeBtn.setOnClickListener(this);
+        beMenteeBtn.setOnClickListener(this);
+        beMentorBtn.setOnClickListener(this);
     }
 
     @Override
@@ -34,12 +30,10 @@ public class LookingFor extends AppCompatActivity implements View.OnClickListene
         int id = v.getId();
         if (id == R.id.btnFriendRequest) {
             startActivity(new Intent(LookingFor.this, FriendActivity.class));
-        } else if (id == R.id.btnStudyGrpRequest) {
-            startActivity(new Intent(LookingFor.this, StudyGrpActivity.class));
-        } else if (id == R.id.btnMentorRequest) {
-            startActivity(new Intent(LookingFor.this, MentorActivity.class));
-        } else if (id == R.id.btnMenteeRequest) {
-            startActivity(new Intent(LookingFor.this, MenteeActivity.class));
+        } else if (id == R.id.btnBeMenteeRequest) {
+            startActivity(new Intent(LookingFor.this, BeMenteeActivity.class));
+        } else if (id == R.id.btnBeMentorRequest) {
+            startActivity(new Intent(LookingFor.this, BeMentorActivity.class));
         }
     }
 }

@@ -31,9 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 import onetomany.Laptops.Laptop;
 import onetomany.Laptops.LaptopRepository;
 
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.http.HttpStatus;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -350,7 +349,7 @@ public class UserController {
         return response;
     }
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody User user,HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
         User existingUser = userRepository.findByEmailIdOrUsername(user.getUsername());
         if (existingUser == null || !user.getPassword().equals(existingUser.getPassword())) {
@@ -358,7 +357,8 @@ public class UserController {
             response.put("message", "Invalid credentials");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
-
+        HttpSession session = request.getSession();
+        session.setAttribute("loggedInUser", existingUser);
 
 //        return new ResponseEntity<>("Login successful", HttpStatus.OK);
         response.put("message", "Login successful");

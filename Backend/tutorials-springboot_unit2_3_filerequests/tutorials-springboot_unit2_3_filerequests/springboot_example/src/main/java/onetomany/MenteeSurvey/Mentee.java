@@ -1,11 +1,11 @@
-package onetomany.MentorSurvey;
+package onetomany.MenteeSurvey;
 
 import onetomany.Users.User;
 
 import javax.persistence.*;
 
 @Entity
-public class Mentor {
+public class Mentee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,18 +21,18 @@ public class Mentor {
     private Classification classification;
 
     @Enumerated(EnumType.STRING)
-    private AreaOfMentorship areaOfMentorship;
+    private AreaOfMenteeship areaOfMenteeship;
 
     // Default constructor
-    public Mentor() {
+    public Mentee() {
     }
 
     // Constructor with fields (userId, major, classification, areaOfMentorship)
-    public Mentor(int userId, String major, Classification classification, AreaOfMentorship areaOfMentorship) {
+    public Mentee(int userId, String major, Classification classification, AreaOfMenteeship areaOfMenteeship) {
         this.user = user;
         this.major = major;
         this.classification = classification;
-        this.areaOfMentorship = areaOfMentorship;
+        this.areaOfMenteeship = areaOfMenteeship;
     }
 
     // Getters and Setters
@@ -68,12 +68,12 @@ public class Mentor {
         this.classification = classification;
     }
 
-    public AreaOfMentorship getAreaOfMentorship() {
-        return areaOfMentorship;
+    public AreaOfMenteeship getAreaOfMenteeship() {
+        return areaOfMenteeship;
     }
 
-    public void setAreaOfMentorship(AreaOfMentorship areaOfMentorship) {
-        this.areaOfMentorship = areaOfMentorship;
+    public void setAreaOfMenteeship(AreaOfMenteeship areaOfMenteeship) {
+        this.areaOfMenteeship = areaOfMenteeship;
     }
 
     public enum Classification {
@@ -84,7 +84,7 @@ public class Mentor {
         GRADUATE_STUDENT
     }
 
-    public enum AreaOfMentorship {
+    public enum AreaOfMenteeship {
         CAREER,
         EDUCATION,
         GENERAL
