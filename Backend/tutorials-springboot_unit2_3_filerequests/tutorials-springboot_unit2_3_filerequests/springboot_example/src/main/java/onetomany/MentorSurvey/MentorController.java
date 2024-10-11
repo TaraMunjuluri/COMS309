@@ -69,4 +69,33 @@ public class MentorController {
         return new ResponseEntity<>("Mentor deleted successfully", HttpStatus.OK);
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<String> updateMentor(@RequestBody Mentor updatedMentor, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+
+        // Check if the user is logged in
+        if (session == null || session.getAttribute("loggedInUser") == null) {
+            return new ResponseEntity<>("User not logged in", HttpStatus.UNAUTHORIZED);
+        }
+
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+        // Find the existing mentor record for the logged-in user
+        Mentor existingMentor = mentorRepository.findByUser(loggedInUser);
+        if (existingMentor == null) {
+            return new ResponseEntity<>("Mentor not found", HttpStatus.NOT_FOUND);
+        }
+
+        // Update the mentor's details (assuming Mentor class has setter methods)
+        existingMentor.setMajor(updatedMentor.getMajor());
+        existingMentor.setClassification(updatedMentor.getClassification());
+        existingMentor.setAreaOfMentorship(updatedMentor.getAreaOfMentorship());
+
+        // Save the updated mentor information
+        mentorRepository.save(existingMentor);
+
+        return new ResponseEntity<>("Mentor updated successfully", HttpStatus.OK);
+    }
+
+
 }
