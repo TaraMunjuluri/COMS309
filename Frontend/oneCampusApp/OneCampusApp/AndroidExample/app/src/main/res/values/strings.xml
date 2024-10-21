@@ -1,19 +1,19 @@
 <resources>
     <string name="app_name">AndroidExample</string>
-        <!-- Classification Options -->
-        <string-array name="classification_options">
-            <item>Freshman</item>
-            <item>Sophomore</item>
-            <item>Junior</item>
-            <item>Senior</item>
-            <item>Graduate Student</item>
-        </string-array>
+    <!-- Classification Options -->
+    <string-array name="classification_options">
+        <item>Freshman</item>
+        <item>Sophomore</item>
+        <item>Junior</item>
+        <item>Senior</item>
+        <item>Graduate Student</item>
+    </string-array>
 
-        <!-- Mentorship Area Options -->
-        <string-array name="mentor_area_options">
-            <item>Career</item>
-            <item>Education</item>
-            <item>General</item>
-        </string-array>
+    <!-- Mentorship Area Options -->
+    <string-array name="mentor_area_options">
+        <item>Career</item>
+        <item>Education</item>
+        <item>General</item>
+    </string-array>
 
 </resources>
