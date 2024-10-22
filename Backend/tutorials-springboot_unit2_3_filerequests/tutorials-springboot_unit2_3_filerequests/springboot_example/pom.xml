@@ -19,58 +19,91 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>11</java.version>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>central</id>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+  </repositories>
+
   <dependencies>
-    <!-- Spring Boot Web dependencies -->
+    <!-- Lombok - just once -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.24</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Spring Boot dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!-- MySQL dependency -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+
+    <!-- Database dependencies -->
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
 
-    <!-- The H2 database dependency -->
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>1.4.200</version>
       <scope>runtime</scope>
     </dependency>
 
-    <!-- The ORM JPA specs/hibernate impl -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
+    <!-- Security -->
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-core</artifactId>
       <version>5.4.2</version>
     </dependency>
 
-<!--    demo 3-->
+    <!-- WebSocket -->
     <dependency>
       <groupId>jakarta.websocket</groupId>
       <artifactId>jakarta.websocket-api</artifactId>
       <version>2.1.0</version>
     </dependency>
 
+    <!-- Development tools -->
     <dependency>
-      <groupId>org.apache.tomcat</groupId>
-      <artifactId>tomcat-websocket</artifactId>
-      <version>10.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.tomcat.embed</groupId>
-      <artifactId>tomcat-embed-websocket</artifactId>
-      <version>10.1.13</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <scope>runtime</scope>
+      <optional>true</optional>
     </dependency>
 
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.persistence</groupId>
+      <artifactId>jakarta.persistence-api</artifactId>
+      <version>3.1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-websocket-api</artifactId>
+      <version>10.1.13</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -78,23 +111,31 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+            </exclude>
+          </excludes>
+        </configuration>
       </plugin>
     </plugins>
   </build>
 
 </project>
 
+
 <!--<?xml version="1.0" encoding="UTF-8"?>-->
 <!--<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
-<!--  xmlns="http://maven.apache.org/POM/4.0.0"-->
-<!--  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">-->
+<!--         xmlns="http://maven.apache.org/POM/4.0.0"-->
+<!--         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">-->
 
 <!--  <modelVersion>4.0.0</modelVersion>-->
 <!--  <groupId>coms309</groupId>-->
 <!--  <artifactId>onetomany</artifactId>-->
 <!--  <version>1.0.0</version>-->
 
-<!--  &lt;!&ndash; To make it a spring boot project &ndash;&gt;-->
 <!--  <parent>-->
 <!--    <groupId>org.springframework.boot</groupId>-->
 <!--    <artifactId>spring-boot-starter-parent</artifactId>-->
@@ -104,12 +145,11 @@
 <!--  <name>one-to-many</name>-->
 
 <!--  <properties>-->
-
-<!--    &lt;!&ndash; Generic properties &ndash;&gt;-->
 <!--    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
 <!--    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>-->
-
 <!--  </properties>-->
+
+
 
 <!--  <dependencies>-->
 
@@ -125,18 +165,12 @@
 <!--      <artifactId>mysql-connector-java</artifactId>-->
 <!--    </dependency>-->
 
-<!--    &lt;!&ndash; dependency for security &ndash;&gt;-->
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>spring-boot-starter-security</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-
 <!--    &lt;!&ndash; The H2 database dependency &ndash;&gt;-->
 <!--    <dependency>-->
-<!--        <groupId>com.h2database</groupId>-->
-<!--        <artifactId>h2</artifactId>-->
-<!--        <version>1.4.200</version>-->
-<!--        <scope>runtime</scope>-->
+<!--      <groupId>com.h2database</groupId>-->
+<!--      <artifactId>h2</artifactId>-->
+<!--      <version>1.4.200</version>-->
+<!--      <scope>runtime</scope>-->
 <!--    </dependency>-->
 
 <!--    &lt;!&ndash; The ORM JPA specs/hibernate impl &ndash;&gt;-->
@@ -144,12 +178,42 @@
 <!--      <groupId>org.springframework.boot</groupId>-->
 <!--      <artifactId>spring-boot-starter-data-jpa</artifactId>-->
 <!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>org.springframework.security</groupId>-->
+<!--      <artifactId>spring-security-core</artifactId>-->
+<!--      <version>5.4.2</version>-->
+<!--    </dependency>-->
 
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>spring-boot-starter-security</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
+<!--&lt;!&ndash;    demo 3&ndash;&gt;-->
+<!--    <dependency>-->
+<!--      <groupId>jakarta.websocket</groupId>-->
+<!--      <artifactId>jakarta.websocket-api</artifactId>-->
+<!--      <version>2.1.0</version>-->
+<!--    </dependency>-->
 
+<!--    <dependency>-->
+<!--      <groupId>org.apache.tomcat</groupId>-->
+<!--      <artifactId>tomcat-websocket</artifactId>-->
+<!--      <version>10.0.0</version>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>org.apache.tomcat.embed</groupId>-->
+<!--      <artifactId>tomcat-embed-websocket</artifactId>-->
+<!--      <version>10.1.13</version>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>jakarta.persistence</groupId>-->
+<!--      <artifactId>jakarta.persistence-api</artifactId>-->
+<!--      <version>3.1.0</version>-->
+<!--    </dependency>-->
+
+<!--    <dependency>-->
+<!--      <groupId>org.projectlombok</groupId>-->
+<!--      <artifactId>lombok</artifactId>-->
+<!--      <version>1.18.30</version>-->
+<!--      <scope>provided</scope>-->
+<!--    </dependency>-->
+<!--    -->
 <!--  </dependencies>-->
 
 <!--  <build>-->
@@ -160,9 +224,88 @@
 <!--      </plugin>-->
 <!--    </plugins>-->
 <!--  </build>-->
-<!--  -->
 
 <!--</project>-->
+
+<!--&lt;!&ndash;<?xml version="1.0" encoding="UTF-8"?>&ndash;&gt;-->
+<!--&lt;!&ndash;<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&ndash;&gt;-->
+<!--&lt;!&ndash;  xmlns="http://maven.apache.org/POM/4.0.0"&ndash;&gt;-->
+<!--&lt;!&ndash;  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">&ndash;&gt;-->
+
+<!--&lt;!&ndash;  <modelVersion>4.0.0</modelVersion>&ndash;&gt;-->
+<!--&lt;!&ndash;  <groupId>coms309</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;  <artifactId>onetomany</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;  <version>1.0.0</version>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  &lt;!&ndash; To make it a spring boot project &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  <parent>&ndash;&gt;-->
+<!--&lt;!&ndash;    <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;    <artifactId>spring-boot-starter-parent</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;    <version>2.4.2</version>&ndash;&gt;-->
+<!--&lt;!&ndash;  </parent>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  <name>one-to-many</name>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  <properties>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash; Generic properties &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>&ndash;&gt;-->
+<!--&lt;!&ndash;    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  </properties>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  <dependencies>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash; Spring Boot Web dependencies &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
+<!--&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;      <artifactId>spring-boot-starter-web</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash; MySQL dependency &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
+<!--&lt;!&ndash;      <groupId>mysql</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;      <artifactId>mysql-connector-java</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash; dependency for security &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      <artifactId>spring-boot-starter-security</artifactId>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash; The H2 database dependency &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
+<!--&lt;!&ndash;        <groupId>com.h2database</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;        <artifactId>h2</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;        <version>1.4.200</version>&ndash;&gt;-->
+<!--&lt;!&ndash;        <scope>runtime</scope>&ndash;&gt;-->
+<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash; The ORM JPA specs/hibernate impl &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
+<!--&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;      <artifactId>spring-boot-starter-data-jpa</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      <artifactId>spring-boot-starter-security</artifactId>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;  </dependencies>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  <build>&ndash;&gt;-->
+<!--&lt;!&ndash;    <plugins>&ndash;&gt;-->
+<!--&lt;!&ndash;      <plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;        <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;        <artifactId>spring-boot-maven-plugin</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;      </plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;    </plugins>&ndash;&gt;-->
+<!--&lt;!&ndash;  </build>&ndash;&gt;-->
+<!--&lt;!&ndash;  &ndash;&gt;-->
+
+<!--&lt;!&ndash;</project>&ndash;&gt;-->
 
 
 
