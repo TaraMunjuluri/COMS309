@@ -47,7 +47,7 @@
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chip_group_interests"
         android:layout_width="wrap_content"
-        android:layout_height="466dp"
+        android:layout_height="wrap_content"
         android:padding="8dp"
         app:chipSpacing="8dp"
         app:singleSelection="false">
@@ -57,19 +57,82 @@
             android:id="@+id/chip_sports"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checkable="true"
             android:text="Sports"
-            app:chipBackgroundColor="?attr/colorPrimary" />
+            android:checkable="true"
+            app:chipBackgroundColor="@drawable/chip_background_selector" />
 
-        <!-- Add other chips for interests here -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Music"
+            android:checkable="true"
+            app:chipBackgroundColor="@drawable/chip_background_selector" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_technology"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Technology"
+            android:checkable="true"
+            app:chipBackgroundColor="@drawable/chip_background_selector" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_reading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reading"
+            android:checkable="true"
+            app:chipBackgroundColor="@drawable/chip_background_selector" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_travel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Travel"
+            android:checkable="true"
+            app:chipBackgroundColor="@drawable/chip_background_selector" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_gaming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gaming"
+            android:checkable="true"
+            app:chipBackgroundColor="@drawable/chip_background_selector" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_photography"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Photography"
+            android:checkable="true"
+            app:chipBackgroundColor="@drawable/chip_background_selector" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_art"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Art"
+            android:checkable="true"
+            app:chipBackgroundColor="@drawable/chip_background_selector" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_movies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Movies"
+            android:checkable="true"
+            app:chipBackgroundColor="@drawable/chip_background_selector" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_fitness"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checkable="true"
             android:text="Fitness"
-            app:chipBackgroundColor="?attr/colorPrimary" />
+            android:checkable="true"
+            app:chipBackgroundColor="@drawable/chip_background_selector" />
+
     </com.google.android.material.chip.ChipGroup>
 
     <!-- Submit Button -->
