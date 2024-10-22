@@ -22,46 +22,6 @@ import org.springframework.stereotype.Controller;
 @ServerEndpoint(value = "/chat/{username}")  // this is Websocket url
 public class ChatSocket {
 
-    // cannot autowire static directly (instead we do it by the below
-    // method
-    private static MessageRepository msgRepo;
-
-    /*
-     * Grabs the MessageRepository singleton from the Spring Application
-     * Context.  This works because of the @Controller annotation on this
-     * class and because the variable is declared as static.
-     * There are other ways to set this. However, this approach is
-     * easiest.
-     */
-    @Autowired
-    public void setMessageRepository(MessageRepository repo) {
-        msgRepo = repo;  // we are setting the static variable
-    }
-
-    // Store all socket session and their corresponding username.
-    private static Map<Session, String> sessionUsernameMap = new Hashtable<>();
-    private static Map<String, Session> usernameSessionMap = new Hashtable<>();
-
-    private final Logger logger = LoggerFactory.getLogger(ChatSocket.class);
-
-    @OnOpen
-    public void onOpen(Session session, @PathParam("username") String username)
-            throws IOException {
-
-        logger.info("Entered into Open");
-
-        // store connecting user information
-        sessionUsernameMap.put(session, username);
-        usernameSessionMap.put(username, session);
-
-        //Send chat history to the newly connected user
-        sendMessageToPArticularUser(username, getChatHistory());
-
-        // broadcast that new user joined
-        String message = "User:" + username + " has Joined the Chat";
-        broadcast(message);
-    }
-
 
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
@@ -138,6 +98,47 @@ public class ChatSocket {
 
 
     // Gets the Chat history from the repository
+    // cannot autowire static directly (instead we do it by the below
+    // method
+    private static MessageRepository msgRepo;
+
+    /*
+     * Grabs the MessageRepository singleton from the Spring Application
+     * Context.  This works because of the @Controller annotation on this
+     * class and because the variable is declared as static.
+     * There are other ways to set this. However, this approach is
+     * easiest.
+     */
+    @Autowired
+    public void setMessageRepository(MessageRepository repo) {
+        msgRepo = repo;  // we are setting the static variable
+    }
+
+    // Store all socket session and their corresponding username.
+    private static Map<Session, String> sessionUsernameMap = new Hashtable<>();
+    private static Map<String, Session> usernameSessionMap = new Hashtable<>();
+
+    private final Logger logger = LoggerFactory.getLogger(ChatSocket.class);
+
+    @OnOpen
+    public void onOpen(Session session, @PathParam("username") String username)
+            throws IOException {
+
+        logger.info("Entered into Open");
+
+        // store connecting user information
+        sessionUsernameMap.put(session, username);
+        usernameSessionMap.put(username, session);
+
+        //Send chat history to the newly connected user
+        sendMessageToPArticularUser(username, getChatHistory());
+
+        // broadcast that new user joined
+        String message = "User:" + username + " has Joined the Chat";
+        broadcast(message);
+    }
+
+
     private String getChatHistory() {
         List<Message> messages = msgRepo.findAll();
 
@@ -150,5 +151,4 @@ public class ChatSocket {
         }
         return sb.toString();
     }
-
 } // end of Class

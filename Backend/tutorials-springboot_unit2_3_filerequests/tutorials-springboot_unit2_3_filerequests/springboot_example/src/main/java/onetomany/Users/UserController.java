@@ -277,52 +277,7 @@ public class UserController {
         return success;
     }
 
-//    @PostMapping("/signup")
-//    public ResponseEntity<String> signup(@RequestBody User user) {
-//        if (userRepository.findByEmailId(user.getEmailId()) != null) {
-//            return new ResponseEntity<>("Email is already registered", HttpStatus.BAD_REQUEST);
-//        }
-//
-//        // Store the password as plain text (not recommended for production)
-//        userRepository.save(user);
-//
-//        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
-//    }
-//
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody User user) {
-//        User existingUser = userRepository.findByEmailId(user.getEmailId());
-//        if (existingUser == null || !user.getPassword().equals(existingUser.getPassword())) { // Compare raw passwords
-//            return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
-//        }
-//
-//        return new ResponseEntity<>("Login successful", HttpStatus.OK);
-//    }
 
-    //latest signup
-//    @PostMapping("/signup")
-//    public ResponseEntity<Map<String, Object>> signup(@RequestBody User user) {
-//        Map<String, Object> response = new HashMap<>();
-//
-//        if (userRepository.findByEmailId(user.getEmailId()) != null) {
-////            return new ResponseEntity<>("Email is already registered", HttpStatus.BAD_REQUEST);
-//            response.put("message", "Email is already registered");
-//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//        }
-//        if (userRepository.findByUsername(user.getUsername()) != null) {
-////            return new ResponseEntity<>("Username is already registered", HttpStatus.BAD_REQUEST);
-//            response.put("message", "Username is already registered");
-//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//        }
-//
-//        // Save the user with the plain text password
-//        userRepository.save(user);
-//        response.put("message", "User registered successfully");
-//        response.put("userId", user.getId());
-//
-////        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
-//        return new ResponseEntity<>(response, HttpStatus.CREATED);
-//    }
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signup(@RequestBody User user) {
