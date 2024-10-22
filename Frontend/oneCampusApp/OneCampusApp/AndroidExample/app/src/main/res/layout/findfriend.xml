@@ -1,0 +1,83 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".FriendActivity"
+    tools:ignore="ExtraText">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/header_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Find Friend/Study Buddy"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:paddingBottom="16dp" />
+
+    <!-- Major Input -->
+    <EditText
+        android:id="@+id/et_major"
+        android:layout_width="match_parent"
+        android:layout_height="192dp"
+        android:hint="Enter Major" />
+
+    <!-- Classification Dropdown -->
+    <Spinner
+        android:id="@+id/spinner_classification"
+        android:layout_width="match_parent"
+        android:layout_height="126dp"
+        android:spinnerMode="dropdown" />
+
+    <!-- Interests Section -->
+    <TextView
+        android:layout_width="181dp"
+        android:layout_height="106dp"
+        android:paddingTop="16dp"
+        android:text="Select Your Interests"
+        android:textSize="16sp" />
+
+    <!-- ChipGroup for Interests -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group_interests"
+        android:layout_width="wrap_content"
+        android:layout_height="466dp"
+        android:padding="8dp"
+        app:chipSpacing="8dp"
+        app:singleSelection="false">
+
+        <!-- Standard Interests -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_sports"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:text="Sports"
+            app:chipBackgroundColor="?attr/colorPrimary" />
+
+        <!-- Add other chips for interests here -->
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_fitness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:text="Fitness"
+            app:chipBackgroundColor="?attr/colorPrimary" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:layout_gravity="center"
+        android:paddingTop="16dp" />
+</LinearLayout>
