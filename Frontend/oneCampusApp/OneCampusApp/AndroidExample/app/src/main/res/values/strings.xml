@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AndroidExample</string>
+    <string name="app_name">One Campus</string>
     <!-- Classification Options -->
     <string-array name="classification_options">
         <item>Freshman</item>
@@ -15,5 +15,9 @@
         <item>Education</item>
         <item>General</item>
     </string-array>
+
+    <!--Homepage Nav Bar-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
 </resources>
