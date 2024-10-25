@@ -346,7 +346,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import onetomany.Chatbox.Message;
 @Entity
 @Table(name = "users")
 public class User {
@@ -376,9 +375,6 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "phone_id"))
     private List<Phone> phones = new ArrayList<>();
-
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-    private List<Message> messages;
 
     // Constructors
     public User(String name, String emailId, Date joiningDate) {
