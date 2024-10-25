@@ -1,5 +1,6 @@
 package com.example.androidexample;
 
+import android.content.Intent;
 import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
@@ -58,6 +59,8 @@ public class BeMentorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendFormData();
+                Intent intent = new Intent(BeMentorActivity.this, HomePage.class);
+                startActivity(intent);
                 finish();
             }
         });
