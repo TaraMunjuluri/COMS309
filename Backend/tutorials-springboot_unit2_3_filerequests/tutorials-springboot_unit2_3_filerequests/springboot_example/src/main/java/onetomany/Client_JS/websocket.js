@@ -16,13 +16,27 @@ function connect() {
         log.innerHTML += "message from server: " + event.data + "\n";
     };
 
+
+
     ws.onopen = function(event) { // called when connection is opened
         var log = document.getElementById("log");
         log.innerHTML += "Connected to " + event.currentTarget.url + "\n";
     };
 }
 
-function send() {  // this is how to send messages
+//function send() {  // this is how to send messages
+//    var content = document.getElementById("msg").value;
+//    ws.send(content);
+//}
+
+
+
+function send() {
     var content = document.getElementById("msg").value;
-    ws.send(content);
+    if (content.trim() !== "") {
+        console.log("Sending message: ", content); // Log the message being sent
+        ws.send(content);
+        document.getElementById("msg").value = ""; // Clear input
+    }
 }
+
