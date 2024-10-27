@@ -1,6 +1,7 @@
 package com.example.androidexample;
 import static com.google.android.material.color.utilities.MaterialDynamicColors.error;
 
+import android.content.Intent;
 import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
@@ -67,6 +68,8 @@ public class BeMenteeActivity extends AppCompatActivity {
 //                // TODO: Handle the form data, like saving it to the database or passing it to another activity
 //
 //                Toast.makeText(FindMenteeActivity.this, "Form Submitted", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(BeMenteeActivity.this, HomePage.class);
+                startActivity(intent);
                 sendFormData();
                 finish();
             }

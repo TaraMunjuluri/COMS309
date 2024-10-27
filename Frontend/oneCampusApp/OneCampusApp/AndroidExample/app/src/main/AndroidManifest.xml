@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,21 +13,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidExample"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".HomePage"
+            android:exported="false" />
         <activity
             android:name=".SignupActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
-        <activity
-            android:name=".LookingFor"/>
-        <activity
-            android:name=".BeMentorActivity"/>
-        <activity
-            android:name=".BeMenteeActivity"/>
-        <activity
-            android:name=".FriendActivity"/>
+        <activity android:name=".LookingFor" />
+        <activity android:name=".BeMentorActivity" />
+        <activity android:name=".BeMenteeActivity" />
+        <activity android:name=".FriendActivity" />
+        <activity android:name=".GetAllMentorsActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
