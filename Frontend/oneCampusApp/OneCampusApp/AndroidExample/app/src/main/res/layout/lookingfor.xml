@@ -34,6 +34,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Get All Mentors" />
+    <Button
+        android:id="@+id/btnProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile" />
 
 
 </LinearLayout>

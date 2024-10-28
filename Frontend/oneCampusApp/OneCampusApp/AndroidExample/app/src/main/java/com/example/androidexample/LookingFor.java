@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class LookingFor extends AppCompatActivity implements View.OnClickListener{
 
-    private Button friendsBtn, beMenteeBtn, beMentorBtn, getAllMentorsBtn;
+    private Button friendsBtn, beMenteeBtn, beMentorBtn, getAllMentorsBtn, profileBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,13 +18,15 @@ public class LookingFor extends AppCompatActivity implements View.OnClickListene
         friendsBtn = findViewById(R.id.btnFriendRequest);
         beMenteeBtn = findViewById(R.id.btnBeMenteeRequest);
         beMentorBtn = findViewById(R.id.btnBeMentorRequest);
-        getAllMentorsBtn = findViewById(R.id.btnGetAllMentors);  // Reference the new button
+        getAllMentorsBtn = findViewById(R.id.btnGetAllMentors);
+        profileBtn = findViewById(R.id.btnProfile);
 
         /* button click listeners */
         friendsBtn.setOnClickListener(this);
         beMenteeBtn.setOnClickListener(this);
         beMentorBtn.setOnClickListener(this);
-        getAllMentorsBtn.setOnClickListener(this);  // Set listener for the new button
+        getAllMentorsBtn.setOnClickListener(this);
+        profileBtn.setOnClickListener(this);
     }
 
     @Override
@@ -37,8 +39,10 @@ public class LookingFor extends AppCompatActivity implements View.OnClickListene
         } else if (id == R.id.btnBeMentorRequest) {
             startActivity(new Intent(LookingFor.this, BeMentorActivity.class));
         } else if (id == R.id.btnGetAllMentors) {
-            // Launch the activity that will pull all mentors
             startActivity(new Intent(LookingFor.this, GetAllMentorsActivity.class));
+        }
+        else if (id == R.id.btnProfile) {
+            startActivity(new Intent(LookingFor.this, ProfileActivity.class));  // Navigate to ProfileActivity
         }
     }
 }

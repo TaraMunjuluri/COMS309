@@ -29,6 +29,8 @@
         <activity android:name=".BeMenteeActivity" />
         <activity android:name=".FriendActivity" />
         <activity android:name=".GetAllMentorsActivity" />
+        <activity android:name=".ProfileActivity" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
