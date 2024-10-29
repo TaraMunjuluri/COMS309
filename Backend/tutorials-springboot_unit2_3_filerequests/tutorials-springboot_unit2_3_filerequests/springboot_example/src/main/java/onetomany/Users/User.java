@@ -2,13 +2,15 @@
 
 package onetomany.Users;
 
-import onetomany.Groups.UserGroup;
+import onetomany.Chatbox.Message;
 import onetomany.Laptops.Laptop;
 import onetomany.Phones.Phone;
 
 import javax.persistence.*;
 import java.sql.Blob;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -32,28 +34,6 @@ public class User {
     @Lob
     private Blob avatar;
 
-    //demo 3
-
-    @ManyToMany(mappedBy = "members") // Assuming 'members' is the collection in Group
-    private Set<UserGroup> groups = new HashSet<>();
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_groups",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "group_id")
-//    )
-//    private List<Group> groups;
-
-    public Set<UserGroup> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(Set<UserGroup> groups) {
-        this.groups = groups;
-    }
-
-    //demo 3
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "laptop_id")
     private Laptop laptop;
@@ -64,6 +44,18 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "phone_id"))
     private List<Phone> phones = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Message> messages;
+
+    // Getters and Setters for `messages`
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+    
     // Constructors
     public User(String name, String emailId, Date joiningDate) {
         this.name = name;
