@@ -30,6 +30,8 @@ public class User {
     private boolean ifActive;
     private String extension;
 
+    private String appMode;
+
     @JsonIgnore
     @Lob
     private Blob avatar;
@@ -55,7 +57,7 @@ public class User {
     public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
-    
+
     // Constructors
     public User(String name, String emailId, Date joiningDate) {
         this.name = name;
@@ -158,5 +160,13 @@ public class User {
 
     public void addPhone(Phone phone) {
         this.phones.add(phone);
+    }
+
+    public String getAppMode() {
+        return appMode; // Getter for appMode
+    }
+
+    public void setAppMode(String appMode) {
+        this.appMode = appMode; // Setter for appMode
     }
 }
