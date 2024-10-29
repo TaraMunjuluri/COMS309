@@ -18,6 +18,7 @@
 
   <properties>
     <java.version>11</java.version>
+    <lombok.version>1.18.22</lombok.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -32,9 +33,17 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
+
+    <!-- WebSocket dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.websocket</groupId>
+      <artifactId>javax.websocket-api</artifactId>
+      <version>1.1</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Security dependencies -->
@@ -47,6 +56,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -82,461 +92,30 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+            </exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
       </plugin>
     </plugins>
   </build>
 </project>
-
-
-
-
-        <!--<?xml version="1.0" encoding="UTF-8"?>-->
-<!--<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
-<!--         xmlns="http://maven.apache.org/POM/4.0.0"-->
-<!--         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">-->
-
-<!--  <modelVersion>4.0.0</modelVersion>-->
-<!--  <groupId>coms309</groupId>-->
-<!--  <artifactId>onetomany</artifactId>-->
-<!--  <version>1.0.0</version>-->
-
-<!--  <parent>-->
-<!--    <groupId>org.springframework.boot</groupId>-->
-<!--    <artifactId>spring-boot-starter-parent</artifactId>-->
-<!--    <version>2.4.2</version>-->
-<!--  </parent>-->
-
-<!--  <name>one-to-many</name>-->
-
-<!--  <properties>-->
-<!--    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
-<!--    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>-->
-<!--    <java.version>11</java.version>-->
-<!--  </properties>-->
-
-<!--  <dependencies>-->
-<!--    &lt;!&ndash; Spring Boot dependencies &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.boot</groupId>-->
-<!--      <artifactId>spring-boot-starter-web</artifactId>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.boot</groupId>-->
-<!--      <artifactId>spring-boot-starter-data-jpa</artifactId>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.boot</groupId>-->
-<!--      <artifactId>spring-boot-starter-websocket</artifactId>-->
-<!--    </dependency>-->
-
-<!--    &lt;!&ndash; Apache Tomcat Embedded WebSocket &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.apache.tomcat.embed</groupId>-->
-<!--      <artifactId>tomcat-embed-websocket</artifactId>-->
-<!--      <version>9.0.41</version>-->
-<!--    </dependency>-->
-
-<!--    &lt;!&ndash; Lombok &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.projectlombok</groupId>-->
-<!--      <artifactId>lombok</artifactId>-->
-<!--      <version>1.18.24</version>-->
-<!--      <scope>provided</scope>-->
-<!--    </dependency>-->
-
-<!--    &lt;!&ndash; Database dependencies &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>mysql</groupId>-->
-<!--      <artifactId>mysql-connector-java</artifactId>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>com.h2database</groupId>-->
-<!--      <artifactId>h2</artifactId>-->
-<!--      <scope>runtime</scope>-->
-<!--    </dependency>-->
-
-<!--    &lt;!&ndash; Security &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.security</groupId>-->
-<!--      <artifactId>spring-security-core</artifactId>-->
-<!--      <version>5.4.2</version>-->
-<!--    </dependency>-->
-
-<!--    &lt;!&ndash; Development tools &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.boot</groupId>-->
-<!--      <artifactId>spring-boot-devtools</artifactId>-->
-<!--      <scope>runtime</scope>-->
-<!--      <optional>true</optional>-->
-<!--    </dependency>-->
-
-<!--    &lt;!&ndash; Test dependencies &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.boot</groupId>-->
-<!--      <artifactId>spring-boot-starter-test</artifactId>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.dom4j</groupId>-->
-<!--      <artifactId>dom4j</artifactId>-->
-<!--      <version>2.1.3</version>-->
-<!--    </dependency>-->
-<!--  </dependencies>-->
-
-<!--  <build>-->
-<!--    <plugins>-->
-<!--      <plugin>-->
-<!--        <groupId>org.springframework.boot</groupId>-->
-<!--        <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--        <configuration>-->
-<!--          <excludes>-->
-<!--            <exclude>-->
-<!--              <groupId>org.projectlombok</groupId>-->
-<!--              <artifactId>lombok</artifactId>-->
-<!--            </exclude>-->
-<!--          </excludes>-->
-<!--        </configuration>-->
-<!--      </plugin>-->
-<!--    </plugins>-->
-<!--  </build>-->
-
-<!--</project>-->
-
-
-
-
-<!--&lt;!&ndash;<?xml version="1.0" encoding="UTF-8"?>&ndash;&gt;-->
-<!--&lt;!&ndash;<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&ndash;&gt;-->
-<!--&lt;!&ndash;         xmlns="http://maven.apache.org/POM/4.0.0"&ndash;&gt;-->
-<!--&lt;!&ndash;         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">&ndash;&gt;-->
-
-<!--&lt;!&ndash;  <modelVersion>4.0.0</modelVersion>&ndash;&gt;-->
-<!--&lt;!&ndash;  <groupId>coms309</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;  <artifactId>onetomany</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;  <version>1.0.0</version>&ndash;&gt;-->
-
-<!--&lt;!&ndash;  <parent>&ndash;&gt;-->
-<!--&lt;!&ndash;    <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;    <artifactId>spring-boot-starter-parent</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;    <version>2.4.2</version>&ndash;&gt;-->
-<!--&lt;!&ndash;  </parent>&ndash;&gt;-->
-
-<!--&lt;!&ndash;  <name>one-to-many</name>&ndash;&gt;-->
-
-<!--&lt;!&ndash;  <properties>&ndash;&gt;-->
-<!--&lt;!&ndash;    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>&ndash;&gt;-->
-<!--&lt;!&ndash;    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>&ndash;&gt;-->
-<!--&lt;!&ndash;    <java.version>11</java.version>&ndash;&gt;-->
-<!--&lt;!&ndash;  </properties>&ndash;&gt;-->
-
-<!--&lt;!&ndash;  <repositories>&ndash;&gt;-->
-<!--&lt;!&ndash;    <repository>&ndash;&gt;-->
-<!--&lt;!&ndash;      <id>central</id>&ndash;&gt;-->
-<!--&lt;!&ndash;      <url>https://repo.maven.apache.org/maven2</url>&ndash;&gt;-->
-<!--&lt;!&ndash;    </repository>&ndash;&gt;-->
-<!--&lt;!&ndash;  </repositories>&ndash;&gt;-->
-
-<!--&lt;!&ndash;  <dependencies>&ndash;&gt;-->
-<!--&lt;!&ndash;    &lt;!&ndash; Lombok - just once &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>org.projectlombok</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>lombok</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <version>1.18.24</version>&ndash;&gt;-->
-<!--&lt;!&ndash;      <scope>provided</scope>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    &lt;!&ndash; Spring Boot dependencies &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>spring-boot-starter-web</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>spring-boot-starter-data-jpa</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>spring-boot-starter-websocket</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    &lt;!&ndash; Database dependencies &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>mysql</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>mysql-connector-java</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>com.h2database</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>h2</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <scope>runtime</scope>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    &lt;!&ndash; Security &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>org.springframework.security</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>spring-security-core</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <version>5.4.2</version>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    &lt;!&ndash; WebSocket &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>jakarta.websocket</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>jakarta.websocket-api</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <version>2.1.0</version>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    &lt;!&ndash; Development tools &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>spring-boot-devtools</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <scope>runtime</scope>&ndash;&gt;-->
-<!--&lt;!&ndash;      <optional>true</optional>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    &lt;!&ndash; Test dependencies &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>spring-boot-starter-test</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <scope>test</scope>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>jakarta.persistence</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>jakarta.persistence-api</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <version>3.1.0</version>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>org.apache.tomcat</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>tomcat-websocket-api</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <version>10.1.13</version>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>org.dom4j</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>dom4j</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <version>2.1.3</version>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;          <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;          <artifactId>spring-boot-autoconfigure</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;          <version>3.1.4</version>&ndash;&gt;-->
-<!--&lt;!&ndash;      </dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;      <groupId>jakarta.persistence</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <artifactId>jakarta.persistence-api</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;      <version>2.2.3</version>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;    &lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <groupId>jakarta.persistence</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <artifactId>jakarta.persistence-api</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <version>2.2.3</version>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;  </dependencies>&ndash;&gt;-->
-
-<!--&lt;!&ndash;  <build>&ndash;&gt;-->
-<!--&lt;!&ndash;    <plugins>&ndash;&gt;-->
-<!--&lt;!&ndash;      <plugin>&ndash;&gt;-->
-<!--&lt;!&ndash;        <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;        <artifactId>spring-boot-maven-plugin</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;        <configuration>&ndash;&gt;-->
-<!--&lt;!&ndash;          <excludes>&ndash;&gt;-->
-<!--&lt;!&ndash;            <exclude>&ndash;&gt;-->
-<!--&lt;!&ndash;              <groupId>org.projectlombok</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;              <artifactId>lombok</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;            </exclude>&ndash;&gt;-->
-<!--&lt;!&ndash;          </excludes>&ndash;&gt;-->
-<!--&lt;!&ndash;        </configuration>&ndash;&gt;-->
-<!--&lt;!&ndash;      </plugin>&ndash;&gt;-->
-<!--&lt;!&ndash;    </plugins>&ndash;&gt;-->
-<!--&lt;!&ndash;  </build>&ndash;&gt;-->
-
-<!--&lt;!&ndash;</project>&ndash;&gt;-->
-
-
-<!--&lt;!&ndash;&lt;!&ndash;<?xml version="1.0" encoding="UTF-8"?>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;         xmlns="http://maven.apache.org/POM/4.0.0"&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;  <modelVersion>4.0.0</modelVersion>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;  <groupId>coms309</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;  <artifactId>onetomany</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;  <version>1.0.0</version>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;  <parent>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <groupId>org.springframework.boot</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <artifactId>spring-boot-starter-parent</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <version>2.4.2</version>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;  </parent>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;  <name>one-to-many</name>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;  <properties>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;  </properties>&ndash;&gt;&ndash;&gt;-->
-
-
-
-<!--&lt;!&ndash;&lt;!&ndash;  <dependencies>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;    &lt;!&ndash; Spring Boot Web dependencies &ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <artifactId>spring-boot-starter-web</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;    &lt;!&ndash; MySQL dependency &ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <groupId>mysql</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <artifactId>mysql-connector-java</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;    &lt;!&ndash; The H2 database dependency &ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <groupId>com.h2database</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <artifactId>h2</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <version>1.4.200</version>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <scope>runtime</scope>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;    &lt;!&ndash; The ORM JPA specs/hibernate impl &ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <artifactId>spring-boot-starter-data-jpa</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <groupId>org.springframework.security</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <artifactId>spring-security-core</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <version>5.4.2</version>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    demo 3&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <groupId>jakarta.websocket</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <artifactId>jakarta.websocket-api</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <version>2.1.0</version>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <groupId>org.apache.tomcat</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <artifactId>tomcat-websocket</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <version>10.0.0</version>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <groupId>org.apache.tomcat.embed</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <artifactId>tomcat-embed-websocket</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <version>10.1.13</version>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <groupId>jakarta.persistence</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <artifactId>jakarta.persistence-api</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <version>3.1.0</version>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <groupId>org.projectlombok</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <artifactId>lombok</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <version>1.18.30</version>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <scope>provided</scope>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;  </dependencies>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;  <build>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <plugins>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <plugin>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;        <groupId>org.springframework.boot</groupId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;        <artifactId>spring-boot-maven-plugin</artifactId>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      </plugin>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    </plugins>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;  </build>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;</project>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;<?xml version="1.0" encoding="UTF-8"?>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  xmlns="http://maven.apache.org/POM/4.0.0"&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  <modelVersion>4.0.0</modelVersion>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  <groupId>coms309</groupId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  <artifactId>onetomany</artifactId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  <version>1.0.0</version>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  &lt;!&ndash; To make it a spring boot project &ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  <parent>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    <groupId>org.springframework.boot</groupId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    <artifactId>spring-boot-starter-parent</artifactId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    <version>2.4.2</version>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  </parent>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  <name>one-to-many</name>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  <properties>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    &lt;!&ndash; Generic properties &ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  </properties>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  <dependencies>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    &lt;!&ndash; Spring Boot Web dependencies &ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;      <artifactId>spring-boot-starter-web</artifactId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    &lt;!&ndash; MySQL dependency &ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;      <groupId>mysql</groupId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;      <artifactId>mysql-connector-java</artifactId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    &lt;!&ndash; dependency for security &ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;      <artifactId>spring-boot-starter-security</artifactId>&ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    &lt;!&ndash; The H2 database dependency &ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;        <groupId>com.h2database</groupId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;        <artifactId>h2</artifactId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;        <version>1.4.200</version>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;        <scope>runtime</scope>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    &lt;!&ndash; The ORM JPA specs/hibernate impl &ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;      <artifactId>spring-boot-starter-data-jpa</artifactId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    <dependency>&ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;      <groupId>org.springframework.boot</groupId>&ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;      <artifactId>spring-boot-starter-security</artifactId>&ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    </dependency>&ndash;&gt;&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  </dependencies>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  <build>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    <plugins>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;      <plugin>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;        <groupId>org.springframework.boot</groupId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;        <artifactId>spring-boot-maven-plugin</artifactId>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;      </plugin>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;    </plugins>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  </build>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  &ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;</project>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-
-
-

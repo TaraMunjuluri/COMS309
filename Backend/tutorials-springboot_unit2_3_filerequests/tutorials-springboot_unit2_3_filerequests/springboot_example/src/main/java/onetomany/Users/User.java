@@ -36,12 +36,12 @@ public class User {
 
     @ManyToMany(mappedBy = "members") // Assuming 'members' is the collection in Group
     private Set<UserGroup> groups = new HashSet<>();
-    @ManyToMany
-    @JoinTable(
-            name = "user_groups",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id")
-    )
+//    @ManyToMany
+//    @JoinTable(
+//            name = "user_groups",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "group_id")
+//    )
 //    private List<Group> groups;
 
     public Set<UserGroup> getGroups() {
