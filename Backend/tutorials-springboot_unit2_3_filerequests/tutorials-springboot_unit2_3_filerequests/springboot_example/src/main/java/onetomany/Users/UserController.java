@@ -428,6 +428,41 @@ public class UserController {
         return userRepository.findByUsernameContainingIgnoreCase(username);
     }
 
+    @PutMapping("/mode")
+    public String updateAppMode(@RequestParam Long id, @RequestParam String mode) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setAppMode(mode);
+        userRepository.save(user);
+        return "App mode updated to " + mode;
+    }
+
+    // Endpoint to change password
+    @PutMapping("/users/update-password")
+    public ResponseEntity<String> updatePasswordByUsername(@RequestParam String username, @RequestParam String newPassword) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        user.setPassword(newPassword); // You might want to hash the password before saving
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Password updated successfully");
+    }
+
+
+    // Endpoint to delete user account by username
+    @DeleteMapping("/delete")
+    public String deleteUser(@RequestParam String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            userRepository.delete(user);
+            return "User account deleted successfully.";
+        } else {
+            return "User not found.";
+        }
+    }
+
     @GetMapping(path = "/users/{id}/avatar")
     ResponseEntity<Resource> getUserAvatar(@PathVariable int id) throws IOException, SQLException {
         User user = userRepository.findById(id);
