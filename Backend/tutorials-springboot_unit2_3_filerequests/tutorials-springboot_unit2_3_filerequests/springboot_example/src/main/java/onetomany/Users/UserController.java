@@ -5,8 +5,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import javax.sql.rowset.serial.SerialBlob;
 
@@ -195,7 +194,6 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.rowset.serial.SerialBlob;
 
@@ -437,15 +435,23 @@ public class UserController {
     }
 
     // Endpoint to change password
-    @PutMapping("/users/update-password")
-    public ResponseEntity<String> updatePasswordByUsername(@RequestParam String username, @RequestParam String newPassword) {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
+    @PutMapping("/updatePassword/{username}")
+    public ResponseEntity<String> updatePassword(@PathVariable("username") String username, @RequestBody Map<String, String> passwordMap) {
+        // Fetch the new password from the request body
+        String newPassword = passwordMap.get("newPassword");
+        if (newPassword == null || newPassword.isEmpty()) {
+            return ResponseEntity.badRequest().body("Password cannot be empty");
+        }
+
+        // Find the user by username
+        User existingUser = userRepository.findByUsername(username);
+        if (existingUser == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
-        user.setPassword(newPassword); // You might want to hash the password before saving
-        userRepository.save(user);
+        // Update the password
+        existingUser.setPassword(newPassword);
+        userRepository.save(existingUser);
 
         return ResponseEntity.ok("Password updated successfully");
     }
