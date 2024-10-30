@@ -44,12 +44,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 //            case R.id.nav_profile:
 //                // Handle profile action
 //                // Navigate to profile page (you can create a ProfileActivity later)
-//                Intent profileIntent = new Intent(HomePage.this, ProfileActivity.class);
+//                Intent profileIntent = new Intent(HomePage.this, ChatActivity.class);
 //                startActivity(profileIntent);
 //                break;
 //            case R.id.nav_chat:
 //                // Navigate to chat page
-//                Intent chatIntent = new Intent(HomePage.this, ChatPage.class);
+//                Intent chatIntent = new Intent(HomePage.this, ChatActivity.class);
 //                startActivity(chatIntent);
 //                break;
 //            case R.id.nav_logout:
