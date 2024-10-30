@@ -2,6 +2,7 @@ package com.example.androidexample;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -35,7 +36,28 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         // Set up navigation view
         NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+//        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_profile) {
+                Intent profileIntent = new Intent(HomePage.this, ChatActivity.class); // Replace with actual activity
+                startActivity(profileIntent);
+            } else if (id == R.id.nav_chat) {
+                Intent chatIntent = new Intent(HomePage.this, ChatActivity.class); // Replace with actual activity
+                startActivity(chatIntent);
+            } else if (id == R.id.nav_logout) {
+                finish();
+            }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu_nav.xml
+        getMenuInflater().inflate(R.menu.menu_nav, menu);
+        return true;
     }
 
 //    @Override
@@ -63,6 +85,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 //        return true;
 //    }
 
+
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -71,6 +94,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             super.onBackPressed();
         }
     }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
