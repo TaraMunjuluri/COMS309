@@ -10,14 +10,14 @@ import android.widget.TextView;
 
 import org.java_websocket.handshake.ServerHandshake;
 
-public class ChatActivity extends AppCompatActivity implements WebSocketListener{
+public class ChatActivity extends AppCompatActivity implements WebSocketListener {
 
     private Button sendBtn;
     private EditText msgEtx;
     private TextView msgTv;
 
 
-
+    private static final String SERVER_URL = "ws://coms-3090-033.class.las.iastate.edu:8080/chat";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,8 @@ public class ChatActivity extends AppCompatActivity implements WebSocketListener
 
         /* connect this activity to the websocket instance */
         WebSocketManager.getInstance().setWebSocketListener(ChatActivity.this);
+
+        WebSocketManager.getInstance().connectWebSocket(SERVER_URL);
 
         /* send button listener */
 //        sendBtn.setOnClickListener(v -> {
@@ -61,6 +63,21 @@ public class ChatActivity extends AppCompatActivity implements WebSocketListener
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        WebSocketManager.getInstance().disconnectWebSocket();
+        WebSocketManager.getInstance().removeWebSocketListener();
+    }
+
+    @Override
+    public void onWebSocketOpen(ServerHandshake handshakedata) {
+        runOnUiThread(() -> {
+            Log.d("WebSocket", "Connection established");
+            // Optionally show connection status to user
+            msgTv.setText("Connected to chat server\n");
+        });
+    }
 
     @Override
     public void onWebSocketMessage(String message) {
@@ -72,7 +89,7 @@ public class ChatActivity extends AppCompatActivity implements WebSocketListener
          */
         runOnUiThread(() -> {
             String s = msgTv.getText().toString();
-            msgTv.setText(s + "\n"+message);
+            msgTv.setText(s + "\n" + message);
         });
     }
 
@@ -86,8 +103,12 @@ public class ChatActivity extends AppCompatActivity implements WebSocketListener
     }
 
     @Override
-    public void onWebSocketOpen(ServerHandshake handshakedata) {}
+    public void onWebSocketError(Exception ex) {
+        runOnUiThread(() -> {
+            Log.e("WebSocket", "Error: " + ex.getMessage());
+            // Optionally show error to user
+            msgTv.setText(msgTv.getText() + "\nError: " + ex.getMessage());
+        });
+    }
 
-    @Override
-    public void onWebSocketError(Exception ex) {}
 }
