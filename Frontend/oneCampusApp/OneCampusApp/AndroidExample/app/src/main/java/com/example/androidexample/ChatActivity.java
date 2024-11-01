@@ -16,6 +16,9 @@ public class ChatActivity extends AppCompatActivity implements WebSocketListener
     private EditText msgEtx;
     private TextView msgTv;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,10 +33,28 @@ public class ChatActivity extends AppCompatActivity implements WebSocketListener
         WebSocketManager.getInstance().setWebSocketListener(ChatActivity.this);
 
         /* send button listener */
+//        sendBtn.setOnClickListener(v -> {
+//            try {
+//                // send message
+//                WebSocketManager.getInstance().sendMessage(msgEtx.getText().toString());
+//            } catch (Exception e) {
+//                Log.d("ExceptionSendMessage:", e.getMessage().toString());
+//            }
+//        });
         sendBtn.setOnClickListener(v -> {
             try {
-                // send message
-                WebSocketManager.getInstance().sendMessage(msgEtx.getText().toString());
+                String message = msgEtx.getText().toString();
+                if (!message.isEmpty()) {
+                    // Display the message locally
+                    String currentText = msgTv.getText().toString();
+                    msgTv.setText(currentText + "\nYou: " + message);
+
+                    // Send the message through WebSocket
+                    WebSocketManager.getInstance().sendMessage(message);
+
+                    // Clear the input field
+                    msgEtx.setText("");
+                }
             } catch (Exception e) {
                 Log.d("ExceptionSendMessage:", e.getMessage().toString());
             }
