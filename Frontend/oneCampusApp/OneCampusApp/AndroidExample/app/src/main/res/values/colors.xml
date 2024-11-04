@@ -8,6 +8,15 @@
     <color name="timberwolf">#C9C5BA</color>
     <color name="teaRose">#EBBAB9</color>
 
+    <color name="primary">#1E88E5</color>
+    <color name="primary_dark">#1976D2</color>
+    <color name="accent">#00BCD4</color>
+    <color name="background">#F5F5F5</color>
+    <color name="message_input_background">#FFFFFF</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="divider">#EEEEEE</color>
+
 
 
 
