@@ -5,8 +5,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import javax.sql.rowset.serial.SerialBlob;
 
@@ -195,7 +194,6 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.rowset.serial.SerialBlob;
 
@@ -426,6 +424,49 @@ public class UserController {
     @GetMapping(path = "/users/search")
     List<User> searchUsers(@RequestParam("username") String username) {
         return userRepository.findByUsernameContainingIgnoreCase(username);
+    }
+
+    @PutMapping("/mode")
+    public String updateAppMode(@RequestParam Long id, @RequestParam String mode) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setAppMode(mode);
+        userRepository.save(user);
+        return "App mode updated to " + mode;
+    }
+
+    // Endpoint to change password
+    @PutMapping("/updatePassword/{username}")
+    public ResponseEntity<String> updatePassword(@PathVariable("username") String username, @RequestBody Map<String, String> passwordMap) {
+        // Fetch the new password from the request body
+        String newPassword = passwordMap.get("newPassword");
+        if (newPassword == null || newPassword.isEmpty()) {
+            return ResponseEntity.badRequest().body("Password cannot be empty");
+        }
+
+        // Find the user by username
+        User existingUser = userRepository.findByUsername(username);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        // Update the password
+        existingUser.setPassword(newPassword);
+        userRepository.save(existingUser);
+
+        return ResponseEntity.ok("Password updated successfully");
+    }
+
+
+    // Endpoint to delete user account by username
+    @DeleteMapping("/delete")
+    public String deleteUser(@RequestParam String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            userRepository.delete(user);
+            return "User account deleted successfully.";
+        } else {
+            return "User not found.";
+        }
     }
 
     @GetMapping(path = "/users/{id}/avatar")
