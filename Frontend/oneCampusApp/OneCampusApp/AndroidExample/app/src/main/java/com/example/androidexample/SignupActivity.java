@@ -2,6 +2,7 @@ package com.example.androidexample;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.content.SharedPreferences; // Import SharedPreferences
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -27,9 +28,6 @@ public class SignupActivity extends AppCompatActivity {
     private Button signupButton;
     private RequestQueue requestQueue;
     private static final String SIGNUP_URL = "http://coms-3090-033.class.las.iastate.edu:8080/signup";
-
-//    private static final String SIGNUP_URL = "https://be7042a2-182f-4aa1-96eb-7622a7a6d818.mock.pstmn.io/signup";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,10 +82,16 @@ public class SignupActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        // Save username and email to SharedPreferences
+                        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("username", username); // Save username
+                        editor.putString("email", email); // Save email
+                        editor.apply(); // Apply changes
+
                         Toast.makeText(SignupActivity.this, "Signup successful", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                         startActivity(intent);
-//                        finish();
                     }
                 },
                 new Response.ErrorListener() {
