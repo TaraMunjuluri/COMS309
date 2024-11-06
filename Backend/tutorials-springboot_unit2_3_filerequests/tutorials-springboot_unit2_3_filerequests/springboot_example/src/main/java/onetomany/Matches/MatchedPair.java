@@ -2,6 +2,7 @@ package onetomany.matches;
 
 import onetomany.MentorSurvey.Mentor;
 import onetomany.MenteeSurvey.Mentee;
+import onetomany.Users.User;
 
 import javax.persistence.*;
 
@@ -14,18 +15,18 @@ public class MatchedPair {
 
     @ManyToOne
     @JoinColumn(name = "mentor_id", nullable = false)
-    private Mentor mentor;
+    private User mentor; // Now references User
 
     @ManyToOne
     @JoinColumn(name = "mentee_id", nullable = false)
-    private Mentee mentee;
+    private User mentee; // Now references User
 
     @Enumerated(EnumType.STRING)
     private Area matchedArea;
 
     public MatchedPair() {}
 
-    public MatchedPair(Mentor mentor, Mentee mentee, Area matchedArea) {
+    public MatchedPair(User mentor, User mentee, Area matchedArea) {
         this.mentor = mentor;
         this.mentee = mentee;
         this.matchedArea = matchedArea;
@@ -45,19 +46,19 @@ public class MatchedPair {
         this.id = id;
     }
 
-    public Mentor getMentor() {
+    public User getMentor() {
         return mentor;
     }
 
-    public void setMentor(Mentor mentor) {
+    public void setMentor(User mentor) {
         this.mentor = mentor;
     }
 
-    public Mentee getMentee() {
+    public User getMentee() {
         return mentee;
     }
 
-    public void setMentee(Mentee mentee) {
+    public void setMentee(User mentee) {
         this.mentee = mentee;
     }
 

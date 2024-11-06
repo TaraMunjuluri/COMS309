@@ -10,11 +10,11 @@ public class Mentee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne // Establishes the relationship between Mentor and User
-    @JoinColumn(name = "user_id", nullable = false) // Creates the foreign key column for user in the mentor table
-    private User user;  // This should match the field you're trying to query in the repository
 
-    //private int userId; // Reference to the User
+    @ManyToOne // Establishes the relationship between Mentee and User
+    @JoinColumn(name = "user_id", nullable = false) // Creates the foreign key column for user in the mentee table
+    private User user;  // Reference to the associated User
+
     private String major;
 
     @Enumerated(EnumType.STRING)
@@ -27,8 +27,8 @@ public class Mentee {
     public Mentee() {
     }
 
-    // Constructor with fields (userId, major, classification, areaOfMentorship)
-    public Mentee(int userId, String major, Classification classification, AreaOfMenteeship areaOfMenteeship) {
+    // Constructor with fields
+    public Mentee(User user, String major, Classification classification, AreaOfMenteeship areaOfMenteeship) {
         this.user = user;
         this.major = major;
         this.classification = classification;

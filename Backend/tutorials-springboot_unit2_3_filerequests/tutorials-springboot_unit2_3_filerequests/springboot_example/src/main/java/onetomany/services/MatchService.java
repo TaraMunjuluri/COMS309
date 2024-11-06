@@ -2,7 +2,9 @@ package onetomany.services;
 
 import onetomany.MenteeSurvey.Mentee;
 import onetomany.MentorSurvey.Mentor;
+import onetomany.Users.User;
 import onetomany.matches.MatchedPair;
+import onetomany.matches.MatchedPairRepository;
 import onetomany.MenteeSurvey.MenteeRepository;
 import onetomany.MentorSurvey.MentorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class MatchService {
     @Autowired
     private MenteeRepository menteeRepository;
 
+    @Autowired
+    private MatchedPairRepository matchedPairRepository;
+
     public List<MatchedPair> findMatches() {
         List<Mentor> mentors = mentorRepository.findAll();
         List<Mentee> mentees = menteeRepository.findAll();
@@ -27,16 +32,21 @@ public class MatchService {
 
         for (Mentor mentor : mentors) {
             for (Mentee mentee : mentees) {
-                // Convert enums to String for comparison
                 if (mentor.getAreaOfMentorship().toString().equals(mentee.getAreaOfMenteeship().toString())) {
-                    // Convert mentor's area to MatchedPair.Area enum when creating a new MatchedPair
                     MatchedPair.Area matchedArea = MatchedPair.Area.valueOf(mentor.getAreaOfMentorship().toString());
-                    MatchedPair match = new MatchedPair(mentor, mentee, matchedArea);
-                    matches.add(match);
+
+                    User mentorUser = mentor.getUser(); // Get the User from Mentor
+                    User menteeUser = mentee.getUser(); // Get the User from Mentee
+
+                    // Check if this match already exists by User ID
+                    if (!matchedPairRepository.existsByMentorAndMentee(mentorUser, menteeUser)) {
+                        MatchedPair match = new MatchedPair(mentorUser, menteeUser, matchedArea);
+                        matchedPairRepository.save(match);
+                        matches.add(match);
+                    }
                 }
             }
         }
         return matches;
     }
-
 }
