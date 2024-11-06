@@ -2,7 +2,7 @@
 
 package onetomany.Users;
 
-import onetomany.Chatbox.Message;
+//import onetomany.Chatbox.Message;
 import onetomany.Laptops.Laptop;
 import onetomany.Phones.Phone;
 
@@ -46,17 +46,17 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "phone_id"))
     private List<Phone> phones = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Message> messages;
-
-    // Getters and Setters for `messages`
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<Message> messages;
+//
+//    // Getters and Setters for `messages`
+//    public List<Message> getMessages() {
+//        return messages;
+//    }
+//
+//    public void setMessages(List<Message> messages) {
+//        this.messages = messages;
+//    }
 
     // Constructors
     public User(String name, String emailId, Date joiningDate) {
