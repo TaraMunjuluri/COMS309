@@ -17,7 +17,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     private String username;
     private String password;
@@ -27,9 +27,6 @@ public class User {
     private boolean ifActive;
     private String extension;
     private String appMode;
-
-    // New field to store the profile photo URL
-    private String photoUrl;
 
     @JsonIgnore
     @Lob
@@ -56,7 +53,7 @@ public class User {
     public User() {}
 
     // Getters and Setters
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -152,14 +149,6 @@ public class User {
         this.appMode = appMode;
     }
 
-    // New getter and setter for photoUrl
-    public String getPhotoUrl() {
-        return photoUrl;
-    }
-
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
-    }
 
     public void addPhone(Phone phone) {
         this.phones.add(phone);

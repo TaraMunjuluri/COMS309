@@ -13,14 +13,15 @@ public class MatchedPairMentorMentee {
 
     @ManyToOne
     @JoinColumn(name = "mentor_id", nullable = false)
-    private User mentor; // Now references User
+    private User mentor;
 
     @ManyToOne
     @JoinColumn(name = "mentee_id", nullable = false)
-    private User mentee; // Now references User
+    private User mentee;
 
     @Enumerated(EnumType.STRING)
     private Area matchedArea;
+
 
     public MatchedPairMentorMentee() {}
 
