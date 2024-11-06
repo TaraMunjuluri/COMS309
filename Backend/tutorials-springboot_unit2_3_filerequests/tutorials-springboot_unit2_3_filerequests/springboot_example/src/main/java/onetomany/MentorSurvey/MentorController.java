@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import onetomany.services.MatchMentorMenteeService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,6 +17,9 @@ public class MentorController {
 
     @Autowired
     MentorRepository mentorRepository;
+
+    @Autowired
+    private MatchMentorMenteeService matchMentorMenteeService; // Injecting the service
 
     // Create a new mentor based on the logged-in user
     @PostMapping("/create")
@@ -39,8 +43,12 @@ public class MentorController {
         // Save the new mentor
         mentorRepository.save(mentor);
 
+        // Trigger matching logic
+        matchMentorMenteeService.findMatches();
+
         return new ResponseEntity<>("Mentor created successfully", HttpStatus.CREATED);
     }
+
     // Get all mentors
     @GetMapping("/all")
     public ResponseEntity<List<Mentor>> getAllMentors() {
@@ -86,7 +94,7 @@ public class MentorController {
             return new ResponseEntity<>("Mentor not found", HttpStatus.NOT_FOUND);
         }
 
-        // Update the mentor's details (assuming Mentor class has setter methods)
+        // Update the mentor's details
         existingMentor.setMajor(updatedMentor.getMajor());
         existingMentor.setClassification(updatedMentor.getClassification());
         existingMentor.setAreaOfMentorship(updatedMentor.getAreaOfMentorship());
@@ -94,8 +102,19 @@ public class MentorController {
         // Save the updated mentor information
         mentorRepository.save(existingMentor);
 
+        // Trigger matching logic after updating
+        matchMentorMenteeService.findMatches();
+
         return new ResponseEntity<>("Mentor updated successfully", HttpStatus.OK);
     }
 
+    @PostMapping
+    public Mentor saveMentor(@RequestBody Mentor mentor) {
+        Mentor savedMentor = mentorRepository.save(mentor);
 
+        // Trigger matching after saving a mentor
+        matchMentorMenteeService.findMatches();
+
+        return savedMentor;
+    }
 }

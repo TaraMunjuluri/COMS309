@@ -1,7 +1,6 @@
 package onetomany.websockets;
 
-import onetomany.matches.MatchedPair;
-import onetomany.services.MatchService;
+import onetomany.services.MatchMentorMenteeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,11 +15,11 @@ public class MatchController {
     private SimpMessagingTemplate template;
 
     @Autowired
-    private MatchService matchService;
+    private MatchMentorMenteeService matchService;
 
     @Scheduled(fixedRate = 5000) // Runs every 5 seconds; adjust as needed
     public void notifyMatches() {
-        List<MatchedPair> matches = matchService.findMatches();
+        List<onetomany.matches.MatchedPairMentorMentee> matches = matchService.findMatches();
         if (!matches.isEmpty()) {
             template.convertAndSend("/topic/matches", matches);
         }

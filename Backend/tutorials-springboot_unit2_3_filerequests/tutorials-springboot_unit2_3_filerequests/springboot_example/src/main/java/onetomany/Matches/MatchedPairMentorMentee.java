@@ -1,13 +1,11 @@
 package onetomany.matches;
 
-import onetomany.MentorSurvey.Mentor;
-import onetomany.MenteeSurvey.Mentee;
 import onetomany.Users.User;
 
 import javax.persistence.*;
 
 @Entity
-public class MatchedPair {
+public class MatchedPairMentorMentee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +22,9 @@ public class MatchedPair {
     @Enumerated(EnumType.STRING)
     private Area matchedArea;
 
-    public MatchedPair() {}
+    public MatchedPairMentorMentee() {}
 
-    public MatchedPair(User mentor, User mentee, Area matchedArea) {
+    public MatchedPairMentorMentee(User mentor, User mentee, Area matchedArea) {
         this.mentor = mentor;
         this.mentee = mentee;
         this.matchedArea = matchedArea;

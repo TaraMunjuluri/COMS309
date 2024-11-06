@@ -1,7 +1,6 @@
 package onetomany.websockets;
 
-import onetomany.matches.MatchedPair;
-import onetomany.services.MatchService;
+import onetomany.services.MatchMentorMenteeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,11 +11,12 @@ import java.util.List;
 public class MatchRestController {
 
     @Autowired
-    private MatchService matchService;
+    private MatchMentorMenteeService matchService;
 
     // HTTP GET endpoint to trigger matching
     @GetMapping("/match")
-    public List<MatchedPair> getMatches() {
+    public List<onetomany.matches.MatchedPairMentorMentee> getMatches() {
         return matchService.findMatches();
     }
+
 }
