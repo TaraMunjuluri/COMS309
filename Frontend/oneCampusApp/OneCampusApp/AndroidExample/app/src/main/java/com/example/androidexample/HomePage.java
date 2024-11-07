@@ -40,10 +40,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_profile) {
-                Intent profileIntent = new Intent(HomePage.this, ChatActivity.class); // Replace with actual activity
+                Intent profileIntent = new Intent(HomePage.this, ProfileActivity.class); // Replace with actual activity
                 startActivity(profileIntent);
             } else if (id == R.id.nav_chat) {
                 Intent chatIntent = new Intent(HomePage.this, ChatActivity.class); // Replace with actual activity
+                startActivity(chatIntent);
+            } else if (id == R.id.nav_settings) {
+                Intent chatIntent = new Intent(HomePage.this, SettingsActivity.class); // Replace with actual activity
                 startActivity(chatIntent);
             } else if (id == R.id.nav_logout) {
                 finish();
