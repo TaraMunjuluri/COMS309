@@ -31,7 +31,7 @@ public class UserMatch extends AppCompatActivity {
     private MatchAdapter adapter;
     private List<User> users;
     private WebSocket webSocket;
-    private static final String SOCKET_URL = "ws://10.90.74.238:8080/matches-websocket";
+    private static final String SOCKET_URL = "ws://localhost:8080/matches-websocket/websocket";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +127,7 @@ public class UserMatch extends AppCompatActivity {
         }
 
         OkHttpClient client = new OkHttpClient();
-        String url = "http://10.90.74.238:8080/matches/" + userId;
+        String url = "http://10.90.74.238:8080/api/matches/" + userId;
 
         Request request = new Request.Builder().url(url).build();
 
