@@ -53,7 +53,9 @@ public class LoginActivity extends AppCompatActivity {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String username = usernameEditText.getText().toString();
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                intent.putExtra("USERNAME", username);
                 startActivity(intent);
             }
         });
@@ -84,6 +86,12 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                         Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+
+                        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("username", username);
+                        editor.apply();
+
                         Intent intent = new Intent(LoginActivity.this, LookingFor.class);
                         intent.putExtra("USERNAME", username);
                         startActivity(intent);
