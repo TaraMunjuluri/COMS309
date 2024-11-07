@@ -44,7 +44,7 @@ public class MentorController {
         mentorRepository.save(mentor);
 
         // Trigger matching logic
-        matchMentorMenteeService.findMatches();
+        matchMentorMenteeService.findNewMatches();
 
         return new ResponseEntity<>("Mentor created successfully", HttpStatus.CREATED);
     }
@@ -103,7 +103,7 @@ public class MentorController {
         mentorRepository.save(existingMentor);
 
         // Trigger matching logic after updating
-        matchMentorMenteeService.findMatches();
+        matchMentorMenteeService.findNewMatches();
 
         return new ResponseEntity<>("Mentor updated successfully", HttpStatus.OK);
     }
@@ -113,7 +113,7 @@ public class MentorController {
         Mentor savedMentor = mentorRepository.save(mentor);
 
         // Trigger matching after saving a mentor
-        matchMentorMenteeService.findMatches();
+        matchMentorMenteeService.findNewMatches();
 
         return savedMentor;
     }

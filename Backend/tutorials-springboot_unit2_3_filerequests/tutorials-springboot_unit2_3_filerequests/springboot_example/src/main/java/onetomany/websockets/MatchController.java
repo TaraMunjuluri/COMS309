@@ -17,10 +17,12 @@ public class MatchController {
     @Autowired
     private MatchMentorMenteeService matchService;
 
-    @Scheduled(fixedRate = 5000) // Runs every 5 seconds; adjust as needed
+    @Scheduled(fixedRate = 5000)
     public void notifyMatches() {
-        List<onetomany.matches.MatchedPairMentorMentee> matches = matchService.findMatches();
+        List<onetomany.matches.MatchedPairMentorMentee> matches = matchService.findNewMatches();
+        System.out.println("Checking for matches...");
         if (!matches.isEmpty()) {
+            System.out.println("Sending match notification...");
             template.convertAndSend("/topic/matches", matches);
         }
     }
