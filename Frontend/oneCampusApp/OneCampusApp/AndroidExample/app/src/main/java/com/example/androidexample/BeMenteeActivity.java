@@ -1,5 +1,4 @@
 package com.example.androidexample;
-import static com.google.android.material.color.utilities.MaterialDynamicColors.error;
 
 import android.content.Intent;
 import android.util.Log;
@@ -44,7 +43,6 @@ public class BeMenteeActivity extends AppCompatActivity {
         // Initialize the Volley request queue
         mQueue = Volley.newRequestQueue(this);
 
-
         // Set up classification spinner
         ArrayAdapter<CharSequence> classificationAdapter = ArrayAdapter.createFromResource(this,
                 R.array.classification_options, android.R.layout.simple_spinner_item);
@@ -61,17 +59,10 @@ public class BeMenteeActivity extends AppCompatActivity {
         btnSubmitForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String major = etMajor.getText().toString();
-//                String classification = spinnerClassification.getSelectedItem().toString();
-//                String mentorArea = spinnerMentorArea.getSelectedItem().toString();
-//
-//                // TODO: Handle the form data, like saving it to the database or passing it to another activity
-//
-//                Toast.makeText(FindMenteeActivity.this, "Form Submitted", Toast.LENGTH_SHORT).show();
+                sendFormData();  // Send data to backend
                 Intent intent = new Intent(BeMenteeActivity.this, HomePage.class);
-                startActivity(intent);
-                sendFormData();
-                finish();
+                startActivity(intent);  // Navigate to the HomePage after submission
+                finish();  // Close the BeMenteeActivity
             }
         });
     }
@@ -90,6 +81,7 @@ public class BeMenteeActivity extends AppCompatActivity {
             Toast.makeText(BeMenteeActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
             return; // Exit if session ID is null
         }
+
         String major = etMajor.getText().toString();
         String classification = spinnerClassification.getSelectedItem().toString();
         String mentorArea = spinnerMentorArea.getSelectedItem().toString();
@@ -104,8 +96,7 @@ public class BeMenteeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        String url = "http://10.90.74.238:8080/mentee/create";
-
+        String url = "http://10.90.74.238:8080/mentee/create";  // URL for Mentee
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST,
@@ -137,6 +128,6 @@ public class BeMenteeActivity extends AppCompatActivity {
             }
         };
 
-        mQueue.add(request);
+        mQueue.add(request);  // Add request to the request queue
     }
 }
