@@ -119,6 +119,8 @@
 package com.example.androidexample;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -144,13 +146,20 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        username = sharedPreferences.getString("username", null);
+
+//        if (username != null) {
+//            initializeWebSocket();
+//        }
+
+
         // Initialize UI elements
         sendBtn = findViewById(R.id.sendBtn);
         msgEtx = findViewById(R.id.msgEdt);
         msgTv = findViewById(R.id.tx1);
 
-        // Get the username passed from LoginActivity
-        username = getIntent().getStringExtra("USERNAME");
+
 
         // Initialize WebSocket
         initializeWebSocket();
