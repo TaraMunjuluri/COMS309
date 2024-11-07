@@ -44,7 +44,7 @@ public class MenteeController {
         menteeRepository.save(mentee);
 
         // Trigger matching logic
-        matchMentorMenteeService.findMatches();
+        matchMentorMenteeService.findNewMatches();
 
         return new ResponseEntity<>("Mentee created successfully", HttpStatus.CREATED);
     }
@@ -61,7 +61,7 @@ public class MenteeController {
         Mentee savedMentee = menteeRepository.save(mentee);
 
         // Trigger matching after saving a mentee
-        matchMentorMenteeService.findMatches();
+        matchMentorMenteeService.findNewMatches();
 
         return savedMentee;
     }

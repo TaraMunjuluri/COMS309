@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class LookingFor extends AppCompatActivity implements View.OnClickListener{
 
-    private Button friendsBtn, beMenteeBtn, beMentorBtn, getAllMentorsBtn, profileBtn;
+    private Button friendsBtn, beMenteeBtn, beMentorBtn, getAllMentorsBtn, profileBtn, nav_match;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +20,7 @@ public class LookingFor extends AppCompatActivity implements View.OnClickListene
         beMentorBtn = findViewById(R.id.btnBeMentorRequest);
         getAllMentorsBtn = findViewById(R.id.btnGetAllMentors);
         profileBtn = findViewById(R.id.btnProfile);
+        nav_match = findViewById(R.id.nav_match);
 
         /* button click listeners */
         friendsBtn.setOnClickListener(this);
@@ -27,6 +28,7 @@ public class LookingFor extends AppCompatActivity implements View.OnClickListene
         beMentorBtn.setOnClickListener(this);
         getAllMentorsBtn.setOnClickListener(this);
         profileBtn.setOnClickListener(this);
+        nav_match.setOnClickListener(this);
     }
 
     @Override
@@ -43,6 +45,9 @@ public class LookingFor extends AppCompatActivity implements View.OnClickListene
         }
         else if (id == R.id.btnProfile) {
             startActivity(new Intent(LookingFor.this, ProfileActivity.class));  // Navigate to ProfileActivity
+        }else if (id == R.id.nav_match) {
+            startActivity(new Intent(LookingFor.this, UserMatch.class));  // Navigate to ProfileActivity
         }
+
     }
 }

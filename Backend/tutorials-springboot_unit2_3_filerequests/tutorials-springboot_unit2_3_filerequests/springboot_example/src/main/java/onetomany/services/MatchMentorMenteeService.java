@@ -24,28 +24,29 @@ public class MatchMentorMenteeService {
     @Autowired
     private MatchedPairRepository matchedPairRepository;
 
-    public List<onetomany.matches.MatchedPairMentorMentee> findMatches() {
+
+    public List<onetomany.matches.MatchedPairMentorMentee> findNewMatches() {
         List<Mentor> mentors = mentorRepository.findAll();
         List<Mentee> mentees = menteeRepository.findAll();
-        List<onetomany.matches.MatchedPairMentorMentee> matches = new ArrayList<>();
+        List<onetomany.matches.MatchedPairMentorMentee> newMatches = new ArrayList<>();
 
         for (Mentor mentor : mentors) {
             for (Mentee mentee : mentees) {
                 if (mentor.getAreaOfMentorship().toString().equals(mentee.getAreaOfMenteeship().toString())) {
                     onetomany.matches.MatchedPairMentorMentee.Area matchedArea = onetomany.matches.MatchedPairMentorMentee.Area.valueOf(mentor.getAreaOfMentorship().toString());
 
-                    User mentorUser = mentor.getUser(); // Get the User from Mentor
-                    User menteeUser = mentee.getUser(); // Get the User from Mentee
+                    User mentorUser = mentor.getUser();
+                    User menteeUser = mentee.getUser();
 
-                    // Check if this match already exists by User ID
                     if (!matchedPairRepository.existsByMentorAndMentee(mentorUser, menteeUser)) {
-                        onetomany.matches.MatchedPairMentorMentee match = new onetomany.matches.MatchedPairMentorMentee(mentorUser, menteeUser, matchedArea);
-                        matchedPairRepository.save(match);
-                        matches.add(match);
+                        onetomany.matches.MatchedPairMentorMentee newMatch = new onetomany.matches.MatchedPairMentorMentee(mentorUser, menteeUser, matchedArea);
+                        matchedPairRepository.save(newMatch);
+                        newMatches.add(newMatch);
                     }
                 }
             }
         }
-        return matches;
+        return newMatches;
     }
+
 }

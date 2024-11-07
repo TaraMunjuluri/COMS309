@@ -42,6 +42,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             if (id == R.id.nav_profile) {
                 Intent profileIntent = new Intent(HomePage.this, ProfileActivity.class); // Replace with actual activity
                 startActivity(profileIntent);
+            } else if (id == R.id.nav_match) {
+                Intent matchIntent = new Intent(HomePage.this, UserMatch.class);
+                startActivity(matchIntent);
             } else if (id == R.id.nav_chat) {
                 Intent chatIntent = new Intent(HomePage.this, ChatActivity.class); // Replace with actual activity
                 startActivity(chatIntent);
