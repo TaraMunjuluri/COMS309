@@ -1,8 +1,5 @@
-
-
 package onetomany.Users;
 
-import onetomany.Chatbox.Message;
 import onetomany.Laptops.Laptop;
 import onetomany.Phones.Phone;
 
@@ -20,7 +17,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     private String username;
     private String password;
@@ -29,7 +26,6 @@ public class User {
     private Date joiningDate;
     private boolean ifActive;
     private String extension;
-
     private String appMode;
 
     @JsonIgnore
@@ -46,18 +42,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "phone_id"))
     private List<Phone> phones = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Message> messages;
-
-    // Getters and Setters for `messages`
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
     // Constructors
     public User(String name, String emailId, Date joiningDate) {
         this.name = name;
@@ -66,11 +50,10 @@ public class User {
         this.ifActive = true;
     }
 
-    public User() {
-    }
+    public User() {}
 
     // Getters and Setters
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -158,15 +141,16 @@ public class User {
         this.extension = extension;
     }
 
-    public void addPhone(Phone phone) {
-        this.phones.add(phone);
-    }
-
     public String getAppMode() {
-        return appMode; // Getter for appMode
+        return appMode;
     }
 
     public void setAppMode(String appMode) {
-        this.appMode = appMode; // Setter for appMode
+        this.appMode = appMode;
+    }
+
+
+    public void addPhone(Phone phone) {
+        this.phones.add(phone);
     }
 }
