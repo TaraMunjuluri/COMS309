@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;
     private RequestQueue requestQueue;
-    private static final String LOGIN_URL = "http://coms-3090-033.class.las.iastate.edu:8080/login"; // Replace with your actual login endpoint
+    private static final String LOGIN_URL = "http://coms-3090-033.class.las.iastate.edu:8080/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = usernameEditText.getText().toString();
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-                intent.putExtra("USERNAME", username);
                 startActivity(intent);
             }
         });
@@ -74,27 +72,34 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // Store session ID from response headers (assuming the server sends a session cookie)
-                        String sessionId = response.optString("sessionId", null); // Adjust based on your backend's response structure
+                        try {
+                            // Parse the nested user object and retrieve the userId
+                            JSONObject userObject = response.getJSONObject("user");
+                            int userId = userObject.getInt("id");
 
-                        if (sessionId != null) {
-                            // Save the session ID in SharedPreferences
-                            SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                            // Optional: If the backend returns additional session info, capture it
+                            String sessionId = response.optString("sessionId", null);
+
+                            // Save both userId and sessionId in SharedPreferences
+                            SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("sessionId", sessionId);
+                            editor.putInt("userId", userId); // Save the userId
+                            if (sessionId != null) {
+                                editor.putString("sessionId", sessionId); // Save the sessionId if available
+                            }
                             editor.apply();
+
+                            Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+
+                            // Start the next activity
+                            Intent intent = new Intent(LoginActivity.this, LookingFor.class);
+                            intent.putExtra("USERNAME", username);
+                            startActivity(intent);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(LoginActivity.this, "Failed to parse login response", Toast.LENGTH_SHORT).show();
                         }
-
-                        Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-
-                        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("username", username);
-                        editor.apply();
-
-                        Intent intent = new Intent(LoginActivity.this, LookingFor.class);
-                        intent.putExtra("USERNAME", username);
-                        startActivity(intent);
                     }
                 },
                 new Response.ErrorListener() {
@@ -106,24 +111,10 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
-                }) {
-            @Override
-            protected Response<JSONObject> parseNetworkResponse(com.android.volley.NetworkResponse response) {
-                // Extract session ID from headers
-                String sessionId = response.headers.get("Set-Cookie");  // Adjust if necessary for your backend
-
-                if (sessionId != null) {
-                    SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("sessionId", sessionId);
-                    editor.apply();
-                }
-
-                return super.parseNetworkResponse(response);
-            }
-        };
+                });
 
         requestQueue.add(jsonObjectRequest);
     }
+
 
 }
