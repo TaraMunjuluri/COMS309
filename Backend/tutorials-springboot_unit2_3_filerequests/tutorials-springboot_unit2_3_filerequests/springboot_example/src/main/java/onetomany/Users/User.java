@@ -111,7 +111,7 @@ public class User {
 
 
     // Getters and Setters
-    public int getId() {
+    public long getId() {
         return id;
     }
 
