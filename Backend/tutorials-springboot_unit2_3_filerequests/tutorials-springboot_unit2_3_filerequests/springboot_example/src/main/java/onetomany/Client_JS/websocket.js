@@ -56,7 +56,6 @@ document.getElementById("msg").addEventListener("input", () => {
     }, typingInterval);
 });
 
-
 @Controller
 public class MatchNotificationController {
 
