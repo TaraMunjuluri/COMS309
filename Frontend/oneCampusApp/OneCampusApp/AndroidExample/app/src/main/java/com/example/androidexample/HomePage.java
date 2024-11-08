@@ -48,7 +48,10 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             } else if (id == R.id.nav_chat) {
                 Intent chatIntent = new Intent(HomePage.this, ChatActivity.class); // Replace with actual activity
                 startActivity(chatIntent);
-            }else if (id == R.id.nav_logout) {
+            } else if (id == R.id.nav_settings) {
+                Intent chatIntent = new Intent(HomePage.this, SettingsActivity.class); // Replace with actual activity
+                startActivity(chatIntent);
+            } else if (id == R.id.nav_logout) {
                 finish();
             }
             drawerLayout.closeDrawer(GravityCompat.START);
