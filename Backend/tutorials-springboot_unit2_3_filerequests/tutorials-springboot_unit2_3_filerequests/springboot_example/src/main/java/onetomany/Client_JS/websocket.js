@@ -55,3 +55,24 @@ document.getElementById("msg").addEventListener("input", () => {
         sendTypingNotification(false); // Notify typing stopped after delay
     }, typingInterval);
 });
+
+@Controller
+public class MatchNotificationController {
+
+    @GetMapping("/matches/notifications")
+    public String getMatchNotificationsPage() {
+        // This will look for src/main/resources/static/matches/index.html
+        return "matches/index";
+    }
+}
+
+
+function send() {
+    var content = document.getElementById("msg").value;
+    if (content.trim() !== "") {
+        console.log("Sending message: ", content); // Log the message being sent
+        ws.send(content);
+        document.getElementById("msg").value = ""; // Clear input
+    }
+}
+
