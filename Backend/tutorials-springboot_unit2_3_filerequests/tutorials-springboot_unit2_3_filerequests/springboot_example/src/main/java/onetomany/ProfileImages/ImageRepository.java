@@ -1,4 +1,4 @@
-package onetomany.images;
+package onetomany.ProfileImages;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
