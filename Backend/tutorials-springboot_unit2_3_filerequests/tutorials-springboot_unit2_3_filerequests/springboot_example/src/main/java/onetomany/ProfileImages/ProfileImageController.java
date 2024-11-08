@@ -2,7 +2,7 @@ package onetomany.ProfileImages;
 import org.springframework.http.HttpStatus;
 
 import onetomany.images.Image;
-import onetomany.ProfileImages.ImageRepository;
+import onetomany.images.ImageRepository;
 import onetomany.Users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
