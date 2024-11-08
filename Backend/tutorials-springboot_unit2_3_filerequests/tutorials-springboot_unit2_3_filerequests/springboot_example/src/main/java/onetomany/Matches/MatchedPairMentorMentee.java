@@ -1,4 +1,4 @@
-package onetomany.matches;
+package onetomany.Matches;
 
 import onetomany.Users.User;
 

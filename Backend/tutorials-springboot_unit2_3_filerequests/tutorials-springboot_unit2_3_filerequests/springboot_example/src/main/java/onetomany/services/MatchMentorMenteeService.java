@@ -55,7 +55,7 @@ package onetomany.services;
 import onetomany.MenteeSurvey.Mentee;
 import onetomany.MentorSurvey.Mentor;
 import onetomany.Users.User;
-import onetomany.matches.MatchedPairRepository;
+import onetomany.Matches.MatchedPairRepository;
 import onetomany.MenteeSurvey.MenteeRepository;
 import onetomany.MentorSurvey.MentorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,10 +76,10 @@ public class MatchMentorMenteeService {
     @Autowired
     private MatchedPairRepository matchedPairRepository;
 
-    public List<onetomany.matches.MatchedPairMentorMentee> findNewMatches() {
+    public List<onetomany.Matches.MatchedPairMentorMentee> findNewMatches() {
         List<Mentor> mentors = mentorRepository.findAll();
         List<Mentee> mentees = menteeRepository.findAll();
-        List<onetomany.matches.MatchedPairMentorMentee> newMatches = new ArrayList<>();
+        List<onetomany.Matches.MatchedPairMentorMentee> newMatches = new ArrayList<>();
 
         System.out.println("Found " + mentors.size() + " mentors and " + mentees.size() + " mentees");
 
@@ -92,8 +92,8 @@ public class MatchMentorMenteeService {
                     System.out.println("Found matching area for mentor: " + mentor.getUser().getUsername() +
                             " and mentee: " + mentee.getUser().getUsername());
 
-                    onetomany.matches.MatchedPairMentorMentee.Area matchedArea =
-                            onetomany.matches.MatchedPairMentorMentee.Area.valueOf(mentor.getAreaOfMentorship().toString());
+                    onetomany.Matches.MatchedPairMentorMentee.Area matchedArea =
+                            onetomany.Matches.MatchedPairMentorMentee.Area.valueOf(mentor.getAreaOfMentorship().toString());
 
                     User mentorUser = mentor.getUser();
                     User menteeUser = mentee.getUser();
@@ -102,8 +102,8 @@ public class MatchMentorMenteeService {
                         System.out.println("Creating new match between mentor: " + mentorUser.getUsername() +
                                 " and mentee: " + menteeUser.getUsername());
 
-                        onetomany.matches.MatchedPairMentorMentee newMatch =
-                                new onetomany.matches.MatchedPairMentorMentee(mentorUser, menteeUser, matchedArea);
+                        onetomany.Matches.MatchedPairMentorMentee newMatch =
+                                new onetomany.Matches.MatchedPairMentorMentee(mentorUser, menteeUser, matchedArea);
                         matchedPairRepository.save(newMatch);
                         newMatches.add(newMatch);
                     } else {

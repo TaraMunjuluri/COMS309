@@ -1,4 +1,4 @@
-package onetomany.matches;
+package onetomany.Matches;
 
 import onetomany.MenteeSurvey.Mentee;
 import onetomany.MentorSurvey.Mentor;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class MatchRestController {
 
     @Autowired
-    private onetomany.matches.MatchedPairRepository matchedPairRepository;
+    private onetomany.Matches.MatchedPairRepository matchedPairRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -30,8 +30,8 @@ public class MatchRestController {
     private MenteeRepository menteeRepository;
 
     @GetMapping("/{userId}")
-    public List<onetomany.matches.MatchedPersonDTO> getMatchedPersons(@PathVariable("userId") Long userId) {
-        List<onetomany.matches.MatchedPersonDTO> matchedPersonDTOList = new ArrayList<>();
+    public List<onetomany.Matches.MatchedPersonDTO> getMatchedPersons(@PathVariable("userId") Long userId) {
+        List<onetomany.Matches.MatchedPersonDTO> matchedPersonDTOList = new ArrayList<>();
         Optional<User> userOpt = userRepository.findById(userId);
         if (!userOpt.isPresent()) {
             return matchedPersonDTOList; // or throw an error
@@ -40,12 +40,12 @@ public class MatchRestController {
         User user = userOpt.get();
 
         // Find matches where the user is a mentor
-        List<onetomany.matches.MatchedPairMentorMentee> matchesAsMentor = matchedPairRepository.findByMentor(user);
-        for (onetomany.matches.MatchedPairMentorMentee match : matchesAsMentor) {
+        List<onetomany.Matches.MatchedPairMentorMentee> matchesAsMentor = matchedPairRepository.findByMentor(user);
+        for (onetomany.Matches.MatchedPairMentorMentee match : matchesAsMentor) {
             User matchedMenteeUser = match.getMentee();
             Optional<Mentee> matchedMenteeOpt = Optional.ofNullable(menteeRepository.findByUser(matchedMenteeUser));
 
-            matchedMenteeOpt.ifPresent(matchedMentee -> matchedPersonDTOList.add(new onetomany.matches.MatchedPersonDTO(
+            matchedMenteeOpt.ifPresent(matchedMentee -> matchedPersonDTOList.add(new onetomany.Matches.MatchedPersonDTO(
                     matchedMenteeUser.getUsername(),
                     matchedMentee.getClassification().toString(),
                     matchedMentee.getMajor()
@@ -53,12 +53,12 @@ public class MatchRestController {
         }
 
         // Find matches where the user is a mentee
-        List<onetomany.matches.MatchedPairMentorMentee> matchesAsMentee = matchedPairRepository.findByMentee(user);
-        for (onetomany.matches.MatchedPairMentorMentee match : matchesAsMentee) {
+        List<onetomany.Matches.MatchedPairMentorMentee> matchesAsMentee = matchedPairRepository.findByMentee(user);
+        for (onetomany.Matches.MatchedPairMentorMentee match : matchesAsMentee) {
             User matchedMentorUser = match.getMentor();
             Optional<Mentor> matchedMentorOpt = Optional.ofNullable(mentorRepository.findByUser(matchedMentorUser));
 
-            matchedMentorOpt.ifPresent(matchedMentor -> matchedPersonDTOList.add(new onetomany.matches.MatchedPersonDTO(
+            matchedMentorOpt.ifPresent(matchedMentor -> matchedPersonDTOList.add(new onetomany.Matches.MatchedPersonDTO(
                     matchedMentorUser.getUsername(),
                     matchedMentor.getClassification().toString(),
                     matchedMentor.getMajor()

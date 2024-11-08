@@ -1,4 +1,4 @@
-package onetomany.matches;
+package onetomany.Matches;
 
 public class MatchedPersonDTO {
     private String username;
