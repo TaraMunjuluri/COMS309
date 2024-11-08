@@ -185,6 +185,8 @@ public class ProfileActivity extends AppCompatActivity {
         editor.apply();
 
         Toast.makeText(this, "Profile information saved", Toast.LENGTH_SHORT).show();
+        Intent profileIntent = new Intent(ProfileActivity.this, HomePage.class);
+        startActivity(profileIntent);
     }
 
     @Override
