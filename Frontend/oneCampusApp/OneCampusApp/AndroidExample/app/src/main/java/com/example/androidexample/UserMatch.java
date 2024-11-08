@@ -31,7 +31,7 @@ public class UserMatch extends AppCompatActivity {
     private MatchAdapter adapter;
     private List<User> users;
     private WebSocket webSocket;
-    private static final String SOCKET_URL = "ws://localhost:8080/matches-websocket/websocket";
+    private static final String SOCKET_URL = "ws://10.90.74.238:8080/matches-websocket/websocket";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,14 +88,28 @@ public class UserMatch extends AppCompatActivity {
 
     // Send Match Request
     private void sendMatchRequest(User user) {
-        String message = "{\"action\": \"match\", \"userId\": \"" + user.getUserId() + "\"}";
-        webSocket.send(message);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("userId", -1);
+
+        if (userId != -1) {
+            String message = "{\"action\": \"match\", \"userId\": " + userId + ", \"matchUserId\": " + user.getUserId() + "}";
+            webSocket.send(message);
+        } else {
+            Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Send Reject Request
     private void rejectMatchRequest(User user) {
-        String message = "{\"action\": \"reject\", \"userId\": \"" + user.getUserId() + "\"}";
-        webSocket.send(message);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("userId", -1);
+
+        if (userId != -1) {
+            String message = "{\"action\": \"reject\", \"userId\": " + userId + ", \"matchUserId\": " + user.getUserId() + "}";
+            webSocket.send(message);
+        } else {
+            Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Handle WebSocket Responses
@@ -115,9 +129,9 @@ public class UserMatch extends AppCompatActivity {
         });
     }
 
+    // Fetch potential matches from the backend
     private List<User> getPotentialMatches() {
-        // Retrieve userId from SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         int userId = sharedPreferences.getInt("userId", -1);
 
         if (userId == -1) {
@@ -154,8 +168,7 @@ public class UserMatch extends AppCompatActivity {
                             String username = matchObject.getString("username");
                             String classification = matchObject.getString("classification");
                             String major = matchObject.getString("major");
-                            // You might want to set some default or null for userId if it's not part of the response
-                            int matchUserId = -1; // You could also set this based on other available data, if possible
+                            int matchUserId = matchObject.optInt("id", -1); // Parse the ID if available
 
                             // Create a new User object for each match
                             User user = new User(username, major, classification, matchUserId);
@@ -177,5 +190,4 @@ public class UserMatch extends AppCompatActivity {
 
         return matchList;
     }
-
 }
