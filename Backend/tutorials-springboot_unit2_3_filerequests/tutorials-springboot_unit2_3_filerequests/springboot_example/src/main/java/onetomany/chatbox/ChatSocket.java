@@ -1,29 +1,33 @@
 package onetomany.chatbox;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
-
-import javax.websocket.Session;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+//import jakarta.websocket.OnClose;
+//import jakarta.websocket.OnError;
+//import jakarta.websocket.OnMessage;
+//import jakarta.websocket.OnOpen;
+//import jakarta.websocket.Session;
+//import jakarta.websocket.server.PathParam;
+//import jakarta.websocket.server.ServerEndpoint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-
 @Controller      // this is needed for this to be an endpoint to springboot
 @ServerEndpoint(value = "/chat/{username}")  // this is Websocket url
 public class ChatSocket {
 
-
     // cannot autowire static directly (instead we do it by the below
     // method
     private static MessageRepository msgRepo;
-
 
     /*
      * Grabs the MessageRepository singleton from the Spring Application
@@ -37,31 +41,24 @@ public class ChatSocket {
         msgRepo = repo;  // we are setting the static variable
     }
 
-
     // Store all socket session and their corresponding username.
     private static Map<Session, String> sessionUsernameMap = new Hashtable<>();
     private static Map<String, Session> usernameSessionMap = new Hashtable<>();
 
-
     private final Logger logger = LoggerFactory.getLogger(ChatSocket.class);
-
 
     @OnOpen
     public void onOpen(Session session, @PathParam("username") String username)
             throws IOException {
 
-
         logger.info("Entered into Open");
-
 
         // store connecting user information
         sessionUsernameMap.put(session, username);
         usernameSessionMap.put(username, session);
 
-
         //Send chat history to the newly connected user
         sendMessageToPArticularUser(username, getChatHistory());
-
 
         // broadcast that new user joined
         String message = "User:" + username + " has Joined the Chat";
@@ -69,95 +66,44 @@ public class ChatSocket {
     }
 
 
-
-
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
-
 
         // Handle new messages
         logger.info("Entered into Message: Got Message:" + message);
         String username = sessionUsernameMap.get(session);
 
+        // Direct message to a user using the format "@username <message>"
+        if (message.startsWith("@")) {
+            String destUsername = message.split(" ")[0].substring(1);
 
-//        startInactivityTimer(session);
+            // send the message to the sender and receiver
+            sendMessageToPArticularUser(destUsername, "[DM] " + username + ": " + message);
+            sendMessageToPArticularUser(username, "[DM] " + username + ": " + message);
 
-
-        if (message.equals("typing")) {
-            broadcastTypingStatus(username, true);
-        } else if (message.equals("stopped typing")) {
-            broadcastTypingStatus(username, false);
-        } else{
-            // Direct message to a user using the format "@username <message>"
-            if (message.startsWith("@")) {
-                String destUsername = message.split(" ")[0].substring(1);
-
-
-                // send the message to the sender and receiver
-                sendMessageToPArticularUser(destUsername, "[DM] " + username + ": " + message);
-                sendMessageToPArticularUser(username, "[DM] " + username + ": " + message);
-
-
-            }
-            else { // broadcast
-                broadcast(username + ": " + message);
-            }
-            // Saving chat history to repository
-            msgRepo.save(new Message(username, message));
+        }
+        else { // broadcast
+            broadcast(username + ": " + message);
         }
 
-
+        // Saving chat history to repository
+        msgRepo.save(new Message(username, message));
     }
 
 
-    private void broadcastTypingStatus(String username, boolean isTyping) {
-        String message = username + " is typing...";
-        if (!isTyping) {
-            message = username + " stopped typing.";
-        }
-        broadcast(message);
-    }
-
-//
-//    private void startInactivityTimer(Session session) {
-//        String username = sessionUsernameMap.get(session);
-//        logger.info("Starting inactivity timer for user: " + username);
-//
-//
-//        Timer timer = new Timer(true);
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                try {
-//                    if (session.isOpen()) {
-//                        logger.info("Inactivity timer triggered for user: " + username);
-//                        session.getBasicRemote().sendText("You have been disconnected due to inactivity.");  // Notify the user
-//                        session.close();
-//                        logger.info(username + " is inactive. Disconnecting...");
-//                    }
-//                } catch (IOException e) {
-//                    logger.error("Error closing session for user " + username + ": " + e.getMessage());
-//                }
-//            }
-//        }, 15 * 1000);  // Timeout after 15 seconds of inactivity
-//    }
     @OnClose
     public void onClose(Session session) throws IOException {
         logger.info("Entered into Close");
-
 
         // remove the user connection information
         String username = sessionUsernameMap.get(session);
         sessionUsernameMap.remove(session);
         usernameSessionMap.remove(username);
 
-
         // broadcase that the user disconnected
         String message = username + " disconnected";
         broadcast(message);
     }
-
-
 
 
     @OnError
@@ -166,8 +112,6 @@ public class ChatSocket {
         logger.info("Entered into Error");
         throwable.printStackTrace();
     }
-
-
 
 
     private void sendMessageToPArticularUser(String username, String message) {
@@ -181,8 +125,6 @@ public class ChatSocket {
     }
 
 
-
-
     private void broadcast(String message) {
         sessionUsernameMap.forEach((session, username) -> {
             try {
@@ -193,19 +135,14 @@ public class ChatSocket {
                 e.printStackTrace();
             }
 
-
         });
 
-
     }
-
-
 
 
     // Gets the Chat history from the repository
     private String getChatHistory() {
         List<Message> messages = msgRepo.findAll();
-
 
         // convert the list to a string
         StringBuilder sb = new StringBuilder();
@@ -216,6 +153,5 @@ public class ChatSocket {
         }
         return sb.toString();
     }
-
 
 } // end of Class

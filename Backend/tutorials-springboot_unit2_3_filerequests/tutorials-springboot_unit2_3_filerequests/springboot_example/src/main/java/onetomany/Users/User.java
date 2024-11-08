@@ -1,7 +1,7 @@
 package onetomany.Users;
 
 
-import onetomany.Achievements.Achievement;
+//import onetomany.Achievements.Achievement;
 import onetomany.chatbox.Message;
 import onetomany.Laptops.Laptop;
 import onetomany.Phones.Phone;
@@ -55,23 +55,23 @@ public class User {
     private Laptop laptop;
 
 
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name = "user_achievements",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "achievement_id"))
-    private Set<Achievement> achievements = new HashSet<>();
-
-
-    public Set<Achievement> getAchievements() {
-        return achievements;
-    }
-
-
-    public void setAchievements(Set<Achievement> achievements) {
-        this.achievements = achievements;
-    }
+//    @JsonIgnore
+//    @ManyToMany
+//    @JoinTable(
+//            name = "user_achievements",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "achievement_id"))
+//    private Set<Achievement> achievements = new HashSet<>();
+//
+//
+//    public Set<Achievement> getAchievements() {
+//        return achievements;
+//    }
+//
+//
+//    public void setAchievements(Set<Achievement> achievements) {
+//        this.achievements = achievements;
+//    }
 
 
     @OneToMany(cascade = CascadeType.ALL)
