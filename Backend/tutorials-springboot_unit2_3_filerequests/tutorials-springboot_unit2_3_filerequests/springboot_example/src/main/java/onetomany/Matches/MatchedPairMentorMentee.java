@@ -7,6 +7,7 @@ import javax.persistence.*;
 @Entity
 public class MatchedPairMentorMentee {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,10 +26,10 @@ public class MatchedPairMentorMentee {
 
     public MatchedPairMentorMentee() {}
 
-    public MatchedPairMentorMentee(User mentor, User mentee, Area matchedArea) {
+    public MatchedPairMentorMentee(User mentor, User mentee, Area area) {
         this.mentor = mentor;
         this.mentee = mentee;
-        this.matchedArea = matchedArea;
+        this.matchedArea = area;
     }
 
     // Getters and setters

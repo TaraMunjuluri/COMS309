@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match Notifications</title>
+</head>
+<body>
+<h2>Mentorship Match Notifications</h2>
+<div id="notifications"></div>
+
+<script>
+  // Connect to WebSocket endpoint
+  const socket = new WebSocket("ws://localhost:8080/topic/matches");
+
+  // On connection open
+  socket.onopen = function(event) {
+      console.log("Connected to WebSocket server.");
+  };
+
+  // Listen for messages
+  socket.onmessage = function(event) {
+      const notificationsDiv = document.getElementById("notifications");
+      const message = JSON.parse(event.data);
+
+      // Display each match in a new paragraph
+      notificationsDiv.innerHTML += `<p>New match found: ${message.username}, ${message.classification}, ${message.major}</p>`;
+  };
+
+  // On connection close
+  socket.onclose = function(event) {
+      console.log("Disconnected from WebSocket server.");
+  };
+
+  // On error
+  socket.onerror = function(error) {
+      console.error("WebSocket error:", error);
+  };
+</script>
+</body>
+</html>
