@@ -3,7 +3,7 @@ package onetomany.Users;
 
 //import onetomany.Achievements.Achievement;
 import onetomany.Achievements.Achievement;
-import onetomany.chatbox.Message;
+//import onetomany.chatbox.Message;
 import onetomany.Laptops.Laptop;
 import onetomany.Phones.Phone;
 
@@ -82,20 +82,20 @@ public class User {
     private List<Phone> phones = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Message> messages;
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<Message> messages;
+//
+//
+//    // Getters and Setters for `messages`
+//    public List<Message> getMessages() {
+//        return messages;
+//    }
 
 
-    // Getters and Setters for `messages`
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
+//    public void setMessages(List<Message> messages) {
+//        this.messages = messages;
+//    }
+//
 
     // Constructors
     public User(String name, String emailId, Date joiningDate) {
