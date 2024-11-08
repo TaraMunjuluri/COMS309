@@ -1,4 +1,4 @@
-package onetomany.images;
+package onetomany.ProfileImages;
 
 import javax.persistence.*;
 import onetomany.Users.User;
