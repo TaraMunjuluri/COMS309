@@ -102,6 +102,8 @@ public class User {
 //    }
 //
 
+
+
     // Constructors
     public User(String name, String emailId, Date joiningDate) {
         this.name = name;
@@ -116,6 +118,18 @@ public class User {
 
 
     // Getters and Setters
+
+    private String theme = "light"; // Default to light mode
+
+    // Getters and setters
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
     public long getId() {
         return id;
     }

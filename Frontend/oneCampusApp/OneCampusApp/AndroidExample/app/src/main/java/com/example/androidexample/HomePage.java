@@ -51,6 +51,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             } else if (id == R.id.nav_settings) {
                 Intent chatIntent = new Intent(HomePage.this, SettingsActivity.class); // Replace with actual activity
                 startActivity(chatIntent);
+            } else if (id == R.id.nav_achievements) {
+                Intent achievementIntent = new Intent(HomePage.this, AchievementsActivity.class); // Replace with actual activity
+                startActivity(achievementIntent);
             } else if (id == R.id.nav_logout) {
                 finish();
             }

@@ -416,7 +416,7 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/users/{id}")
-    String deleteUser(@PathVariable int id){
+    String deleteUser(@PathVariable long id){
         userRepository.deleteById(id);
         return success;
     }
@@ -426,13 +426,48 @@ public class UserController {
         return userRepository.findByUsernameContainingIgnoreCase(username);
     }
 
-    @PutMapping("/mode")
-    public String updateAppMode(@RequestParam Long id, @RequestParam String mode) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        user.setAppMode(mode);
-        userRepository.save(user);
-        return "App mode updated to " + mode;
+//    @PutMapping("/mode")
+//    public String updateAppMode(@RequestParam Long id, @RequestParam String mode) {
+//        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+//        user.setAppMode(mode);
+//        userRepository.save(user);
+//        return "App mode updated to " + mode;
+//    }
+//@PutMapping("/mode")
+//public String updateAppMode(@RequestBody Map<String, Object> request) {
+//    Long id = Long.valueOf(request.get("id").toString());
+//    String mode = request.get("mode").toString();
+//
+//    User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+//    user.setAppMode(mode);
+//    userRepository.save(user);
+//
+//    return "App mode updated to " + mode;
+//}
+@PutMapping("/users/{id}/theme")
+public ResponseEntity<Map<String, Object>> toggleThemeMode(
+        @PathVariable int id,
+        @RequestBody Map<String, String> themeRequest
+) {
+    User user = userRepository.findById(id);
+    if (user == null) {
+        return new ResponseEntity<>(failureResponse("User not found"), HttpStatus.NOT_FOUND);
     }
+
+    String themeMode = themeRequest.get("themeMode");
+    if (themeMode == null || (!themeMode.equalsIgnoreCase("dark") && !themeMode.equalsIgnoreCase("light"))) {
+        return new ResponseEntity<>(failureResponse("Invalid theme mode"), HttpStatus.BAD_REQUEST);
+    }
+
+    user.setTheme(themeMode);
+    userRepository.save(user);
+
+    Map<String, Object> response = new HashMap<>();
+    response.put("message", "Theme updated successfully");
+    response.put("themeMode", themeMode);
+    return new ResponseEntity<>(response, HttpStatus.OK);
+}
+
 
     // Endpoint to change password
     @PutMapping("/updatePassword/{username}")

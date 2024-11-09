@@ -22,6 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
+
+
 
 @Controller
 @ServerEndpoint(value = "/chat/{username}")
@@ -38,6 +41,11 @@ public class ChatSocket {
     private static Map<String, Session> usernameSessionMap = new ConcurrentHashMap<>();
     private final Logger logger = LoggerFactory.getLogger(ChatSocket.class);
 
+    private static final int INACTIVITY_TIMEOUT = 20000;  // 10 seconds (in milliseconds)
+    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private Map<Session, ScheduledFuture<?>> inactivityTasks = new ConcurrentHashMap<>();
+    private Map<Session, Long> lastActivityTime = new ConcurrentHashMap<>();
+
     @OnOpen
     public void onOpen(Session session, @PathParam("username") String username) throws IOException {
         logger.info("Entered into Open");
@@ -49,11 +57,17 @@ public class ChatSocket {
 
         // Broadcast that a new user joined
         broadcast("User:" + username + " has Joined the Chat");
+
+        // Start inactivity timer
+        resetInactivityTimer(session);
     }
 
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
         String username = sessionUsernameMap.get(session);
+
+        // Reset inactivity timer whenever a message is received
+        resetInactivityTimer(session);
 
         // Typing notification
         if (message.equals("TYPING_START")) {
@@ -82,12 +96,48 @@ public class ChatSocket {
 
         // Broadcast that the user disconnected
         broadcast(username + " disconnected");
+
+        // Cancel inactivity task
+        cancelInactivityTimer(session);
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
         logger.info("Entered into Error");
         throwable.printStackTrace();
+    }
+
+    private void resetInactivityTimer(Session session) {
+        // Cancel any existing inactivity task
+        cancelInactivityTimer(session);
+
+        // Start a new task to check for inactivity after the timeout period
+        inactivityTasks.put(session, scheduler.schedule(() -> handleInactivity(session), INACTIVITY_TIMEOUT, TimeUnit.MILLISECONDS));
+        lastActivityTime.put(session, System.currentTimeMillis());
+    }
+
+    private void cancelInactivityTimer(Session session) {
+        if (inactivityTasks.containsKey(session)) {
+            inactivityTasks.get(session).cancel(false);
+            inactivityTasks.remove(session);
+        }
+    }
+
+    private void handleInactivity(Session session) {
+        // If no message was received for the timeout period, consider the user inactive
+        long currentTime = System.currentTimeMillis();
+        long lastActive = lastActivityTime.getOrDefault(session, currentTime);
+
+        if (currentTime - lastActive >= INACTIVITY_TIMEOUT) {
+            String username = sessionUsernameMap.get(session);
+            try {
+                // Notify the user or close the session due to inactivity
+                sendMessageToParticularUser(username, "You have been inactive for 10 seconds and will be disconnected.");
+                session.close();  // Disconnect the user
+            } catch (IOException e) {
+                logger.error("Error while closing session due to inactivity: " + e.getMessage());
+            }
+        }
     }
 
     private void sendMessageToParticularUser(String username, String message) {
@@ -133,3 +183,4 @@ public class ChatSocket {
         return sb.toString();
     }
 }
+

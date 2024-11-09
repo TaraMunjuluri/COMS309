@@ -76,3 +76,24 @@ function send() {
     }
 }
 
+let inactivityTimer;
+
+// Reset inactivity timer on any user activity
+function resetInactivityTimer() {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+        console.log('You have been inactive for a while.');
+        // Optionally send a message to the server or show a warning.
+    }, 20 * 1000);  // 5 minutes
+}
+
+// Reset timer on message send
+function sendMessage(message) {
+    resetInactivityTimer();
+    // Send the message to the WebSocket server
+    websocket.send(message);
+}
+
+// Reset the timer on user interactions
+document.addEventListener('mousemove', resetInactivityTimer);
+document.addEventListener('keydown', resetInactivityTimer);
