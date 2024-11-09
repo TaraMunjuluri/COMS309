@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText usernameEditText;
-//    private EditText emailEditText;
+    //    private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
     private Button signupButton;
@@ -73,32 +73,35 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            // Parse the nested user object and retrieve the userId
-                            JSONObject userObject = response.getJSONObject("user");
-                            int userId = userObject.getInt("id");
-
-                            // Optional: If the backend returns additional session info, capture it
+                            // Extract sessionId if it exists
                             String sessionId = response.optString("sessionId", null);
 
-                            // Save both userId and sessionId in SharedPreferences
-                            SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+                            // Extract user object and retrieve userId
+                            JSONObject userObject = response.getJSONObject("user");
+                            int userId = userObject.optInt("id", -1);  // Retrieve userId from user object
+
+                            // Save sessionId and userId to SharedPreferences
+                            SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putInt("userId", userId); // Save the userId
+
                             if (sessionId != null) {
-                                editor.putString("sessionId", sessionId); // Save the sessionId if available
+                                editor.putString("sessionId", sessionId);
+                            }
+                            if (userId != -1) {
+                                editor.putInt("userId", userId); // Save userId if available
                             }
                             editor.apply();
 
                             Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
 
-                            // Start the next activity
+                            // Start LookingFor activity after login success
                             Intent intent = new Intent(LoginActivity.this, LookingFor.class);
                             intent.putExtra("USERNAME", username);
                             startActivity(intent);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(LoginActivity.this, "Failed to parse login response", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Failed to parse user data", Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -111,10 +114,25 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+                }) {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(com.android.volley.NetworkResponse response) {
+                String sessionId = response.headers.get("Set-Cookie");
+
+                if (sessionId != null) {
+                    SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("sessionId", sessionId);
+                    editor.apply();
+                }
+
+                return super.parseNetworkResponse(response);
+            }
+        };
 
         requestQueue.add(jsonObjectRequest);
     }
+
 
 
 }

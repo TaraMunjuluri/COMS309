@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -26,8 +27,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -38,7 +43,8 @@ import okhttp3.Response;
 public class ProfileActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA_PERMISSION = 100;
-    private static final String BACKEND_URL = "https://your-backend-url.com/upload"; // Replace with your backend endpoint
+    private static final String BACKEND_URL = "http://10.90.74.238:8080/api/images/upload/";
+    private static final String USER_UPDATE_URL = "http://coms-3090-033.class.las.iastate.edu:8080/api/users/update";
 
     private TextView tvUsername, tvEmail;
     private EditText etMajor;
@@ -46,6 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Button btnSaveProfile, btnUploadPicture;
     private ImageView ivProfilePicture;
     private Uri selectedImageUri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String username = sharedPreferences.getString("username", "N/A");
         String email = sharedPreferences.getString("email", "N/A");
+        int userId = sharedPreferences.getInt("userId", -1);
 
         tvUsername.setText(username);
         tvEmail.setText(email);
@@ -78,11 +86,14 @@ public class ProfileActivity extends AppCompatActivity {
         classificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerClassification.setAdapter(classificationAdapter);
 
+        // Display profile picture if available
+        displayProfilePicture(userId);
+
         // Open dialog for selecting gallery or camera
         btnUploadPicture.setOnClickListener(v -> openImageSourceDialog());
 
         // Save profile information
-        btnSaveProfile.setOnClickListener(v -> saveProfileData());
+        btnSaveProfile.setOnClickListener(v -> saveProfileData(userId));
     }
 
     private void openImageSourceDialog() {
@@ -113,8 +124,8 @@ public class ProfileActivity extends AppCompatActivity {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     selectedImageUri = result.getData().getData();
                     ivProfilePicture.setImageURI(selectedImageUri);
-                    // Here you can save the image locally or keep it in memory for later upload
-                    saveImageLocally(selectedImageUri);
+                    // Call your image upload method here
+                    uploadImageToBackend(selectedImageUri);
                 }
             });
 
@@ -129,6 +140,16 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    ivProfilePicture.setImageURI(selectedImageUri);
+                    // Call your image upload method here
+                    uploadImageToBackend(selectedImageUri);
+                }
+            });
+
     private void openCamera() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "New Profile Picture");
@@ -140,64 +161,103 @@ public class ProfileActivity extends AppCompatActivity {
         cameraLauncher.launch(cameraIntent);
     }
 
-    private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK) {
-                    ivProfilePicture.setImageURI(selectedImageUri);
-                    // Save image locally or keep it in memory for later upload
-                    saveImageLocally(selectedImageUri);
-                }
-            });
+    private void saveProfileData(int userId) {
+        // Removed the code for saving major and classification to the backend
+        // as you mentioned you don't need that functionality for now
 
-    // Placeholder method for saving the image locally
-    private void saveImageLocally(Uri uri) {
-        // Implement your local storage logic here if needed
-        // For now, this method is a placeholder
-        Log.d("ProfileActivity", "Image saved locally: " + uri.toString());
+        // Upload the selected image to the backend
+        if (selectedImageUri != null) {
+            uploadImageToBackend(selectedImageUri);
+        } else {
+            Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void uploadImageToBackend(File file) {
-        // This method can remain as is or be modified to handle uploading later
-        // You can also save the image path in SharedPreferences if needed
-        Log.d("ProfileActivity", "Ready to upload image: " + file.getPath());
-        // Implement backend upload logic later when ready
-    }
-
-    private String getRealPathFromUri(Uri uri) {
-        // Implement real path retrieval as needed for later uploads
-        return uri.getPath(); // Simple placeholder return for demonstration
-    }
-
-    private void saveProfileData() {
-        String major = etMajor.getText().toString();
-        String classification = spinnerClassification.getSelectedItem().toString();
-
-        if (major.isEmpty()) {
-            Toast.makeText(this, "Please enter your major", Toast.LENGTH_SHORT).show();
+    private void uploadImageToBackend(Uri imageUri) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("userId", -1);
+        if (userId == -1) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("major", major);
-        editor.putString("classification", classification);
-        editor.apply();
+        String filePath = createTempFileFromUri(imageUri);
+        if (filePath == null) {
+            Toast.makeText(this, "Error: Unable to get the real path of the image", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        Toast.makeText(this, "Profile information saved", Toast.LENGTH_SHORT).show();
-        Intent profileIntent = new Intent(ProfileActivity.this, HomePage.class);
-        startActivity(profileIntent);
+        File imageFile = new File(filePath);
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", imageFile.getName(),
+                        RequestBody.create(MediaType.parse("image/*"), imageFile))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(BACKEND_URL + userId)
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(() -> Toast.makeText(ProfileActivity.this, "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    runOnUiThread(() -> Toast.makeText(ProfileActivity.this, "Image uploaded successfully", Toast.LENGTH_SHORT).show());
+                } else {
+                    runOnUiThread(() -> Toast.makeText(ProfileActivity.this, "Failed to upload image", Toast.LENGTH_SHORT).show());
+                }
+            }
+        });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openCamera();
-            } else {
-                Toast.makeText(this, "Camera permission is required to take a photo", Toast.LENGTH_SHORT).show();
+
+    private String createTempFileFromUri(Uri uri) {
+        try (InputStream inputStream = getContentResolver().openInputStream(uri);
+             FileOutputStream outputStream = new FileOutputStream(new File(getCacheDir(), "temp_image"))) {
+            if (inputStream == null) return null;
+
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
             }
+            return new File(getCacheDir(), "temp_image").getAbsolutePath();
+        } catch (IOException e) {
+            Log.e("ProfileActivity", "Error creating temp file from URI", e);
+            return null;
         }
+    }
+
+
+    private void displayProfilePicture(int userId) {
+        OkHttpClient client = new OkHttpClient();
+        String imageUrl = "http://coms-3090-033.class.las.iastate.edu:8080/api/images/user/" + userId;
+
+        Request request = new Request.Builder().url(imageUrl).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(() -> Log.e("ProfileActivity", "Failed to load image: " + e.getMessage()));
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    InputStream inputStream = response.body().byteStream();
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    runOnUiThread(() -> ivProfilePicture.setImageBitmap(bitmap));
+                } else {
+                    runOnUiThread(() -> Log.e("ProfileActivity", "Failed to load image"));
+                }
+            }
+        });
     }
 }
