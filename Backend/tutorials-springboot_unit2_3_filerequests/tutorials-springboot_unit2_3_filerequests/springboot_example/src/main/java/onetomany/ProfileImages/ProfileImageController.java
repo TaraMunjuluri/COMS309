@@ -97,4 +97,11 @@ public class ProfileImageController {
                     .body("Failed to delete image: " + e.getMessage());
         }
     }
+    @GetMapping("/path/{imageId}")
+    public ResponseEntity<?> getImagePathById(@PathVariable Integer imageId) {
+        return imageRepository.findById(imageId)
+                .map(image -> ResponseEntity.ok(image.getImageLink()))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }
