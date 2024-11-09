@@ -56,15 +56,15 @@ document.getElementById("msg").addEventListener("input", () => {
     }, typingInterval);
 });
 
-@Controller
-public class MatchNotificationController {
-
-    @GetMapping("/matches/notifications")
-    public String getMatchNotificationsPage() {
-        // This will look for src/main/resources/static/matches/index.html
-        return "matches/index";
-    }
-}
+//@Controller
+//public class MatchNotificationController {
+//
+//    @GetMapping("/matches/notifications")
+//    public String getMatchNotificationsPage() {
+//        // This will look for src/main/resources/static/matches/index.html
+//        return "matches/index";
+//    }
+//}
 
 
 function send() {

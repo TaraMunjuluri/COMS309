@@ -74,24 +74,43 @@ public class AchievementService {
         Optional<User> userOpt = Optional.ofNullable(userRepository.findById(userId));
         Optional<Achievement> achievementOpt = achievementRepository.findById(achievementId);
 
-
         if (!userOpt.isPresent() || !achievementOpt.isPresent()) {
             return false;
         }
 
-
         User user = userOpt.get();
         Achievement achievement = achievementOpt.get();
-
 
         Set<Achievement> userAchievements = user.getAchievements();
         userAchievements.add(achievement);
         user.setAchievements(userAchievements);
 
-
         userRepository.save(user);
         return true;
     }
+
+//    public boolean awardAchievementToUser(Integer userId, Integer achievementId) {
+//        Optional<User> userOpt = Optional.ofNullable(userRepository.findById(userId));
+//        Optional<Achievement> achievementOpt = achievementRepository.findById(achievementId);
+//
+//
+//        if (!userOpt.isPresent() || !achievementOpt.isPresent()) {
+//            return false;
+//        }
+//
+//
+//        User user = userOpt.get();
+//        Achievement achievement = achievementOpt.get();
+//
+//
+//        Set<Achievement> userAchievements = user.getAchievements();
+//        userAchievements.add(achievement);
+//        user.setAchievements(userAchievements);
+//
+//
+//        userRepository.save(user);
+//        return true;
+//    }
 
 
 

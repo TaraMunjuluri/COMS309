@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findById(int id);
+    User findById(long id);
     void deleteById(int id);
 
     List<User> findByUsernameContainingIgnoreCase(String username);

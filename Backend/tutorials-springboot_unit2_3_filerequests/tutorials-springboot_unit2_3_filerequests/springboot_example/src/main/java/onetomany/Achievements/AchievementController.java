@@ -93,6 +93,7 @@ public class AchievementController {
             achievementService.awardAchievementToUser(userId, achievementId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (RuntimeException e) {
+            System.out.println("something went wrong buddy" + e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
