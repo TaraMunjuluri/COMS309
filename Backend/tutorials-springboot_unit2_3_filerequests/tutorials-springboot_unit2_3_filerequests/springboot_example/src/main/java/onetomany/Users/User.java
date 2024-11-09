@@ -2,22 +2,16 @@ package onetomany.Users;
 
 
 //import onetomany.Achievements.Achievement;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import onetomany.Achievements.Achievement;
-//import onetomany.chatbox.Message;
+import onetomany.Interests.Interests;
 import onetomany.Laptops.Laptop;
 import onetomany.Phones.Phone;
-
 
 import javax.persistence.*;
 import java.sql.Blob;
 import java.util.*;
-
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.OneToOne;
 
 
 @Entity
@@ -81,6 +75,17 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "phone_id"))
     private List<Phone> phones = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "users")
+    private Set<Interests> interests = new HashSet<>();
+
+    // Add getters and setters for interests
+    public Set<Interests> getInterests() {
+        return interests;
+    }
+    public void setInterests(Set<Interests> interests) {
+        this.interests = interests;
+    }
+
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 //    private List<Message> messages;
@@ -116,7 +121,7 @@ public class User {
     }
 
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
