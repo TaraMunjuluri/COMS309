@@ -1,6 +1,5 @@
 package onetomany.Interests;
 
-import onetomany.Interests.Interests;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
