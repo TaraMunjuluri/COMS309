@@ -15,7 +15,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import org.json.JSONArray;
@@ -31,7 +30,7 @@ public class UserMatch extends AppCompatActivity {
     private MatchAdapter adapter;
     private List<User> users;
     private WebSocket webSocket;
-    private static final String SOCKET_URL = "ws://localhost:8080/matches-websocket/websocket";
+    private static final String SOCKET_URL = "ws://10.90.74.238:8080/matches-websocket/websocket";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +41,7 @@ public class UserMatch extends AppCompatActivity {
         backButton.setOnClickListener(v -> finish());
 
         recyclerView = findViewById(R.id.recycler_view);
-        users = getPotentialMatches();
+        users = new ArrayList<>(); // Ensure users is initialized as an empty list
 
         // Initialize the RecyclerView
         adapter = new MatchAdapter(users, new MatchAdapter.OnUserRequestClickListener() {
@@ -61,6 +60,7 @@ public class UserMatch extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         initializeWebSocket();
+        fetchPotentialMatches(); // Ensure this method is called in onCreate
     }
 
     // Initialize WebSocket
@@ -88,14 +88,28 @@ public class UserMatch extends AppCompatActivity {
 
     // Send Match Request
     private void sendMatchRequest(User user) {
-        String message = "{\"action\": \"match\", \"userId\": \"" + user.getUserId() + "\"}";
-        webSocket.send(message);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("userId", -1);
+
+        if (userId != -1) {
+            String message = "{\"action\": \"match\", \"userId\": " + userId + ", \"matchUserId\": " + user.getUserId() + "}";
+            webSocket.send(message);
+        } else {
+            Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Send Reject Request
     private void rejectMatchRequest(User user) {
-        String message = "{\"action\": \"reject\", \"userId\": \"" + user.getUserId() + "\"}";
-        webSocket.send(message);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("userId", -1);
+
+        if (userId != -1) {
+            String message = "{\"action\": \"reject\", \"userId\": " + userId + ", \"matchUserId\": " + user.getUserId() + "}";
+            webSocket.send(message);
+        } else {
+            Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Handle WebSocket Responses
@@ -115,15 +129,15 @@ public class UserMatch extends AppCompatActivity {
         });
     }
 
-    private List<User> getPotentialMatches() {
-        // Retrieve userId from SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+    // Fetch potential matches from the backend
+    private void fetchPotentialMatches() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         int userId = sharedPreferences.getInt("userId", -1);
 
         if (userId == -1) {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
             finish();
-            return new ArrayList<>();
+            return;
         }
 
         OkHttpClient client = new OkHttpClient();
@@ -131,35 +145,30 @@ public class UserMatch extends AppCompatActivity {
 
         Request request = new Request.Builder().url(url).build();
 
-        List<User> matchList = new ArrayList<>();
-
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
+                Log.e("HTTP Request", "Failed to fetch matches", e);
                 runOnUiThread(() -> Toast.makeText(UserMatch.this, "Failed to load matches", Toast.LENGTH_SHORT).show());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     try {
                         String jsonData = response.body().string();
                         JSONArray jsonArray = new JSONArray(jsonData);
 
-                        // Parse each match object
+                        List<User> matchList = new ArrayList<>();
+
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject matchObject = jsonArray.getJSONObject(i);
-
                             String username = matchObject.getString("username");
                             String classification = matchObject.getString("classification");
                             String major = matchObject.getString("major");
-                            // You might want to set some default or null for userId if it's not part of the response
-                            int matchUserId = -1; // You could also set this based on other available data, if possible
+                            int matchUserId = matchObject.optInt("id", -1); // Ensure correct ID parsing
 
-                            // Create a new User object for each match
-                            User user = new User(username, major, classification, matchUserId);
-                            matchList.add(user);
+                            matchList.add(new User(username, major, classification, matchUserId));
                         }
 
                         runOnUiThread(() -> {
@@ -167,15 +176,13 @@ public class UserMatch extends AppCompatActivity {
                             users.addAll(matchList);
                             adapter.notifyDataSetChanged();
                         });
-
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e("JSON Parsing", "Error parsing match data", e);
                     }
+                } else {
+                    Log.e("HTTP Response", "Unsuccessful response or null body");
                 }
             }
         });
-
-        return matchList;
     }
-
 }
