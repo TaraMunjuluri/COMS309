@@ -39,7 +39,7 @@ public class InterestsController {
             @PathVariable long userId,
             @RequestBody Interests interest) {
 
-        User user = userRepository.findById(userId).orElse(null);
+        User user = userRepository.findById(userId);
         if(user == null) {
             return ResponseEntity.notFound().build();
         }
