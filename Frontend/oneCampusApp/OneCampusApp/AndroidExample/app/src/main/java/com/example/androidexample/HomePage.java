@@ -55,7 +55,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 Intent achievementIntent = new Intent(HomePage.this, AchievementsActivity.class); // Replace with actual activity
                 startActivity(achievementIntent);
             } else if (id == R.id.nav_logout) {
-                finish();
+                Intent logoutIntent = new Intent(HomePage.this, LoginActivity.class); // Replace with actual activity
+                startActivity(logoutIntent);
             }
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
@@ -109,4 +110,4 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         return false;
     }
-}
+    }
