@@ -104,4 +104,20 @@ public class InterestsController {
     public List<Interests> getInterestsByClassification(@PathVariable String classification) {
         return interestsRepository.findByClassification(classification);
     }
+    @GetMapping("/users/{userId}/interests")
+    public ResponseEntity<Set<Interests>> getInterestsForUser(@PathVariable Long userId) {
+        // Find the user by ID
+        User user = userRepository.findById(userId).orElse(null);
+
+        // If user does not exist, return 404
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Retrieve the interests of the user
+        Set<Interests> userInterests = user.getInterests();
+
+        return ResponseEntity.ok(userInterests);
+    }
+
 }
