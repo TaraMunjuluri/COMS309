@@ -39,7 +39,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
+/**
+ * ProfileActivity manages the user profile, allowing users to update their major,
+ * classification, and profile picture, and view their saved information.
+ */
 public class ProfileActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA_PERMISSION = 100;
@@ -53,7 +56,14 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView ivProfilePicture;
     private Uri selectedImageUri;
 
-
+    /**
+     * Called when the activity is created. Initializes the views, loads user data
+     * from SharedPreferences, and sets up click listeners for buttons.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously
+     *                           being shut down, this Bundle contains the data it most
+     *                           recently supplied. Otherwise, it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +106,10 @@ public class ProfileActivity extends AppCompatActivity {
         btnSaveProfile.setOnClickListener(v -> saveProfileData(userId));
     }
 
+    /**
+     * Opens a dialog for the user to choose between selecting an image from the gallery
+     * or taking a photo with the camera.
+     */
     private void openImageSourceDialog() {
         String[] options = {"Select from Gallery", "Take a Photo"};
         new androidx.appcompat.app.AlertDialog.Builder(this)
@@ -110,6 +124,9 @@ public class ProfileActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Launches an intent to open the gallery for the user to pick an image.
+     */
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
@@ -129,6 +146,10 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
 
+    /**
+     * Checks if the app has permission to use the camera. If not, requests permission.
+     * Otherwise, opens the camera.
+     */
     private void checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -150,6 +171,10 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
 
+    /**
+     * Launches the camera to allow the user to take a photo.
+     * A temporary URI is created to store the captured photo.
+     */
     private void openCamera() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "New Profile Picture");
@@ -161,6 +186,12 @@ public class ProfileActivity extends AppCompatActivity {
         cameraLauncher.launch(cameraIntent);
     }
 
+    /**
+     * Saves the profile data (e.g., major, classification) and uploads the selected
+     * profile picture to the backend.
+     *
+     * @param userId The ID of the user whose profile is being updated.
+     */
     private void saveProfileData(int userId) {
         // Removed the code for saving major and classification to the backend
         // as you mentioned you don't need that functionality for now
@@ -173,6 +204,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Uploads the selected image to the backend server.
+     *
+     * @param imageUri The URI of the image to upload.
+     */
     private void uploadImageToBackend(Uri imageUri) {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         int userId = sharedPreferences.getInt("userId", -1);
@@ -219,6 +255,12 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Creates a temporary file from the provided image URI.
+     *
+     * @param uri The URI of the image.
+     * @return The file path of the temporary image file, or null if the operation fails.
+     */
     private String createTempFileFromUri(Uri uri) {
         try (InputStream inputStream = getContentResolver().openInputStream(uri);
              FileOutputStream outputStream = new FileOutputStream(new File(getCacheDir(), "temp_image"))) {
@@ -237,6 +279,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Displays the user's profile picture by fetching it from the backend server.
+     *
+     * @param userId The ID of the user whose profile picture is to be displayed.
+     */
     private void displayProfilePicture(int userId) {
         OkHttpClient client = new OkHttpClient();
         String imageUrl = "http://coms-3090-033.class.las.iastate.edu:8080/api/images/user/" + userId;
