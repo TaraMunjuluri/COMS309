@@ -1,11 +1,17 @@
 package onetomany.MentorSurvey;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import onetomany.ExceptionHandlers.MentorAlreadyExistsException;
+import onetomany.ExceptionHandlers.MentorNotFoundException;
+import onetomany.ExceptionHandlers.UnauthorizedException;
 import onetomany.Users.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import onetomany.services.MatchMentorMenteeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,14 +25,26 @@ public class MentorController {
     MentorRepository mentorRepository;
 
     @Autowired
-    private MatchMentorMenteeService matchMentorMenteeService; // Injecting the service
+    private MatchMentorMenteeService matchMentorMenteeService;
 
-    // Create a new mentor based on the logged-in user
+    @Operation(summary = "Create a new mentor for the logged-in user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Mentor created successfully"),
+            @ApiResponse(responseCode = "401", description = "User not logged in", content = @Content),
+            @ApiResponse(responseCode = "409", description = "User is already a mentor", content = @Content)
+    })
     @PostMapping("/create")
-    public ResponseEntity<String> createMentor(@RequestBody Mentor mentor, HttpServletRequest request) {
+    public String createMentor(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Details of the mentor to create",
+                    required = true,
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Mentor.class))
+            )
+            @RequestBody Mentor mentor, HttpServletRequest request) {
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("loggedInUser") == null) {
-            return new ResponseEntity<>("User not logged in", HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException("User not logged in");
         }
 
         User loggedInUser = (User) session.getAttribute("loggedInUser");
@@ -34,7 +52,7 @@ public class MentorController {
         // Check if the user is already a mentor
         Mentor existingMentor = mentorRepository.findByUser(loggedInUser);
         if (existingMentor != null) {
-            return new ResponseEntity<>("User is already a mentor", HttpStatus.CONFLICT);
+            throw new MentorAlreadyExistsException("User is already a mentor");
         }
 
         // Associate the mentor with the logged-in user
@@ -46,21 +64,29 @@ public class MentorController {
         // Trigger matching logic
         matchMentorMenteeService.findNewMatches();
 
-        return new ResponseEntity<>("Mentor created successfully", HttpStatus.CREATED);
+        return "Mentor created successfully";
     }
 
-    // Get all mentors
+    @Operation(summary = "Retrieve all mentors")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mentors retrieved successfully")
+    })
     @GetMapping("/all")
-    public ResponseEntity<List<Mentor>> getAllMentors() {
-        List<Mentor> mentors = mentorRepository.findAll();
-        return ResponseEntity.ok(mentors);
+    public List<Mentor> getAllMentors() {
+        return mentorRepository.findAll();
     }
 
+    @Operation(summary = "Delete the logged-in user's mentor record")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mentor deleted successfully"),
+            @ApiResponse(responseCode = "401", description = "User not logged in", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Mentor not found", content = @Content)
+    })
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteMentor(HttpServletRequest request) {
+    public String deleteMentor(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("loggedInUser") == null) {
-            return new ResponseEntity<>("User not logged in", HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException("User not logged in");
         }
 
         User loggedInUser = (User) session.getAttribute("loggedInUser");
@@ -68,22 +94,33 @@ public class MentorController {
         // Find the existing mentor record for the logged-in user
         Mentor existingMentor = mentorRepository.findByUser(loggedInUser);
         if (existingMentor == null) {
-            return new ResponseEntity<>("Mentor not found", HttpStatus.NOT_FOUND);
+            throw new MentorNotFoundException("Mentor not found");
         }
 
         // Delete the mentor record
         mentorRepository.delete(existingMentor);
 
-        return new ResponseEntity<>("Mentor deleted successfully", HttpStatus.OK);
+        return "Mentor deleted successfully";
     }
 
+    @Operation(summary = "Update the logged-in user's mentor record")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mentor updated successfully"),
+            @ApiResponse(responseCode = "401", description = "User not logged in", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Mentor not found", content = @Content)
+    })
     @PutMapping("/update")
-    public ResponseEntity<String> updateMentor(@RequestBody Mentor updatedMentor, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+    public String updateMentor(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Updated mentor details",
+                    required = true,
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Mentor.class))
+            )
+            @RequestBody Mentor updatedMentor, HttpServletRequest request) {
 
-        // Check if the user is logged in
+        HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("loggedInUser") == null) {
-            return new ResponseEntity<>("User not logged in", HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException("User not logged in");
         }
 
         User loggedInUser = (User) session.getAttribute("loggedInUser");
@@ -91,7 +128,7 @@ public class MentorController {
         // Find the existing mentor record for the logged-in user
         Mentor existingMentor = mentorRepository.findByUser(loggedInUser);
         if (existingMentor == null) {
-            return new ResponseEntity<>("Mentor not found", HttpStatus.NOT_FOUND);
+            throw new MentorNotFoundException("Mentor not found");
         }
 
         // Update the mentor's details
@@ -105,11 +142,22 @@ public class MentorController {
         // Trigger matching logic after updating
         matchMentorMenteeService.findNewMatches();
 
-        return new ResponseEntity<>("Mentor updated successfully", HttpStatus.OK);
+        return "Mentor updated successfully";
     }
 
+    @Operation(summary = "Save a new mentor record")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mentor saved successfully")
+    })
     @PostMapping
-    public Mentor saveMentor(@RequestBody Mentor mentor) {
+    public Mentor saveMentor(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Details of the mentor to save",
+                    required = true,
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Mentor.class))
+            )
+            @RequestBody Mentor mentor) {
+
         Mentor savedMentor = mentorRepository.save(mentor);
 
         // Trigger matching after saving a mentor
