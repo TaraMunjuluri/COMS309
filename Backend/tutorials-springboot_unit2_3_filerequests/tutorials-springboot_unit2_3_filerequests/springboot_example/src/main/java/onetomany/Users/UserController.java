@@ -36,157 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.net.UnknownHostException;
-//
-//@RestController
-//public class UserController {
-//
-//    @Autowired
-//    UserRepository userRepository;
-//
-//    @Autowired
-//    LaptopRepository laptopRepository;
-//
-//    @Autowired
-//    BCryptPasswordEncoder passwordEncoder;
-//
-//    private String success = "{\"message\":\"success\"}";
-//    private String failure = "{\"message\":\"failure\"}";
-//
-//    @GetMapping(path = "/users")
-//    List<User> getAllUsers(){
-//        return userRepository.findAll();
-//    }
-//
-//    @GetMapping(path = "/users/{id}")
-//    User getUserById(@PathVariable int id){
-//        return userRepository.findById(id);
-//    }
-//
-//    @PostMapping(path = "/users")
-//    String createUser(@RequestParam("avatar") MultipartFile avatar, @RequestParam("user") String userString) throws Exception {
-//        if (userString == null)
-//            return failure;
-//
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        User user = objectMapper.readValue(userString, User.class);
-//
-//        user.setExtension(avatar.getOriginalFilename());
-//        userRepository.save(user);
-//
-//        if(avatar != null) {
-//            byte[] file = avatar.getBytes();
-//            SerialBlob blob = new SerialBlob(file);
-//            Blob image = blob;
-//            user.setAvatar(image);
-//            userRepository.save(user);
-//        }
-//        return success;
-//    }
-//
-//    @PostMapping("/signup")
-//    public ResponseEntity<String> signup(@RequestBody User user) {
-//        if (userRepository.findByEmailId(user.getEmailId()) != null) {
-//            return new ResponseEntity<>("Email is already registered", HttpStatus.BAD_REQUEST);
-//        }
-//
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        userRepository.save(user);
-//
-//        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
-//    }
-//
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody User user) {
-//        User existingUser = userRepository.findByEmailId(user.getEmailId());
-//        if (existingUser == null || !passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
-//            return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
-//        }
-//
-//        return new ResponseEntity<>("Login successful", HttpStatus.OK);
-//    }
-//
-//
-//    @PostMapping("/auth/login")
-//    public ResponseEntity<String> login(@RequestBody User user, HttpServletRequest request) {
-//        User existingUser = userRepository.findByEmailId(user.getEmailId());
-//        if (existingUser == null || !passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
-//            return new ResponseEntity<>(failure, HttpStatus.UNAUTHORIZED);
-//        }
-//
-//        // Create a session for the logged-in user
-//        HttpSession session = request.getSession();
-//        session.setAttribute("user", existingUser);
-//
-//        return new ResponseEntity<>(success, HttpStatus.OK);
-//    }
-//
-//    // Logout endpoint to invalidate the session
-//    @PostMapping("/auth/logout")
-//    public ResponseEntity<String> logout(HttpServletRequest request) {
-//        HttpSession session = request.getSession(false);
-//        if (session != null) {
-//            session.invalidate();
-//        }
-//        return new ResponseEntity<>("{\"message\":\"Logout successful\"}", HttpStatus.OK);
-//    }
-//
-//    @PutMapping("/users/{id}")
-//    User updateUser(@PathVariable int id, @RequestBody User request){
-//        User user = userRepository.findById(id);
-//        if(user == null)
-//            return null;
-//        userRepository.save(request);
-//        return userRepository.findById(id);
-//    }
-//
-//    @PutMapping("/users/{userId}/laptops/{laptopId}")
-//    String assignLaptopToUser(@PathVariable int userId,@PathVariable int laptopId){
-//        User user = userRepository.findById(userId);
-//        Laptop laptop = laptopRepository.findById(laptopId);
-//        if(user == null || laptop == null)
-//            return failure;
-//        laptop.setUser(user);
-//        user.setLaptop(laptop);
-//        userRepository.save(user);
-//        return success;
-//    }
-//
-//    @DeleteMapping(path = "/users/{id}")
-//    String deleteUser(@PathVariable int id){
-//        userRepository.deleteById(id);
-//        return success;
-//    }
-//
-//    @GetMapping(path = "/users/search")
-//    List<User> searchUsers(@RequestParam("username") String username) {
-//        return userRepository.findByUsernameContainingIgnoreCase(username);
-//    }
-//
-//    @GetMapping(path = "/users/{id}/avatar")
-//    ResponseEntity<Resource> getUserAvatar(@PathVariable int id) throws IOException, SQLException{
-//        User user = userRepository.findById(id);
-//
-//        if(user == null || user.getAvatar() == null){
-//            return null;
-//        }
-//
-//        HttpHeaders header = new HttpHeaders();
-//        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+user.getExtension());
-//        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
-//        header.add("Pragma", "no-cache");
-//        header.add("Expires", "0");
-//
-//        int blobLength = (int)user.getAvatar().length();
-//        byte[] byteArray = user.getAvatar().getBytes(1, blobLength);
-//        ByteArrayResource data = new ByteArrayResource(byteArray);
-//
-//        return ResponseEntity.ok()
-//                .headers(header)
-//                .contentLength(blobLength)
-//                .contentType(MediaType.parseMediaType("application/octet-stream"))
-//                .body(data);
-//    }
-//}
+
 
 //package onetomany.Users;
 
@@ -197,32 +47,18 @@ import java.util.List;
 
 import javax.sql.rowset.serial.SerialBlob;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.HttpStatus;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import onetomany.Laptops.Laptop;
-import onetomany.Laptops.LaptopRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 
 @RestController
+@Tag(name = "User Controller", description = "Manage users, their profiles, and authentication")
 public class UserController {
 
     @Autowired
@@ -234,28 +70,33 @@ public class UserController {
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
 
+    @Operation(summary = "Get all users")
+    @ApiResponse(responseCode = "200", description = "List of users retrieved successfully")
     @GetMapping(path = "/users")
     List<User> getAllUsers(){
         return userRepository.findAll();
     }
 
+    @Operation(summary = "Get user by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content)
+    })
     @GetMapping(path = "/users/{id}")
-    User getUserById(@PathVariable int id){
+    User getUserById(@Parameter(description = "ID of the user to retrieve")  @PathVariable int id){
         return userRepository.findById(id);
     }
 
-    //code section for ip address to be used by frontend
-//    @GetMapping("/ip-address")
-//    public ResponseEntity<String> getIpAddress() {
-//        try {
-//            InetAddress ip = InetAddress.getLocalHost();
-//            return new ResponseEntity<>(ip.getHostAddress(), HttpStatus.OK);
-//        } catch (UnknownHostException e) {
-//            return new ResponseEntity<>("Could not determine IP address", HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+    @Operation(summary = "Create new user with avatar")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input provided")
+    })
     @PostMapping(path = "/users")
-    String createUser(@RequestParam("avatar") MultipartFile avatar, @RequestParam("user") String userString) throws Exception {
+    String createUser( @Parameter(description = "User's avatar image file")  @RequestParam("avatar") MultipartFile avatar, @Parameter(description = "User details in JSON format")  @RequestParam("user") String userString) throws Exception {
         if (userString == null)
             return failure;
 
@@ -275,53 +116,11 @@ public class UserController {
         return success;
     }
 
-//    @PostMapping("/signup")
-//    public ResponseEntity<String> signup(@RequestBody User user) {
-//        if (userRepository.findByEmailId(user.getEmailId()) != null) {
-//            return new ResponseEntity<>("Email is already registered", HttpStatus.BAD_REQUEST);
-//        }
-//
-//        // Store the password as plain text (not recommended for production)
-//        userRepository.save(user);
-//
-//        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
-//    }
-//
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody User user) {
-//        User existingUser = userRepository.findByEmailId(user.getEmailId());
-//        if (existingUser == null || !user.getPassword().equals(existingUser.getPassword())) { // Compare raw passwords
-//            return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
-//        }
-//
-//        return new ResponseEntity<>("Login successful", HttpStatus.OK);
-//    }
-
-    //latest signup
-//    @PostMapping("/signup")
-//    public ResponseEntity<Map<String, Object>> signup(@RequestBody User user) {
-//        Map<String, Object> response = new HashMap<>();
-//
-//        if (userRepository.findByEmailId(user.getEmailId()) != null) {
-////            return new ResponseEntity<>("Email is already registered", HttpStatus.BAD_REQUEST);
-//            response.put("message", "Email is already registered");
-//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//        }
-//        if (userRepository.findByUsername(user.getUsername()) != null) {
-////            return new ResponseEntity<>("Username is already registered", HttpStatus.BAD_REQUEST);
-//            response.put("message", "Username is already registered");
-//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//        }
-//
-//        // Save the user with the plain text password
-//        userRepository.save(user);
-//        response.put("message", "User registered successfully");
-//        response.put("userId", user.getId());
-//
-////        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
-//        return new ResponseEntity<>(response, HttpStatus.CREATED);
-//    }
-
+    @Operation(summary = "Register new user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User registered successfully"),
+            @ApiResponse(responseCode = "400", description = "Email or username already exists")
+    })
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signup(@RequestBody User user) {
         if (userRepository.findByEmailId(user.getEmailId()) != null) {
@@ -346,6 +145,12 @@ public class UserController {
         response.put("message", message);
         return response;
     }
+
+    @Operation(summary = "User login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login successful"),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials")
+    })
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody User user,HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
@@ -364,6 +169,11 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "User login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login successful"),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials")
+    })
     @PostMapping("/auth/login")
     public ResponseEntity<String> loginWithSession(@RequestBody User user, HttpServletRequest request) {
         User existingUser = userRepository.findByEmailId(user.getEmailId());
@@ -378,6 +188,8 @@ public class UserController {
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
+    @Operation(summary = "User logout")
+    @ApiResponse(responseCode = "200", description = "Logout successful")
     // Logout endpoint to invalidate the session
     @PostMapping("/auth/logout")
     public ResponseEntity<Map<String, Object>> logout(HttpServletRequest request) {
@@ -393,9 +205,13 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
+    @Operation(summary = "Update user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User updated successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
     @PutMapping("/users/{id}")
-    User updateUser(@PathVariable int id, @RequestBody User request){
+    User updateUser( @Parameter(description = "ID of the user to update") @PathVariable int id, @RequestBody User request){
         User user = userRepository.findById(id);
         if(user == null)
             return null;
@@ -403,8 +219,13 @@ public class UserController {
         return userRepository.findById(id);
     }
 
+    @Operation(summary = "Assign laptop to user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Laptop assigned successfully"),
+            @ApiResponse(responseCode = "404", description = "User or laptop not found")
+    })
     @PutMapping("/users/{userId}/laptops/{laptopId}")
-    String assignLaptopToUser(@PathVariable int userId, @PathVariable int laptopId){
+    String assignLaptopToUser(@Parameter(description = "ID of the user")  @PathVariable int userId, @Parameter(description = "ID of the laptop") @PathVariable int laptopId){
         User user = userRepository.findById(userId);
         Laptop laptop = laptopRepository.findById(laptopId);
         if(user == null || laptop == null)
@@ -415,38 +236,32 @@ public class UserController {
         return success;
     }
 
+    @Operation(summary = "Delete user")
+    @ApiResponse(responseCode = "200", description = "User deleted successfully")
     @DeleteMapping(path = "/users/{id}")
-    String deleteUser(@PathVariable long id){
+    String deleteUser(@Parameter(description = "ID of the user to delete") @PathVariable long id){
         userRepository.deleteById(id);
         return success;
     }
 
+    @Operation(summary = "Search users by username")
+    @ApiResponse(responseCode = "200", description = "Search results retrieved successfully")
+
     @GetMapping(path = "/users/search")
-    List<User> searchUsers(@RequestParam("username") String username) {
+    List<User> searchUsers( @Parameter(description = "Username to search for") @RequestParam("username") String username) {
         return userRepository.findByUsernameContainingIgnoreCase(username);
     }
 
-//    @PutMapping("/mode")
-//    public String updateAppMode(@RequestParam Long id, @RequestParam String mode) {
-//        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-//        user.setAppMode(mode);
-//        userRepository.save(user);
-//        return "App mode updated to " + mode;
-//    }
-//@PutMapping("/mode")
-//public String updateAppMode(@RequestBody Map<String, Object> request) {
-//    Long id = Long.valueOf(request.get("id").toString());
-//    String mode = request.get("mode").toString();
-//
-//    User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-//    user.setAppMode(mode);
-//    userRepository.save(user);
-//
-//    return "App mode updated to " + mode;
-//}
+    @Operation(summary = "Update user's theme preference")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Theme updated successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid theme mode")
+    })
 @PutMapping("/users/{id}/theme")
 public ResponseEntity<Map<String, Object>> toggleThemeMode(
-        @PathVariable int id,
+            @Parameter(description = "ID of the user")
+            @PathVariable int id,
         @RequestBody Map<String, String> themeRequest
 ) {
     User user = userRepository.findById(id);
@@ -468,10 +283,15 @@ public ResponseEntity<Map<String, Object>> toggleThemeMode(
     return new ResponseEntity<>(response, HttpStatus.OK);
 }
 
-
+    @Operation(summary = "Update user password")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Password updated successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid password")
+    })
     // Endpoint to change password
     @PutMapping("/updatePassword/{username}")
-    public ResponseEntity<String> updatePassword(@PathVariable("username") String username, @RequestBody Map<String, String> passwordMap) {
+    public ResponseEntity<String> updatePassword( @Parameter(description = "Username of the user")  @PathVariable("username") String username, @RequestBody Map<String, String> passwordMap) {
         // Fetch the new password from the request body
         String newPassword = passwordMap.get("newPassword");
         if (newPassword == null || newPassword.isEmpty()) {
@@ -491,10 +311,14 @@ public ResponseEntity<Map<String, Object>> toggleThemeMode(
         return ResponseEntity.ok("Password updated successfully");
     }
 
-
+    @Operation(summary = "Delete user account by username")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
     // Endpoint to delete user account by username
     @DeleteMapping("/delete")
-    public String deleteUser(@RequestParam String username) {
+    public String deleteUser( @Parameter(description = "Username of the user to delete") @RequestParam String username) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
             userRepository.delete(user);
@@ -504,8 +328,14 @@ public ResponseEntity<Map<String, Object>> toggleThemeMode(
         }
     }
 
+    @Operation(summary = "Get user's avatar")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Avatar retrieved successfully",
+                    content = @Content(mediaType = "application/octet-stream")),
+            @ApiResponse(responseCode = "404", description = "User or avatar not found")
+    })
     @GetMapping(path = "/users/{id}/avatar")
-    ResponseEntity<Resource> getUserAvatar(@PathVariable int id) throws IOException, SQLException {
+    ResponseEntity<Resource> getUserAvatar(@Parameter(description = "ID of the user") @PathVariable int id) throws IOException, SQLException {
         User user = userRepository.findById(id);
 
         if(user == null || user.getAvatar() == null) {
