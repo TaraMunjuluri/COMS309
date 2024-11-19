@@ -14,10 +14,22 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
+/**
+ * HomePage is the main activity that provides navigation to various sections of the app.
+ * It features a navigation drawer with options to access different activities.
+ */
 public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
 
+    /**
+     * Called when the activity is created.
+     * Sets up the toolbar, navigation drawer, and handles navigation item selections.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this Bundle contains the data it most recently supplied in onSaveInstanceState().
+     *                           Otherwise, it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,66 +48,46 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         // Set up navigation view
         NavigationView navigationView = findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
+
+            // Handle navigation item selections
             if (id == R.id.nav_profile) {
-                Intent profileIntent = new Intent(HomePage.this, ProfileActivity.class); // Replace with actual activity
-                startActivity(profileIntent);
+                navigateToActivity(ProfileActivity.class);
             } else if (id == R.id.nav_match) {
-                Intent matchIntent = new Intent(HomePage.this, UserMatch.class);
-                startActivity(matchIntent);
+                navigateToActivity(UserMatch.class);
             } else if (id == R.id.nav_chat) {
-                Intent chatIntent = new Intent(HomePage.this, ChatActivity.class); // Replace with actual activity
-                startActivity(chatIntent);
+                navigateToActivity(ChatActivity.class);
             } else if (id == R.id.nav_settings) {
-                Intent chatIntent = new Intent(HomePage.this, SettingsActivity.class); // Replace with actual activity
-                startActivity(chatIntent);
+                navigateToActivity(SettingsActivity.class);
             } else if (id == R.id.nav_achievements) {
-                Intent achievementIntent = new Intent(HomePage.this, AchievementsActivity.class); // Replace with actual activity
-                startActivity(achievementIntent);
+                navigateToActivity(AchievementsActivity.class);
             } else if (id == R.id.nav_logout) {
-                Intent logoutIntent = new Intent(HomePage.this, LoginActivity.class); // Replace with actual activity
-                startActivity(logoutIntent);
+                navigateToActivity(LoginActivity.class);
             }
+
+            // Close the navigation drawer
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
     }
 
+    /**
+     * Inflates the options menu.
+     *
+     * @param menu The menu object to inflate.
+     * @return True if the menu is successfully created.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu_nav.xml
         getMenuInflater().inflate(R.menu.menu_nav, menu);
         return true;
     }
 
-//    @Override
-//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.nav_profile:
-//                // Handle profile action
-//                // Navigate to profile page (you can create a ProfileActivity later)
-//                Intent profileIntent = new Intent(HomePage.this, ChatActivity.class);
-//                startActivity(profileIntent);
-//                break;
-//            case R.id.nav_chat:
-//                // Navigate to chat page
-//                Intent chatIntent = new Intent(HomePage.this, ChatActivity.class);
-//                startActivity(chatIntent);
-//                break;
-//            case R.id.nav_logout:
-//                // Handle logout
-//                // Add your logout logic here
-//                finish();
-//                break;
-//        }
-//        // Close the drawer after selection
-//        drawerLayout.closeDrawer(GravityCompat.START);
-//        return true;
-//    }
-
-
+    /**
+     * Handles the back button press.
+     * If the navigation drawer is open, it closes it. Otherwise, the default back press behavior is executed.
+     */
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -105,9 +97,25 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
-
+    /**
+     * Placeholder for handling navigation item selections.
+     * This method is overridden to satisfy the NavigationView.OnNavigationItemSelectedListener interface.
+     *
+     * @param item The selected menu item.
+     * @return False since this implementation is overridden by the lambda in setNavigationItemSelectedListener.
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         return false;
     }
+
+    /**
+     * Navigates to the specified activity.
+     *
+     * @param activityClass The class of the activity to navigate to.
+     */
+    private void navigateToActivity(Class<?> activityClass) {
+        Intent intent = new Intent(HomePage.this, activityClass);
+        startActivity(intent);
     }
+}

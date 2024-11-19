@@ -19,22 +19,35 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * LoginActivity handles the login functionality of the app.
+ * It allows the user to log in with a username and password,
+ * or navigate to the signup page.
+ */
 public class LoginActivity extends AppCompatActivity {
+
     private EditText usernameEditText;
-    //    private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
     private Button signupButton;
     private RequestQueue requestQueue;
+
     private static final String LOGIN_URL = "http://coms-3090-033.class.las.iastate.edu:8080/login";
 
+    /**
+     * Called when the activity is first created.
+     * Initializes UI elements and sets up button listeners for login and signup actions.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this Bundle contains the data it most recently supplied in onSaveInstanceState().
+     *                           Otherwise, it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         usernameEditText = findViewById(R.id.login_username_edt);
-//        emailEditText = findViewById(R.id.login_email_edt);
         passwordEditText = findViewById(R.id.login_password_edt);
         loginButton = findViewById(R.id.login_login_btn);
         signupButton = findViewById(R.id.login_signup_btn);
@@ -42,6 +55,12 @@ public class LoginActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Handles the login button click event.
+             * Retrieves the username and password entered by the user and calls the loginUser method.
+             *
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 String username = usernameEditText.getText().toString();
@@ -51,6 +70,12 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         signupButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Handles the signup button click event.
+             * Redirects the user to the SignupActivity.
+             *
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
@@ -59,6 +84,14 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Logs in the user by sending a POST request to the server with the provided username and password.
+     * If the login is successful, it stores the sessionId and userId in SharedPreferences
+     * and redirects the user to the LookingFor activity.
+     *
+     * @param username The username entered by the user.
+     * @param password The password entered by the user.
+     */
     private void loginUser(String username, String password) {
         JSONObject jsonBody = new JSONObject();
         try {
@@ -70,6 +103,12 @@ public class LoginActivity extends AppCompatActivity {
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, LOGIN_URL, jsonBody,
                 new Response.Listener<JSONObject>() {
+                    /**
+                     * Handles the response from the server upon a successful login request.
+                     * Saves sessionId and userId to SharedPreferences and navigates to the LookingFor activity.
+                     *
+                     * @param response The JSON response from the server.
+                     */
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
@@ -106,6 +145,12 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 },
                 new Response.ErrorListener() {
+                    /**
+                     * Handles error responses from the server during login.
+                     * Displays appropriate error messages to the user.
+                     *
+                     * @param error The error returned by the server.
+                     */
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
@@ -115,6 +160,13 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 }) {
+            /**
+             * Parses the network response from the server to extract the sessionId, if available.
+             * Saves the sessionId to SharedPreferences.
+             *
+             * @param response The network response from the server.
+             * @return The parsed JSON response.
+             */
             @Override
             protected Response<JSONObject> parseNetworkResponse(com.android.volley.NetworkResponse response) {
                 String sessionId = response.headers.get("Set-Cookie");
@@ -132,7 +184,4 @@ public class LoginActivity extends AppCompatActivity {
 
         requestQueue.add(jsonObjectRequest);
     }
-
-
-
 }
