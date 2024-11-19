@@ -1,8 +1,14 @@
 package onetomany.PotentialFriends;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import onetomany.ExceptionHandlers.UserNotFoundException;
+import onetomany.Interests.Interests;
 import onetomany.Users.User;
 import onetomany.Users.UserRepository;
-import onetomany.Interests.Interests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +25,20 @@ public class PotentialFriendsController {
     @Autowired
     private UserRepository userRepository;
 
+    @Operation(summary = "Update the potential friends list for a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Potential friends updated successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+    })
     @GetMapping("/update/{userId}")
-    public ResponseEntity<?> updatePotentialFriends(@PathVariable long userId) {
+    public ResponseEntity<?> updatePotentialFriends(
+            @Parameter(description = "ID of the user to update potential friends for", required = true)
+            @PathVariable long userId) {
+
         User user = userRepository.findById(userId);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            throw new UserNotFoundException("User not found with ID: " + userId);
         }
-
         // Clear existing potential friends
         potentialFriendsRepository.deleteByUserId(userId);
 
@@ -64,9 +77,18 @@ public class PotentialFriendsController {
         return getPotentialFriends(userId);
     }
 
+    @Operation(summary = "Retrieve the potential friends list for a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Potential friends retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+    })
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getPotentialFriends(@PathVariable long userId) {
-        List<PotentialFriends> potentialFriends = potentialFriendsRepository.findByUserIdOrderByCommonInterestCountDesc(userId);
+    public ResponseEntity<?> getPotentialFriends(
+            @Parameter(description = "ID of the user to retrieve potential friends for", required = true)
+            @PathVariable long userId) {
+
+        List<PotentialFriends> potentialFriends = potentialFriendsRepository
+                .findByUserIdOrderByCommonInterestCountDesc(userId);
 
         List<Map<String, Object>> response = new ArrayList<>();
         for (PotentialFriends pf : potentialFriends) {
@@ -88,8 +110,16 @@ public class PotentialFriendsController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Delete a potential friend by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Potential friend deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Potential friend not found", content = @Content)
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePotentialFriend(@PathVariable Long id) {
+    public ResponseEntity<?> deletePotentialFriend(
+            @Parameter(description = "ID of the potential friend record to delete", required = true)
+            @PathVariable Long id) {
+
         potentialFriendsRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }

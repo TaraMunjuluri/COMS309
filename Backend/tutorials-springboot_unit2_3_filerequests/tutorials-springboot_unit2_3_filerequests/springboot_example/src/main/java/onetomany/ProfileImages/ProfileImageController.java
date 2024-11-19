@@ -1,9 +1,15 @@
 package onetomany.ProfileImages;
-import org.springframework.http.HttpStatus;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import onetomany.ExceptionHandlers.ImageNotFoundException;
+import onetomany.ExceptionHandlers.UnauthorizedException;
+import onetomany.Users.UserRepository;
 import onetomany.images.Image;
 import onetomany.images.ImageRepository;
-import onetomany.Users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/images")
@@ -27,13 +34,21 @@ public class ProfileImageController {
 
     private final String UPLOAD_DIRECTORY = "./uploads/images/";
 
+    @Operation(summary = "Upload a new profile image for a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Image uploaded successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Image.class))),
+            @ApiResponse(responseCode = "400", description = "User not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Failed to upload image", content = @Content)
+    })
     @PostMapping("/upload/{userId}")
-    public ResponseEntity<?> uploadImage(@PathVariable Integer userId,
-                                         @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadImage(
+            @PathVariable Integer userId,
+            @RequestParam("file") MultipartFile file) {
         try {
             // Verify user exists
             if (!userRepository.existsById(Long.valueOf(userId))) {
-                return ResponseEntity.badRequest().body("User not found");
+                throw new UnauthorizedException("User not found");
             }
 
             // Create directory if it doesn't exist
@@ -56,31 +71,57 @@ public class ProfileImageController {
             return ResponseEntity.ok(savedImage);
 
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to upload image: " + e.getMessage());
+            throw new RuntimeException("Failed to upload image: " + e.getMessage());
         }
     }
 
+    @Operation(summary = "Get all images uploaded by a specific user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Images retrieved successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Image.class)))
+    })
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getUserImages(@PathVariable Integer userId) {
-        List<Image> images = imageRepository.findByUserId(userId);
-        return ResponseEntity.ok(images);
+    public List<Image> getUserImages(@PathVariable Integer userId) {
+        return imageRepository.findByUserId(userId);
     }
 
+    @Operation(summary = "Get image details by image ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Image retrieved successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Image.class))),
+            @ApiResponse(responseCode = "404", description = "Image not found", content = @Content)
+    })
     @GetMapping("/{imageId}")
-    public ResponseEntity<?> getImage(@PathVariable Integer imageId) {
-        return imageRepository.findById(imageId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Image getImage(@PathVariable Integer imageId) {
+        Optional<Image> optionalImage = imageRepository.findById(imageId);
+        if (optionalImage.isEmpty()) {
+            try {
+                throw new ImageNotFoundException("Image not found with ID: " + imageId);
+            } catch (ImageNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return optionalImage.get();
     }
 
+    @Operation(summary = "Delete an image uploaded by a specific user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Image deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Image not found or unauthorized", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Failed to delete image", content = @Content)
+    })
     @DeleteMapping("/{userId}/{imageId}")
-    public ResponseEntity<?> deleteImage(@PathVariable Integer userId,
-                                         @PathVariable Integer imageId) {
+    public String deleteImage(@PathVariable Integer userId, @PathVariable Integer imageId) {
         try {
-            Image image = imageRepository.findById(imageId).orElse(null);
-            if (image == null || !image.getUserId().equals(userId)) {
-                return ResponseEntity.notFound().build();
+            Optional<Image> optionalImage = imageRepository.findById(imageId);
+            if (optionalImage.isEmpty()) {
+                throw new ImageNotFoundException("Image not found with ID: " + imageId);
+            }
+
+            Image image = optionalImage.get();
+
+            if (!image.getUserId().equals(userId)) {
+                throw new UnauthorizedException("User is not authorized to delete this image");
             }
 
             // Delete file from disk
@@ -90,18 +131,24 @@ public class ProfileImageController {
 
             // Delete from database
             imageRepository.deleteByUserIdAndImageId(userId, imageId);
-            return ResponseEntity.ok().build();
+            return "Image deleted successfully";
 
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to delete image: " + e.getMessage());
+        } catch (IOException | ImageNotFoundException e) {
+            throw new RuntimeException("Failed to delete image: " + e.getMessage());
         }
     }
-    @GetMapping("/path/{imageId}")
-    public ResponseEntity<?> getImagePathById(@PathVariable Integer imageId) {
-        return imageRepository.findById(imageId)
-                .map(image -> ResponseEntity.ok(image.getImageLink()))
-                .orElse(ResponseEntity.notFound().build());
-    }
 
+    @Operation(summary = "Get the file path of an image by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Image path retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Image not found", content = @Content)
+    })
+    @GetMapping("/path/{imageId}")
+    public String getImagePathById(@PathVariable Integer imageId) throws ImageNotFoundException {
+        Optional<Image> optionalImage = imageRepository.findById(imageId);
+        if (optionalImage.isEmpty()) {
+            throw new ImageNotFoundException("Image not found with ID: " + imageId);
+        }
+        return optionalImage.get().getImageLink();
+    }
 }
