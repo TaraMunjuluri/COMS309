@@ -24,6 +24,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * UserMatch manages the matchmaking functionality, allowing users to view potential matches,
+ * send match requests, and reject match requests. It integrates with WebSocket for real-time updates.
+ */
 public class UserMatch extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -32,6 +36,14 @@ public class UserMatch extends AppCompatActivity {
     private WebSocket webSocket;
     private static final String SOCKET_URL = "ws://10.90.74.238:8080/matches-websocket/websocket";
 
+    /**
+     * Called when the activity is created. Initializes the RecyclerView for potential matches,
+     * sets up WebSocket communication, and fetches potential matches from the backend.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously
+     *                           being shut down, this Bundle contains the data it most
+     *                           recently supplied. Otherwise, it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +75,10 @@ public class UserMatch extends AppCompatActivity {
         fetchPotentialMatches(); // Ensure this method is called in onCreate
     }
 
-    // Initialize WebSocket
+    /**
+     * Initializes the WebSocket connection for real-time communication with the server.
+     * Logs connection establishment and handles messages or failures.
+     */
     private void initializeWebSocket() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(SOCKET_URL).build();
@@ -86,7 +101,11 @@ public class UserMatch extends AppCompatActivity {
         });
     }
 
-    // Send Match Request
+    /**
+     * Sends a match request to the server for the specified user.
+     *
+     * @param user The user to send the match request to.
+     */
     private void sendMatchRequest(User user) {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         int userId = sharedPreferences.getInt("userId", -1);
@@ -99,7 +118,11 @@ public class UserMatch extends AppCompatActivity {
         }
     }
 
-    // Send Reject Request
+    /**
+     * Sends a reject request to the server for the specified user.
+     *
+     * @param user The user to reject.
+     */
     private void rejectMatchRequest(User user) {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         int userId = sharedPreferences.getInt("userId", -1);
@@ -112,7 +135,12 @@ public class UserMatch extends AppCompatActivity {
         }
     }
 
-    // Handle WebSocket Responses
+    /**
+     * Handles the response received via WebSocket. Processes the JSON message and performs
+     * appropriate actions based on the message content (e.g., match confirmation).
+     *
+     * @param text The JSON message received from the WebSocket server.
+     */
     private void handleWebSocketResponse(String text) {
         runOnUiThread(() -> {
             try {
@@ -129,7 +157,10 @@ public class UserMatch extends AppCompatActivity {
         });
     }
 
-    // Fetch potential matches from the backend
+    /**
+     * Fetches the list of potential matches for the logged-in user from the backend.
+     * Populates the RecyclerView with the received match data.
+     */
     private void fetchPotentialMatches() {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         int userId = sharedPreferences.getInt("userId", -1);
