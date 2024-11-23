@@ -11,6 +11,9 @@ maven-build:
     - ls
     - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example || exit 1
     - mvn package
+  rules:
+    - if: $CI_COMMIT_BRANCH == "tara_CICD"
+      when: always
 
 maven-test:
   stage: maventest
@@ -19,3 +22,6 @@ maven-test:
   script:
     - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example || exit 1
     - mvn test
+  rules:
+    - if: $CI_COMMIT_BRANCH == "tara_CICD"
+      when: always
