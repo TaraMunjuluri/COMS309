@@ -9,15 +9,19 @@ maven-build:
   script:
     - echo "Current working directory:"
     - pwd
-    - echo "Listing all files in the repository:"
+    - echo "Listing all files in the repository recursively:"
     - ls -R
-    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
+    - echo "Navigating to Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example:"
+    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example || exit 1
     - echo "Listing files in springboot_example directory:"
     - ls
+    - echo "Checking Maven version:"
+    - mvn -version
+    - echo "Running Maven package:"
     - mvn package
   rules:
-    - if: $CI_PIPELINE_SOURCE == "web"  # Allow manual triggers without conditions
-    - if: $CI_PIPELINE_SOURCE == "push"  # Allow pushes with conditions
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_PIPELINE_SOURCE == "push"
       changes:
         - Backend/**/*
 
@@ -26,10 +30,11 @@ maven-test:
   tags:
     - tara_tag
   script:
-    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
+    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example || exit 1
+    - echo "Running Maven tests:"
     - mvn test
   rules:
-    - if: $CI_PIPELINE_SOURCE == "web"  # Allow manual triggers without conditions
-    - if: $CI_PIPELINE_SOURCE == "push"  # Allow pushes with conditions
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_PIPELINE_SOURCE == "push"
       changes:
         - Backend/**/*
