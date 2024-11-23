@@ -1,27 +1,12 @@
 stages:
-  - mavenbuild
-  - maventest
+  - test
 
-maven-build:
-  stage: mavenbuild
+simple-test:
+  stage: test
   tags:
     - tara_tag
   script:
-    - pwd
-    - ls
-    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example || exit 1
-    - mvn package
+    - echo "This is a test"
   rules:
-    - if: $CI_COMMIT_BRANCH == "tara_CICD"
-      when: always
-
-maven-test:
-  stage: maventest
-  tags:
-    - tara_tag
-  script:
-    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example || exit 1
-    - mvn test
-  rules:
-    - if: $CI_COMMIT_BRANCH == "tara_CICD"
-      when: always
+    - when: manual
+      allow_failure: true
