@@ -8,5 +8,8 @@ simple-test:
   script:
     - echo "This is a test"
   rules:
-    - when: manual
-      allow_failure: true
+    - if: '$CI_PIPELINE_SOURCE == "web"'  # Specifically for web UI triggers
+      when: always
+    - if: '$CI_COMMIT_BRANCH == "tara_CICD"'  # Specifically for your branch
+      when: always
+  allow_failure: true
