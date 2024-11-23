@@ -5,9 +5,9 @@ stages:
 maven-build:
   stage: mavenbuild
   tags:
-    - tara_tag      # <-- change to your runner's tag
+    - tara_tag      # Ensure this matches your runner's tag
   script:
-    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example       # change 'Backend' to to where you have the pom.xml (do not add / in the beginning)
+    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
     - mvn package
   only:
     refs:
@@ -15,13 +15,12 @@ maven-build:
     changes:
       - Backend/**/*
 
-
 maven-test:
   stage: maventest
   tags:
-    - tara_tag     # <-- change to your runner's tag
+    - tara_tag      # Ensure this matches your runner's tag
   script:
-    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example  # change 'Backend' to to where you have the pom.xml (do not add / in the beginning)
+    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
     - mvn test
   only:
     refs:
