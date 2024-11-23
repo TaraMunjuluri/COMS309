@@ -7,15 +7,23 @@ maven-build:
   tags:
     - tara_tag
   script:
-    - echo "Debugging the pipeline"
-    - printenv
-    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
     - mvn package
+  only:
+    refs:
+      - tara_CICD
+    changes:
+      - pom.xml
+      - src/**/*
 
 maven-test:
   stage: maventest
   tags:
     - tara_tag
   script:
-    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
     - mvn test
+  only:
+    refs:
+      - tara_CICD
+    changes:
+      - pom.xml
+      - src/**/*
