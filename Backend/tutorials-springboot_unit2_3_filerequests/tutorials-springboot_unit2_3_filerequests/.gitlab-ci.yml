@@ -22,8 +22,8 @@ maven-test:
   script:
     - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
     - mvn test
-  only:
-    refs:
-      - tara_CICD
-    changes:
-      - Backend/**/*
+#  only:
+#    refs:
+#      - tara_CICD
+#    changes:
+#      - Backend/**/*
