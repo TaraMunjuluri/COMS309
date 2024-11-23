@@ -14,9 +14,6 @@ maven-build:
     - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
     - echo "Listing files in springboot_example directory:"
     - ls
-    - echo "Checking Maven version:"
-    - mvn -version
-    - echo "Running Maven package:"
     - mvn package
   rules:
     - if: $CI_PIPELINE_SOURCE == "web"  # Allow manual triggers without conditions
@@ -30,9 +27,6 @@ maven-test:
     - tara_tag
   script:
     - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
-    - echo "Checking Maven version:"
-    - mvn -version
-    - echo "Running Maven tests:"
     - mvn test
   rules:
     - if: $CI_PIPELINE_SOURCE == "web"  # Allow manual triggers without conditions
