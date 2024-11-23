@@ -16,10 +16,10 @@ maven-build:
     - ls
     - mvn package
   rules:
+    - if: $CI_PIPELINE_SOURCE == "web"  # Allow manual triggers without conditions
     - if: $CI_PIPELINE_SOURCE == "push"
-    - if: $CI_PIPELINE_SOURCE == "web"
-    - changes:
-        - Backend/**/*
+      changes:
+        - Backend/**/*  # Run for pushes only if changes in Backend/**/*
 
 maven-test:
   stage: maventest
@@ -29,7 +29,7 @@ maven-test:
     - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
     - mvn test
   rules:
+    - if: $CI_PIPELINE_SOURCE == "web"  # Allow manual triggers without conditions
     - if: $CI_PIPELINE_SOURCE == "push"
-    - if: $CI_PIPELINE_SOURCE == "web"
-    - changes:
+      changes:
         - Backend/**/*
