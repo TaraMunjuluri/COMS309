@@ -16,8 +16,10 @@ maven-build:
     - ls
     - mvn package
   rules:
-    - if: $CI_PIPELINE_SOURCE == "web"  # Always allow manual triggers
-    - if: $CI_PIPELINE_SOURCE == "push"  # Allow push-based pipelines
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      when: always
 
 maven-test:
   stage: maventest
@@ -27,5 +29,7 @@ maven-test:
     - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example || exit 1
     - mvn test
   rules:
-    - if: $CI_PIPELINE_SOURCE == "web"  # Always allow manual triggers
-    - if: $CI_PIPELINE_SOURCE == "push"  # Allow push-based pipelines
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      when: always
