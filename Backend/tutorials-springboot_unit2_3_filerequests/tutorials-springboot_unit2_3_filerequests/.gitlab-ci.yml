@@ -1,3 +1,12 @@
+default:
+  image: maven:latest
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
 stages:
   - test
 
@@ -6,7 +15,7 @@ simple-test:
   tags:
     - tara_tag
   script:
-    - echo "This is a test"
+    - echo "Testing pipeline"
   rules:
-    - when: always
-  allow_failure: true
+    - if: '$CI_COMMIT_BRANCH == "tara_CICD" || $CI_PIPELINE_SOURCE == "web"'
+      when: always
