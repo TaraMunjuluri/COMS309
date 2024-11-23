@@ -7,13 +7,19 @@ maven-build:
   tags:
     - tara_tag
   script:
+    - echo "Current working directory:"
+    - pwd
+    - echo "Listing all files in the repository:"
+    - ls -R
     - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
+    - echo "Listing files in springboot_example directory:"
+    - ls
     - mvn package
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push"   # Run for code pushes
-    - if: $CI_PIPELINE_SOURCE == "web"   # Allow manual triggers from the UI
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURCE == "web"
     - changes:
-        - Backend/**/*                   # Only when files in this path are modified
+        - Backend/**/*
 
 maven-test:
   stage: maventest
@@ -23,7 +29,7 @@ maven-test:
     - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
     - mvn test
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push"   # Run for code pushes
-    - if: $CI_PIPELINE_SOURCE == "web"   # Allow manual triggers from the UI
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURCE == "web"
     - changes:
         - Backend/**/*
