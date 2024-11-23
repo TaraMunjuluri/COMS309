@@ -5,25 +5,17 @@ stages:
 maven-build:
   stage: mavenbuild
   tags:
-    - tara_tag      # Ensure this matches your runner's tag
+    - tara_tag
   script:
+    - echo "Debugging the pipeline"
+    - printenv
     - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
     - mvn package
-  only:
-    refs:
-      - tara_CICD
-    changes:
-      - Backend/**/*
 
 maven-test:
   stage: maventest
   tags:
-    - tara_tag      # Ensure this matches your runner's tag
+    - tara_tag
   script:
     - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
     - mvn test
-#  only:
-#    refs:
-#      - tara_CICD
-#    changes:
-#      - Backend/**/*
