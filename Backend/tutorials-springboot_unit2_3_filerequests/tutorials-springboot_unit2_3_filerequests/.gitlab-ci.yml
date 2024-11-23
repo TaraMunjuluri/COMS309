@@ -1,4 +1,4 @@
-\stages:
+stages:
   - mavenbuild
   - maventest
 
@@ -17,9 +17,7 @@ maven-build:
     - mvn package
   rules:
     - if: $CI_PIPELINE_SOURCE == "web"  # Always allow manual triggers
-    - if: $CI_PIPELINE_SOURCE == "push"  # Allow pushes only if changes exist
-      changes:
-        - Backend/**/*
+    - if: $CI_PIPELINE_SOURCE == "push"  # Allow push-based pipelines
 
 maven-test:
   stage: maventest
@@ -30,6 +28,4 @@ maven-test:
     - mvn test
   rules:
     - if: $CI_PIPELINE_SOURCE == "web"  # Always allow manual triggers
-    - if: $CI_PIPELINE_SOURCE == "push"  # Allow pushes only if changes exist
-      changes:
-        - Backend/**/*
+    - if: $CI_PIPELINE_SOURCE == "push"  # Allow push-based pipelines
