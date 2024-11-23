@@ -1,4 +1,4 @@
-\stages:
+stages:
   - mavenbuild
   - maventest
 
@@ -7,16 +7,10 @@ maven-build:
   tags:
     - tara_tag
   script:
-    - echo "Current working directory:"
     - pwd
-    - echo "Listing all files in the repository recursively:"
-    - ls -R
-    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example || exit 1
-    - echo "Listing files in springboot_example directory:"
     - ls
+    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example || exit 1
     - mvn package
-  rules:
-    - when: always
 
 maven-test:
   stage: maventest
@@ -25,5 +19,3 @@ maven-test:
   script:
     - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example || exit 1
     - mvn test
-  rules:
-    - when: always
