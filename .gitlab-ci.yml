@@ -11,7 +11,7 @@ maven-build:
     - mvn package
   only:
     refs:
-      - aelia_CICD
+      - 39-aelia_CICD
     changes:
       - Backend/**/*
 
@@ -25,6 +25,6 @@ maven-test:
     - mvn test
   only:
     refs:
-      - aelia_CICD
+      - 39-aelia_CICD
     changes:
       - Backend/**/*
