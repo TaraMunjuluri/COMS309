@@ -11,7 +11,7 @@ maven-build:
     - springboot_tag    # change to your runner's tag
   script:               # what to execute for this job
     # - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
-    - cd Users/Aelia Rizvi/Documents/CS30924/2_mstafa_4         # change 'Backend' to to where you have the pom.xml (do not add / in the beginning)
+    - cd Documents/CS30924/2_mstafa_4         # change 'Backend' to to where you have the pom.xml (do not add / in the beginning)
     - mvn package       # maven package
   artifacts:            # where to output the packaged jar file, change 'Backend' to to where you have the pom.xml
     paths:
@@ -28,7 +28,7 @@ maven-test:
      - springboot_tag   # change to your runner's tag
   script:
     #  - cd Backend/target/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example       
-    - cd Users/Aelia Rizvi/Documents/CS30924/2_mstafa_4 # change 'Backend' to  pom.xml (do not add / in the beginning)
+    - cd Documents/CS30924/2_mstafa_4 # change 'Backend' to  pom.xml (do not add / in the beginning)
     - mvn test         # maven test
   # only:
   #   refs:
@@ -42,7 +42,7 @@ auto-deploy:
   - springboot_tag      # change to your runner's tag
   script:               # script to run the deployment service you created
     # - cd Backend/target/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example        
-    - cd Users/Aelia Rizvi/Documents/CS30924/2_mstafa_4
+    - cd Documents/CS30924/2_mstafa_4
     # change 'Backend' to to where you have the pom.xml (do not add / in the beginning)
     - sudo mv target/*.jar /target/web-demo.jar 
     - sudo systemctl stop system-web-demo
