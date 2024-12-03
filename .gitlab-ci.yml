@@ -10,7 +10,7 @@ maven-build:
   tags:                 # to specify which runner to execute this job
     - springboot_tag    # change to your runner's tag
   script:               # what to execute for this job
-    - Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example         # change 'Backend' to to where you have the pom.xml (do not add / in the beginning)
+    - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example         # change 'Backend' to to where you have the pom.xml (do not add / in the beginning)
     - mvn package       # maven package
   artifacts:            # where to output the packaged jar file, change 'Backend' to to where you have the pom.xml
     paths:
