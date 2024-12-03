@@ -15,7 +15,7 @@ maven-build:
     - mvn package       # maven package
   artifacts:            # where to output the packaged jar file, change 'Backend' to to where you have the pom.xml
     paths:
-    - Backend/target/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example/*.jar # change 'Backend' to where you have 'target' (do not add a / in the beginning)
+    - Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example/target/*.jar # change 'Backend' to where you have 'target' (do not add a / in the beginning)
   # only:
   #   refs:
   #     - main            # only to trigger the pipeline when changes are pushed to 'main'
