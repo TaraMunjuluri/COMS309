@@ -60,9 +60,9 @@ android-build:
    - android_tag                    # change to your runner's tag
   before_script:                    # enable gradlew, change 'Frontend' to where you have 'gradlew'
     - export GRADLE_USER_HOME=`pwd`/.gradle
-    - chmod +x ./Frontend/gradlew
+    - chmod +x ./Frontend/oneCampusApp/OneCampusApp/AndroidExample/gradlew
   script:
-    - cd Frontend/oneCampusApp/OneCampusApp/AndroidExample/gradlew                # change 'Frontend' to where you have 'gradlew' (do not add / in the beginning)
+    - cd Frontend/oneCampusApp/OneCampusApp/AndroidExample                # change 'Frontend' to where you have 'gradlew' (do not add / in the beginning)
     - ./gradlew build               # gradle build
   # only:
   #   refs:
@@ -77,9 +77,9 @@ android-test:
     - android_tag                   # change to your runner's tag
   before_script:                   # enable gradlew, change 'Frontend' to where you have 'gradlew'
      - export GRADLE_USER_HOME=`pwd`/.gradle
-     - chmod +x ./Frontend/gradlew
+     - chmod +x ./Frontend/oneCampusApp/OneCampusApp/AndroidExample/gradlew
   script:
-     - cd Frontend/oneCampusApp/OneCampusApp/AndroidExample/gradlew
+     - cd Frontend/oneCampusApp/OneCampusApp/AndroidExample
                  # change 'Frontend' to where you have 'gradlew' (do not add / in the beginning)
      - ./gradlew test               # gradle test
   # only:
