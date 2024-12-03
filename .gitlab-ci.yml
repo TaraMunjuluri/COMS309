@@ -12,6 +12,7 @@ maven-build:
   only:
     refs:
       - 39-aelia_CICD
+      - main
     changes:
       - Backend/**/*
 
@@ -26,5 +27,6 @@ maven-test:
   only:
     refs:
       - 39-aelia_CICD
+      - main
     changes:
       - Backend/**/*
