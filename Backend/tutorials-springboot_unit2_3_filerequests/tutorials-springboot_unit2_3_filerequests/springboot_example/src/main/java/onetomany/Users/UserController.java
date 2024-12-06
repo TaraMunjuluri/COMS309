@@ -328,6 +328,83 @@ public ResponseEntity<Map<String, Object>> toggleThemeMode(
         }
     }
 
+    //demo 4
+    @Operation(summary = "Switch user language preference")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Language updated successfully"),
+            @ApiResponse(responseCode = "401", description = "User not logged in"),
+            @ApiResponse(responseCode = "400", description = "Invalid language code")
+    })
+    @PutMapping("/users/language")
+    public ResponseEntity<Map<String, Object>> switchLanguage(
+            @RequestBody Map<String, String> languageRequest,
+            HttpServletRequest request
+    ) {
+
+        HttpSession session = request.getSession(false);
+
+
+        if (session == null || session.getAttribute("loggedInUser") == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "User not logged in");
+            return ResponseEntity.status(401).body(response);
+        }
+
+
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+
+        String languageCode = languageRequest.get("languageCode");
+
+
+        try {
+            Language newLanguage = Language.fromCode(languageCode);
+
+
+            loggedInUser.setLanguage(newLanguage);
+            userRepository.save(loggedInUser);
+
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Language updated successfully");
+            response.put("language", newLanguage.getCode());
+
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Invalid language code");
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @Operation(summary = "Get user's current language preference")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Language retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "User not logged in")
+    })
+    @GetMapping("/users/language")
+    public ResponseEntity<Map<String, Object>> getCurrentLanguage(HttpServletRequest request) {
+        // Get the current session
+        HttpSession session = request.getSession(false);
+
+        // Check if user is logged in
+        if (session == null || session.getAttribute("loggedInUser") == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "User not logged in");
+            return ResponseEntity.status(401).body(response);
+        }
+
+        // Get the logged-in user
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+        // Prepare response
+        Map<String, Object> response = new HashMap<>();
+        response.put("language", loggedInUser.getLanguage().getCode());
+
+        return ResponseEntity.ok(response);
+    }
+    //demo 4
+
     @Operation(summary = "Get user's avatar")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Avatar retrieved successfully",
