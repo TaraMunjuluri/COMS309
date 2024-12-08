@@ -1,0 +1,244 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Mentor</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">onetomany.MentorSurvey</a>
+</div>
+
+<h1>Coverage Summary for Class: Mentor (onetomany.MentorSurvey)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Mentor</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (3/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    18.8%
+  </span>
+  <span class="absValue">
+    (3/16)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Mentor$AreaOfMentorship</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Mentor$Classification</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Mentor$HibernateProxy$MdYZ88gD</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    43.8%
+  </span>
+  <span class="absValue">
+    (7/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (13/26)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.MentorSurvey;
+&nbsp;
+&nbsp;import onetomany.Users.User;
+&nbsp;
+&nbsp;import javax.persistence.*;
+&nbsp;
+&nbsp;@Entity
+&nbsp;public class Mentor {
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    private Long id;
+&nbsp;
+&nbsp;    @ManyToOne // Establishes the relationship between Mentor and User
+&nbsp;    @JoinColumn(name = &quot;user_id&quot;, nullable = false) // Creates the foreign key column for user in the mentor table
+&nbsp;    private User user;  // Reference to the associated User
+&nbsp;
+&nbsp;    private String major;
+&nbsp;
+&nbsp;    @Enumerated(EnumType.STRING)
+&nbsp;    private Classification classification;
+&nbsp;
+&nbsp;    @Enumerated(EnumType.STRING)
+&nbsp;    private AreaOfMentorship areaOfMentorship;
+&nbsp;
+&nbsp;    // Default constructor
+<b class="fc">&nbsp;    public Mentor() {</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Constructor with fields
+<b class="nc">&nbsp;    public Mentor(User user, String major, Classification classification, AreaOfMentorship areaOfMentorship) {</b>
+<b class="nc">&nbsp;        this.user = user;</b>
+<b class="nc">&nbsp;        this.major = major;</b>
+<b class="nc">&nbsp;        this.classification = classification;</b>
+<b class="nc">&nbsp;        this.areaOfMentorship = areaOfMentorship;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Getters and Setters
+&nbsp;    public Long getId() {
+<b class="nc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setId(Long id) {
+<b class="nc">&nbsp;        this.id = id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public User getUser() {
+<b class="fc">&nbsp;        return user;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setUser(User user) {
+<b class="nc">&nbsp;        this.user = user;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getMajor() {
+<b class="nc">&nbsp;        return major;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setMajor(String major) {
+<b class="nc">&nbsp;        this.major = major;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Classification getClassification() {
+<b class="nc">&nbsp;        return classification;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setClassification(Classification classification) {
+<b class="nc">&nbsp;        this.classification = classification;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public AreaOfMentorship getAreaOfMentorship() {
+<b class="fc">&nbsp;        return areaOfMentorship;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setAreaOfMentorship(AreaOfMentorship areaOfMentorship) {
+<b class="nc">&nbsp;        this.areaOfMentorship = areaOfMentorship;</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public enum Classification {</b>
+<b class="fc">&nbsp;        FRESHMAN,</b>
+<b class="fc">&nbsp;        SOPHOMORE,</b>
+<b class="fc">&nbsp;        JUNIOR,</b>
+<b class="fc">&nbsp;        SENIOR,</b>
+<b class="fc">&nbsp;        GRADUATE_STUDENT</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public enum AreaOfMentorship {</b>
+<b class="fc">&nbsp;        CAREER,</b>
+<b class="fc">&nbsp;        EDUCATION,</b>
+<b class="fc">&nbsp;        GENERAL</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-08 00:32</div>
+</div>
+</body>
+</html>

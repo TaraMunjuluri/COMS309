@@ -1,0 +1,228 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > PhoneController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">onetomany.Phones</a>
+</div>
+
+<h1>Coverage Summary for Class: PhoneController (onetomany.Phones)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PhoneController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (1/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    21.4%
+  </span>
+  <span class="absValue">
+    (3/14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.Phones;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+&nbsp;import org.springframework.web.bind.annotation.PathVariable;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.PutMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestBody;
+&nbsp;import org.springframework.web.bind.annotation.RestController;
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.Parameter;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponses;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;import io.swagger.v3.oas.annotations.media.Content;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;
+&nbsp;/**
+&nbsp; * REST Controller for managing Phone entities.
+&nbsp; * Provides endpoints to handle CRUD operations for Phone records.
+&nbsp; */
+&nbsp;@RestController
+&nbsp;@Tag(name = &quot;Phone Controller&quot;, description = &quot;Manage Phone entities in the system.&quot;)
+<b class="fc">&nbsp;public class PhoneController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    PhoneRepository phoneRepository;
+&nbsp;
+<b class="fc">&nbsp;    private String success = &quot;{\&quot;message\&quot;:\&quot;success\&quot;}&quot;;</b>
+<b class="fc">&nbsp;    private String failure = &quot;{\&quot;message\&quot;:\&quot;failure\&quot;}&quot;;</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves all phones from the repository.
+&nbsp;     *
+&nbsp;     * @return List of all Phone entities.
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Get all phones&quot;, description = &quot;Retrieve a list of all phones in the system.&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;List of phones retrieved successfully&quot;)
+&nbsp;    })
+&nbsp;    @GetMapping(path = &quot;/phones&quot;)
+&nbsp;    public List&lt;Phone&gt; getAllPhones() {
+<b class="nc">&nbsp;        return phoneRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves a single phone by its ID.
+&nbsp;     *
+&nbsp;     * @param id The ID of the phone to retrieve.
+&nbsp;     * @return The Phone entity if found, or null if not.
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Get phone by ID&quot;, description = &quot;Retrieve a phone by its unique ID.&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Phone found&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Phone not found&quot;)
+&nbsp;    })
+&nbsp;    @GetMapping(path = &quot;/phones/{id}&quot;)
+&nbsp;    public Phone getPhoneById(
+&nbsp;            @Parameter(description = &quot;ID of the phone to retrieve&quot;, required = true) @PathVariable int id) {
+<b class="nc">&nbsp;        return phoneRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new phone entry in the repository.
+&nbsp;     *
+&nbsp;     * @param phone The Phone object to be created.
+&nbsp;     * @return A JSON response indicating success or failure.
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Create a new phone&quot;, description = &quot;Create a new phone record in the system.&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;201&quot;, description = &quot;Phone created successfully&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Invalid input provided&quot;)
+&nbsp;    })
+&nbsp;    @PostMapping(path = &quot;/phones&quot;)
+&nbsp;    public String createPhone(
+&nbsp;            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = &quot;Details of the phone to create&quot;, required = true,
+&nbsp;                    content = @Content(mediaType = &quot;application/json&quot;, schema = @Schema(implementation = Phone.class)))
+&nbsp;            @RequestBody Phone phone) {
+<b class="nc">&nbsp;        if (phone == null) {</b>
+<b class="nc">&nbsp;            return failure;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        phoneRepository.save(phone);</b>
+<b class="nc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates an existing phone by its ID.
+&nbsp;     *
+&nbsp;     * @param id      The ID of the phone to update.
+&nbsp;     * @param request The Phone object containing updated information.
+&nbsp;     * @return The updated Phone entity, or null if the phone was not found.
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Update phone by ID&quot;, description = &quot;Update an existing phone record by its ID.&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Phone updated successfully&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Phone not found&quot;)
+&nbsp;    })
+&nbsp;    @PutMapping(&quot;/phones/{id}&quot;)
+&nbsp;    public Phone updatePhone(
+&nbsp;            @Parameter(description = &quot;ID of the phone to update&quot;, required = true) @PathVariable int id,
+&nbsp;            @RequestBody Phone request) {
+<b class="nc">&nbsp;        Phone phone = phoneRepository.findById(id);</b>
+<b class="nc">&nbsp;        if (phone == null) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        phoneRepository.save(request);</b>
+<b class="nc">&nbsp;        return phoneRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-08 00:32</div>
+</div>
+</body>
+</html>
