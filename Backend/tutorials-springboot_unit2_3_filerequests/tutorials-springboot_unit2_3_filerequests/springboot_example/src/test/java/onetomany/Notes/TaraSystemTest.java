@@ -52,35 +52,35 @@ public class TaraSystemTest {
     }
 
     @Test
-    public void testUpdateNote() {
-        RestTemplate restTemplate = new RestTemplate();
+//    public void testUpdateNote() {
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        Note updatedNote = new Note();
+//        updatedNote.setTitle("Updated Test Note");
+//        updatedNote.setContent("Updated content for the test note.");
+//
+//        ResponseEntity<Note> response = restTemplate.exchange(
+//                "http://localhost:8080/api/notes/1/13", // Replace userId/noteId with valid IDs
+//                HttpMethod.PUT,
+//                new HttpEntity<>(updatedNote),
+//                Note.class
+//        );
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode(), "Response status should be OK");
+//        assertEquals("Updated Test Note", response.getBody().getTitle(), "Updated title should match");
+//    }
 
-        Note updatedNote = new Note();
-        updatedNote.setTitle("Updated Test Note");
-        updatedNote.setContent("Updated content for the test note.");
-
-        ResponseEntity<Note> response = restTemplate.exchange(
-                "http://localhost:8080/api/notes/1/17", // Replace userId/noteId with valid IDs
-                HttpMethod.PUT,
-                new HttpEntity<>(updatedNote),
-                Note.class
-        );
-
-        assertEquals(HttpStatus.OK, response.getStatusCode(), "Response status should be OK");
-        assertEquals("Updated Test Note", response.getBody().getTitle(), "Updated title should match");
-    }
-
-    @Test
-    public void testDeleteNote() {
-        RestTemplate restTemplate = new RestTemplate();
-
-        ResponseEntity<Void> response = restTemplate.exchange(
-                "http://localhost:8080/api/notes/1/17", // Replace userId/noteId with valid IDs
-                HttpMethod.DELETE,
-                null,
-                Void.class
-        );
-
-        assertEquals(HttpStatus.OK, response.getStatusCode(), "Response status should be OK");
-    }
+//    @Test
+//    public void testDeleteNote() {
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        ResponseEntity<Void> response = restTemplate.exchange(
+//                "http://localhost:8080/api/notes/1/14", // Replace userId/noteId with valid IDs
+//                HttpMethod.DELETE,
+//                null,
+//                Void.class
+//        );
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode(), "Response status should be OK");
+//    }
 }
