@@ -12,6 +12,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -46,7 +47,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.rowset.serial.SerialBlob;
-
+import onetomany.Lang.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -55,6 +56,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.web.servlet.LocaleResolver;
 
 
 @RestController
@@ -66,6 +68,15 @@ public class UserController {
 
     @Autowired
     LaptopRepository laptopRepository;
+
+//    @Autowired
+//    private MessageSource messageSource;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private LocaleResolver localeResolver;
 
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
@@ -328,7 +339,7 @@ public ResponseEntity<Map<String, Object>> toggleThemeMode(
         }
     }
 
-    //demo 4
+    //demo4
     @Operation(summary = "Switch user language preference")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Language updated successfully"),
@@ -402,6 +413,31 @@ public ResponseEntity<Map<String, Object>> toggleThemeMode(
         response.put("language", loggedInUser.getLanguage().getCode());
 
         return ResponseEntity.ok(response);
+    }
+
+//    @GetMapping("/changeLanguage")
+//    public String changeLanguage(@RequestParam("lang") String lang, HttpServletRequest request) {
+//        Locale locale = new Locale(lang);
+//        localeResolver.setLocale(request, null, locale); // Set locale in the session or request
+//        return "redirect:/home"; // Redirect to a page where you need to show localized content
+//    }
+
+    // Method to change the language of the user based on their userId
+    @PostMapping("/{userId}/change-language")
+    public String changeLanguage(@PathVariable Long userId, @RequestParam String languageCode) {
+        // Validate the language code if necessary (optional)
+        if (languageCode == null || languageCode.isEmpty()) {
+            return "Language code cannot be empty!";
+        }
+
+        // Call the service to update the user's language
+        try {
+            Language language = Language.fromCode(languageCode);
+            userService.saveUserLanguage(userId, languageCode);
+            return "Language updated successfully!";
+        } catch (Exception e) {
+            return "Error updating language: " + e.getMessage();
+        }
     }
     //demo 4
 

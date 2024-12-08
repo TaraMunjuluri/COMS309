@@ -20,6 +20,6 @@ public enum Language {
                 return language;
             }
         }
-        return ENGLISH; // Default to English
+        return ENGLISH; // Default to English if the code doesn't match
     }
 }
