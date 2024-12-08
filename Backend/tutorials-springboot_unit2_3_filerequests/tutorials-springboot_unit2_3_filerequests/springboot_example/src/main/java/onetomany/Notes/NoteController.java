@@ -127,3 +127,4 @@ public class NoteController {
         return noteRepository.findByUserIdAndTitleContainingIgnoreCase(userId, query);
     }
 }
+

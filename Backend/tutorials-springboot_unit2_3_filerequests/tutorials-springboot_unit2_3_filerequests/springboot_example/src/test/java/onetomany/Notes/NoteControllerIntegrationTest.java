@@ -70,4 +70,29 @@ public class NoteControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].title", is("Note 1")))
                 .andExpect(jsonPath("$[1].title", is("Note 2")));
     }
+    @Test
+    public void testGetNote() throws Exception {
+        Note note = new Note();
+        note.setNoteId(1);
+        note.setUserId(1);
+        note.setTitle("Sample Note");
+        note.setContent("Sample Content");
+
+        // Mock repository behavior
+        Mockito.when(noteRepository.findById(1)).thenReturn(java.util.Optional.of(note));
+
+        // Perform GET request and verify response
+        mockMvc.perform(get("/api/notes/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title", is("Sample Note")))
+                .andExpect(jsonPath("$.content", is("Sample Content")));
+
+        // Test for non-existent note
+        Mockito.when(noteRepository.findById(2)).thenReturn(java.util.Optional.empty());
+
+        mockMvc.perform(get("/api/notes/2")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }
