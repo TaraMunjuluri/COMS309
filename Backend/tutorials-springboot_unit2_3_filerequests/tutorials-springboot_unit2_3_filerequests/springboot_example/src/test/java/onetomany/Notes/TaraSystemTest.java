@@ -27,7 +27,7 @@ public class TaraSystemTest {
 
         // Make a POST request to create a new note
         ResponseEntity<Note> response = restTemplate.postForEntity(
-                "http://localhost:8081/api/notes/1",  // Replace with your endpoint
+                "http://localhost:8080/api/notes/1",  // Replace with your endpoint
                 newNote,
                 Note.class
         );
@@ -43,7 +43,7 @@ public class TaraSystemTest {
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<String> response = restTemplate.getForEntity(
-                "http://localhost:8081/api/notes/user/1", // Replace with your endpoint
+                "http://localhost:8080/api/notes/user/1", // Replace with your endpoint
                 String.class
         );
 
@@ -60,7 +60,7 @@ public class TaraSystemTest {
         updatedNote.setContent("Updated content for the test note.");
 
         ResponseEntity<Note> response = restTemplate.exchange(
-                "http://localhost:8081/api/notes/1/17", // Replace userId/noteId with valid IDs
+                "http://localhost:8080/api/notes/1/17", // Replace userId/noteId with valid IDs
                 HttpMethod.PUT,
                 new HttpEntity<>(updatedNote),
                 Note.class
@@ -75,7 +75,7 @@ public class TaraSystemTest {
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<Void> response = restTemplate.exchange(
-                "http://localhost:8081/api/notes/1/17", // Replace userId/noteId with valid IDs
+                "http://localhost:8080/api/notes/1/17", // Replace userId/noteId with valid IDs
                 HttpMethod.DELETE,
                 null,
                 Void.class
