@@ -119,11 +119,6 @@
       <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>com.github</groupId>
-      <artifactId>badwords-java</artifactId>
-      <version>1.0.0</version>
-    </dependency>
   </dependencies>
 
   <build>
