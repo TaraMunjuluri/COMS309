@@ -12,7 +12,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import onetomany.chatbox.Message;
 import java.time.LocalDateTime;
-
+import onetomany.BadWords.ProfanityFilterService;
 
 @RestController
 public class ChatWebSocket extends TextWebSocketHandler {
@@ -23,6 +23,8 @@ public class ChatWebSocket extends TextWebSocketHandler {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ProfanityFilterService profanityFilterService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -35,6 +37,11 @@ public class ChatWebSocket extends TextWebSocketHandler {
         // Assuming the payload is in JSON format
         ChatMessage chatMessage = objectMapper.readValue(payload, ChatMessage.class);
 
+
+        if (profanityFilterService.containsProfanity(chatMessage.getContent())) {
+            session.sendMessage(new TextMessage("Profanity is not allowed!"));
+            return;
+        }
 
         // Fetch the user who sent the message
         User user = userRepository.findByUsername(chatMessage.getUsername());
