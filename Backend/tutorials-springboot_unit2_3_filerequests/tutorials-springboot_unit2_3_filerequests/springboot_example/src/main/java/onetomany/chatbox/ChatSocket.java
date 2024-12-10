@@ -230,7 +230,7 @@ public class ChatSocket {
     private static Map<String, Session> usernameSessionMap = new ConcurrentHashMap<>();
     private final Logger logger = LoggerFactory.getLogger(ChatSocket.class);
 
-    private static final int INACTIVITY_TIMEOUT = 20000;  // 20 seconds (in milliseconds)
+    private static final int INACTIVITY_TIMEOUT = 50000;  // 50 seconds (in milliseconds)
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private Map<Session, ScheduledFuture<?>> inactivityTasks = new ConcurrentHashMap<>();
     private Map<Session, Long> lastActivityTime = new ConcurrentHashMap<>();

@@ -84,7 +84,7 @@ function resetInactivityTimer() {
     inactivityTimer = setTimeout(() => {
         console.log('You have been inactive for a while.');
         // Optionally send a message to the server or show a warning.
-    }, 20 * 1000);  // 5 minutes
+    }, 50 * 1000);  // 5 minutes
 }
 
 // Reset timer on message send
