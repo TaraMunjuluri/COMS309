@@ -1,0 +1,227 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > PotentialFriends</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">onetomany.PotentialFriends</a>
+</div>
+
+<h1>Coverage Summary for Class: PotentialFriends (onetomany.PotentialFriends)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PotentialFriends</td>
+<td class="coverageStat">
+  <span class="percent">
+    6.2%
+  </span>
+  <span class="absValue">
+    (1/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    8.3%
+  </span>
+  <span class="absValue">
+    (2/24)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">PotentialFriends$HibernateProxy$pwKTIa0V</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    6.2%
+  </span>
+  <span class="absValue">
+    (1/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    8.3%
+  </span>
+  <span class="absValue">
+    (2/24)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.PotentialFriends;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.annotation.JsonIgnore;
+&nbsp;import onetomany.Users.User;
+&nbsp;
+&nbsp;import javax.persistence.*;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.Set;
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;potential_friends&quot;)
+&nbsp;public class PotentialFriends {
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    private Long id;
+&nbsp;
+&nbsp;    @Column(name = &quot;user_id&quot;)
+&nbsp;    private long userId;
+&nbsp;
+&nbsp;    @Column(name = &quot;potential_friend_id&quot;)
+&nbsp;    private long potentialFriendId;
+&nbsp;
+&nbsp;    private int commonInterestCount;
+&nbsp;
+<b class="fc">&nbsp;    @ElementCollection</b>
+&nbsp;    @CollectionTable(
+&nbsp;            name = &quot;potential_friend_interests&quot;,
+&nbsp;            joinColumns = @JoinColumn(name = &quot;potential_friend_id&quot;)
+&nbsp;    )
+&nbsp;    @Column(name = &quot;interest&quot;)
+&nbsp;    private Set&lt;String&gt; commonInterests = new HashSet&lt;&gt;();
+&nbsp;
+&nbsp;    @ManyToOne(fetch = FetchType.LAZY)
+&nbsp;    @JoinColumn(name = &quot;user_id&quot;, insertable = false, updatable = false)
+&nbsp;    @JsonIgnore
+&nbsp;    private User user;
+&nbsp;
+&nbsp;    @ManyToOne(fetch = FetchType.LAZY)
+&nbsp;    @JoinColumn(name = &quot;potential_friend_id&quot;, insertable = false, updatable = false)
+&nbsp;    @JsonIgnore
+&nbsp;    private User potentialFriend;
+&nbsp;
+&nbsp;    // Constructors
+<b class="fc">&nbsp;    public PotentialFriends() {}</b>
+&nbsp;
+<b class="nc">&nbsp;    public PotentialFriends(long userId, long potentialFriendId, Set&lt;String&gt; commonInterests) {</b>
+<b class="nc">&nbsp;        this.userId = userId;</b>
+<b class="nc">&nbsp;        this.potentialFriendId = potentialFriendId;</b>
+<b class="nc">&nbsp;        this.commonInterests = commonInterests;</b>
+<b class="nc">&nbsp;        this.commonInterestCount = commonInterests.size();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Getters and Setters
+&nbsp;    public Long getId() {
+<b class="nc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setId(Long id) {
+<b class="nc">&nbsp;        this.id = id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public long getUserId() {
+<b class="nc">&nbsp;        return userId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setUserId(long userId) {
+<b class="nc">&nbsp;        this.userId = userId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public long getPotentialFriendId() {
+<b class="nc">&nbsp;        return potentialFriendId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setPotentialFriendId(long potentialFriendId) {
+<b class="nc">&nbsp;        this.potentialFriendId = potentialFriendId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getCommonInterestCount() {
+<b class="nc">&nbsp;        return commonInterestCount;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCommonInterestCount(int commonInterestCount) {
+<b class="nc">&nbsp;        this.commonInterestCount = commonInterestCount;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Set&lt;String&gt; getCommonInterests() {
+<b class="nc">&nbsp;        return commonInterests;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCommonInterests(Set&lt;String&gt; commonInterests) {
+<b class="nc">&nbsp;        this.commonInterests = commonInterests;</b>
+<b class="nc">&nbsp;        this.commonInterestCount = commonInterests.size();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public User getUser() {
+<b class="nc">&nbsp;        return user;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setUser(User user) {
+<b class="nc">&nbsp;        this.user = user;</b>
+<b class="nc">&nbsp;        this.userId = user.getId();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public User getPotentialFriend() {
+<b class="nc">&nbsp;        return potentialFriend;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setPotentialFriend(User potentialFriend) {
+<b class="nc">&nbsp;        this.potentialFriend = potentialFriend;</b>
+<b class="nc">&nbsp;        this.potentialFriendId = potentialFriend.getId();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-08 00:32</div>
+</div>
+</body>
+</html>

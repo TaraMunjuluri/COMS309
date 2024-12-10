@@ -1,0 +1,302 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ChatSocket</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">onetomany.chatbox</a>
+</div>
+
+<h1>Coverage Summary for Class: ChatSocket (onetomany.chatbox)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChatSocket</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    18.8%
+  </span>
+  <span class="absValue">
+    (3/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    11.6%
+  </span>
+  <span class="absValue">
+    (8/69)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.chatbox;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.Hashtable;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;import javax.websocket.*;
+&nbsp;import javax.websocket.server.PathParam;
+&nbsp;import javax.websocket.server.ServerEndpoint;
+&nbsp;//import jakarta.websocket.OnClose;
+&nbsp;//import jakarta.websocket.OnError;
+&nbsp;//import jakarta.websocket.OnMessage;
+&nbsp;//import jakarta.websocket.OnOpen;
+&nbsp;//import jakarta.websocket.Session;
+&nbsp;//import jakarta.websocket.server.PathParam;
+&nbsp;//import jakarta.websocket.server.ServerEndpoint;
+&nbsp;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Controller;
+&nbsp;
+&nbsp;import java.util.concurrent.ConcurrentHashMap;
+&nbsp;import java.util.concurrent.*;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;@Controller
+&nbsp;@ServerEndpoint(value = &quot;/chat/{username}&quot;)
+<b class="fc">&nbsp;public class ChatSocket {</b>
+&nbsp;
+&nbsp;    private static MessageRepository msgRepo;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    public void setMessageRepository(MessageRepository repo) {
+<b class="fc">&nbsp;        msgRepo = repo;</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    private static Map&lt;Session, String&gt; sessionUsernameMap = new ConcurrentHashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;    private static Map&lt;String, Session&gt; usernameSessionMap = new ConcurrentHashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;    private final Logger logger = LoggerFactory.getLogger(ChatSocket.class);</b>
+&nbsp;
+&nbsp;    private static final int INACTIVITY_TIMEOUT = 20000;  // 10 seconds (in milliseconds)
+<b class="fc">&nbsp;    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();</b>
+<b class="fc">&nbsp;    private Map&lt;Session, ScheduledFuture&lt;?&gt;&gt; inactivityTasks = new ConcurrentHashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;    private Map&lt;Session, Long&gt; lastActivityTime = new ConcurrentHashMap&lt;&gt;();</b>
+&nbsp;
+&nbsp;    @OnOpen
+&nbsp;    public void onOpen(Session session, @PathParam(&quot;username&quot;) String username) throws IOException {
+<b class="nc">&nbsp;        logger.info(&quot;Entered into Open&quot;);</b>
+<b class="nc">&nbsp;        sessionUsernameMap.put(session, username);</b>
+<b class="nc">&nbsp;        usernameSessionMap.put(username, session);</b>
+&nbsp;
+&nbsp;        // Send chat history to the newly connected user
+<b class="nc">&nbsp;        sendMessageToParticularUser(username, getChatHistory());</b>
+&nbsp;
+&nbsp;        // Broadcast that a new user joined
+<b class="nc">&nbsp;        broadcast(&quot;User:&quot; + username + &quot; has Joined the Chat&quot;);</b>
+&nbsp;
+&nbsp;        // Start inactivity timer
+<b class="nc">&nbsp;        resetInactivityTimer(session);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @OnMessage
+&nbsp;    public void onMessage(Session session, String message) throws IOException {
+<b class="nc">&nbsp;        String username = sessionUsernameMap.get(session);</b>
+&nbsp;
+&nbsp;        // Reset inactivity timer whenever a message is received
+<b class="nc">&nbsp;        resetInactivityTimer(session);</b>
+&nbsp;
+&nbsp;        // Typing notification
+<b class="nc">&nbsp;        if (message.equals(&quot;TYPING_START&quot;)) {</b>
+<b class="nc">&nbsp;            broadcastTypingStatus(username, true);</b>
+<b class="nc">&nbsp;        } else if (message.equals(&quot;TYPING_STOP&quot;)) {</b>
+<b class="nc">&nbsp;            broadcastTypingStatus(username, false);</b>
+&nbsp;        } else {
+&nbsp;            // Handle regular messages
+<b class="nc">&nbsp;            logger.info(&quot;Entered into Message: Got Message:&quot; + message);</b>
+<b class="nc">&nbsp;            if (message.startsWith(&quot;@&quot;)) {</b>
+<b class="nc">&nbsp;                String destUsername = message.split(&quot; &quot;)[0].substring(1);</b>
+<b class="nc">&nbsp;                sendMessageToParticularUser(destUsername, &quot;[DM] &quot; + username + &quot;: &quot; + message);</b>
+<b class="nc">&nbsp;                sendMessageToParticularUser(username, &quot;[DM] &quot; + username + &quot;: &quot; + message);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                broadcast(username + &quot;: &quot; + message);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            msgRepo.save(new Message(username, message));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @OnClose
+&nbsp;    public void onClose(Session session) throws IOException {
+<b class="nc">&nbsp;        String username = sessionUsernameMap.get(session);</b>
+<b class="nc">&nbsp;        sessionUsernameMap.remove(session);</b>
+<b class="nc">&nbsp;        usernameSessionMap.remove(username);</b>
+&nbsp;
+&nbsp;        // Broadcast that the user disconnected
+<b class="nc">&nbsp;        broadcast(username + &quot; disconnected&quot;);</b>
+&nbsp;
+&nbsp;        // Cancel inactivity task
+<b class="nc">&nbsp;        cancelInactivityTimer(session);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @OnError
+&nbsp;    public void onError(Session session, Throwable throwable) {
+<b class="nc">&nbsp;        logger.info(&quot;Entered into Error&quot;);</b>
+<b class="nc">&nbsp;        throwable.printStackTrace();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void resetInactivityTimer(Session session) {
+&nbsp;        // Cancel any existing inactivity task
+<b class="nc">&nbsp;        cancelInactivityTimer(session);</b>
+&nbsp;
+&nbsp;        // Start a new task to check for inactivity after the timeout period
+<b class="nc">&nbsp;        inactivityTasks.put(session, scheduler.schedule(() -&gt; handleInactivity(session), INACTIVITY_TIMEOUT, TimeUnit.MILLISECONDS));</b>
+<b class="nc">&nbsp;        lastActivityTime.put(session, System.currentTimeMillis());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void cancelInactivityTimer(Session session) {
+<b class="nc">&nbsp;        if (inactivityTasks.containsKey(session)) {</b>
+<b class="nc">&nbsp;            inactivityTasks.get(session).cancel(false);</b>
+<b class="nc">&nbsp;            inactivityTasks.remove(session);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void handleInactivity(Session session) {
+&nbsp;        // If no message was received for the timeout period, consider the user inactive
+<b class="nc">&nbsp;        long currentTime = System.currentTimeMillis();</b>
+<b class="nc">&nbsp;        long lastActive = lastActivityTime.getOrDefault(session, currentTime);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (currentTime - lastActive &gt;= INACTIVITY_TIMEOUT) {</b>
+<b class="nc">&nbsp;            String username = sessionUsernameMap.get(session);</b>
+&nbsp;            try {
+&nbsp;                // Notify the user or close the session due to inactivity
+<b class="nc">&nbsp;                sendMessageToParticularUser(username, &quot;You have been inactive for 10 seconds and will be disconnected.&quot;);</b>
+<b class="nc">&nbsp;                session.close();  // Disconnect the user</b>
+<b class="nc">&nbsp;            } catch (IOException e) {</b>
+<b class="nc">&nbsp;                logger.error(&quot;Error while closing session due to inactivity: &quot; + e.getMessage());</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void sendMessageToParticularUser(String username, String message) {
+&nbsp;        try {
+<b class="nc">&nbsp;            usernameSessionMap.get(username).getBasicRemote().sendText(message);</b>
+<b class="nc">&nbsp;        } catch (IOException e) {</b>
+<b class="nc">&nbsp;            logger.info(&quot;Exception: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void broadcast(String message) {
+<b class="nc">&nbsp;        sessionUsernameMap.forEach((session, username) -&gt; {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                session.getBasicRemote().sendText(message);</b>
+<b class="nc">&nbsp;            } catch (IOException e) {</b>
+<b class="nc">&nbsp;                logger.info(&quot;Exception: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;                e.printStackTrace();</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    private void broadcastTypingStatus(String username, boolean isTyping) {
+<b class="nc">&nbsp;        String message = isTyping ? username + &quot; is typing...&quot; : username + &quot; stopped typing&quot;;</b>
+<b class="nc">&nbsp;        sessionUsernameMap.forEach((session, user) -&gt; {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                session.getBasicRemote().sendText(message);</b>
+<b class="nc">&nbsp;            } catch (IOException e) {</b>
+<b class="nc">&nbsp;                logger.info(&quot;Exception: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;                e.printStackTrace();</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    private String getChatHistory() {
+<b class="nc">&nbsp;        List&lt;Message&gt; messages = msgRepo.findAll();</b>
+<b class="nc">&nbsp;        StringBuilder sb = new StringBuilder();</b>
+<b class="nc">&nbsp;        if (messages != null &amp;&amp; !messages.isEmpty()) {</b>
+<b class="nc">&nbsp;            for (Message message : messages) {</b>
+<b class="nc">&nbsp;                sb.append(message.getUserName()).append(&quot;: &quot;).append(message.getContent()).append(&quot;\n&quot;);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return sb.toString();</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-08 00:32</div>
+</div>
+</body>
+</html>

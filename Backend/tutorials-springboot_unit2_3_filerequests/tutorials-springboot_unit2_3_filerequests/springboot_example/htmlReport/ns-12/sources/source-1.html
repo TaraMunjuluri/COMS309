@@ -1,0 +1,327 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MatchController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">onetomany.websockets</a>
+</div>
+
+<h1>Coverage Summary for Class: MatchController (onetomany.websockets)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MatchController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    53.3%
+  </span>
+  <span class="absValue">
+    (8/15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    3.6%
+  </span>
+  <span class="absValue">
+    (1/28)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13.3%
+  </span>
+  <span class="absValue">
+    (11/83)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.websockets;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.databind.JsonNode;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import onetomany.MenteeSurvey.Mentee;
+&nbsp;import onetomany.MenteeSurvey.MenteeRepository;
+&nbsp;import onetomany.MentorSurvey.Mentor;
+&nbsp;import onetomany.MentorSurvey.MentorRepository;
+&nbsp;import onetomany.Users.User;
+&nbsp;import onetomany.Users.UserRepository;
+&nbsp;import onetomany.Matches.MatchedPairMentorMentee;
+&nbsp;import onetomany.Matches.MatchedPairRepository;
+&nbsp;import onetomany.Matches.MatchedPersonDTO;
+&nbsp;import onetomany.services.MatchMentorMenteeService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.messaging.simp.SimpMessagingTemplate;
+&nbsp;import org.springframework.scheduling.annotation.Scheduled;
+&nbsp;import org.springframework.stereotype.Controller;
+&nbsp;
+&nbsp;import javax.websocket.*;
+&nbsp;import javax.websocket.server.PathParam;
+&nbsp;import javax.websocket.server.ServerEndpoint;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Date;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.concurrent.ConcurrentHashMap;
+&nbsp;
+&nbsp;@Controller
+&nbsp;@ServerEndpoint(value = &quot;/matches-websocket/{user_id}&quot;, configurator = WebSocketConfig.WebSocketConfigurator.class)
+<b class="fc">&nbsp;public class MatchController {</b>
+&nbsp;
+&nbsp;    private static SimpMessagingTemplate template;
+&nbsp;    private static UserRepository users_repo;
+&nbsp;    private static MatchedPairRepository matchedPairRepository;
+&nbsp;    private static MentorRepository mentorRepository;
+&nbsp;    private static MenteeRepository menteeRepository;
+&nbsp;    private static MatchMentorMenteeService matchMentorMenteeService;
+&nbsp;
+<b class="fc">&nbsp;    private final ConcurrentHashMap&lt;Long, List&lt;Session&gt;&gt; userSessions = new ConcurrentHashMap&lt;&gt;();</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    public void setTemplate(SimpMessagingTemplate template) {
+<b class="fc">&nbsp;        MatchController.template = template;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    public void setUsersRepo(UserRepository repo) {
+<b class="fc">&nbsp;        MatchController.users_repo = repo;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    public void setMatchedPairRepository(MatchedPairRepository repo) {
+<b class="fc">&nbsp;        MatchController.matchedPairRepository = repo;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    public void setMentorRepository(MentorRepository repo) {
+<b class="fc">&nbsp;        MatchController.mentorRepository = repo;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    public void setMenteeRepository(MenteeRepository repo) {
+<b class="fc">&nbsp;        MatchController.menteeRepository = repo;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    public void setMatchMentorMenteeService(MatchMentorMenteeService service) {
+<b class="fc">&nbsp;        MatchController.matchMentorMenteeService = service;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @OnOpen
+&nbsp;    public void onOpen(Session session, @PathParam(&quot;user_id&quot;) Long userId) {
+<b class="nc">&nbsp;        System.out.println(&quot;[Match WS]: New connection from user: &quot; + userId);</b>
+<b class="nc">&nbsp;        userSessions.computeIfAbsent(userId, k -&gt; new ArrayList&lt;&gt;()).add(session);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;[Match WS]: Added session for user: &quot; + userId + &quot;, Total sessions: &quot; +</b>
+<b class="nc">&nbsp;                userSessions.get(userId).size());</b>
+&nbsp;
+&nbsp;        // Send initial matches when connected
+&nbsp;        try {
+<b class="nc">&nbsp;            List&lt;MatchedPersonDTO&gt; matches = getMatchesForUser(userId);</b>
+<b class="nc">&nbsp;            sendMatchesToSession(session, matches);</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;[Match WS]: Error sending initial matches: &quot; + e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @OnMessage
+&nbsp;    public void onMessage(Session session, String message, @PathParam(&quot;user_id&quot;) Long userId) {
+<b class="nc">&nbsp;        System.out.println(&quot;[Match WS] Received message: &quot; + message + &quot; from user: &quot; + userId);</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            ObjectMapper mapper = new ObjectMapper();</b>
+<b class="nc">&nbsp;            JsonNode node = mapper.readTree(message);</b>
+&nbsp;
+<b class="nc">&nbsp;            if (&quot;REQUEST_MATCHES&quot;.equals(node.get(&quot;type&quot;).asText())) {</b>
+<b class="nc">&nbsp;                System.out.println(&quot;[Match WS] Processing REQUEST_MATCHES&quot;);</b>
+<b class="nc">&nbsp;                List&lt;MatchedPersonDTO&gt; matches = getMatchesForUser(userId);</b>
+<b class="nc">&nbsp;                System.out.println(&quot;[Match WS] Found &quot; + matches.size() + &quot; matches&quot;);</b>
+<b class="nc">&nbsp;                sendMatchesToSession(session, matches);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;[Match WS] Error: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void sendMatchesToSession(Session session, List&lt;MatchedPersonDTO&gt; matches) throws IOException {
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        response.put(&quot;type&quot;, &quot;MATCHES_RESPONSE&quot;);</b>
+<b class="nc">&nbsp;        response.put(&quot;timestamp&quot;, new Date().toString());</b>
+<b class="nc">&nbsp;        response.put(&quot;matches&quot;, matches);</b>
+&nbsp;
+<b class="nc">&nbsp;        String jsonResponse = new ObjectMapper().writeValueAsString(response);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;[Match WS] Sending response: &quot; + jsonResponse);</b>
+<b class="nc">&nbsp;        session.getBasicRemote().sendText(jsonResponse);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @OnClose
+&nbsp;    public void onClose(Session session, @PathParam(&quot;user_id&quot;) Long userId) {
+<b class="nc">&nbsp;        List&lt;Session&gt; sessions = userSessions.get(userId);</b>
+<b class="nc">&nbsp;        if (sessions != null) {</b>
+<b class="nc">&nbsp;            sessions.remove(session);</b>
+<b class="nc">&nbsp;            if (sessions.isEmpty()) {</b>
+<b class="nc">&nbsp;                userSessions.remove(userId);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            System.out.println(&quot;[Match WS]: Closed session for user: &quot; + userId);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private List&lt;MatchedPersonDTO&gt; getMatchesForUser(Long userId) {
+<b class="nc">&nbsp;        System.out.println(&quot;[Match WS]: Getting matches for user: &quot; + userId);</b>
+<b class="nc">&nbsp;        User user = users_repo.findById(userId).orElse(null);</b>
+<b class="nc">&nbsp;        if (user == null) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;[Match WS]: User not found: &quot; + userId);</b>
+<b class="nc">&nbsp;            return new ArrayList&lt;&gt;();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return getMatchedPersons(user);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private List&lt;MatchedPersonDTO&gt; getMatchedPersons(User user) {
+<b class="nc">&nbsp;        List&lt;MatchedPersonDTO&gt; matchedPersonDTOList = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;        // Get matches where user is mentor
+<b class="nc">&nbsp;        List&lt;MatchedPairMentorMentee&gt; mentorMatches = matchedPairRepository.findByMentor(user);</b>
+<b class="nc">&nbsp;        for (MatchedPairMentorMentee match : mentorMatches) {</b>
+<b class="nc">&nbsp;            User menteeUser = match.getMentee();</b>
+<b class="nc">&nbsp;            Mentee mentee = menteeRepository.findByUser(menteeUser);</b>
+<b class="nc">&nbsp;            if (mentee != null) {</b>
+<b class="nc">&nbsp;                matchedPersonDTOList.add(new MatchedPersonDTO(</b>
+<b class="nc">&nbsp;                        menteeUser.getUsername(),</b>
+<b class="nc">&nbsp;                        mentee.getClassification().toString(),</b>
+<b class="nc">&nbsp;                        mentee.getMajor()</b>
+&nbsp;                ));
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        // Get matches where user is mentee
+<b class="nc">&nbsp;        List&lt;MatchedPairMentorMentee&gt; menteeMatches = matchedPairRepository.findByMentee(user);</b>
+<b class="nc">&nbsp;        for (MatchedPairMentorMentee match : menteeMatches) {</b>
+<b class="nc">&nbsp;            User mentorUser = match.getMentor();</b>
+<b class="nc">&nbsp;            Mentor mentor = mentorRepository.findByUser(mentorUser);</b>
+<b class="nc">&nbsp;            if (mentor != null) {</b>
+<b class="nc">&nbsp;                matchedPersonDTOList.add(new MatchedPersonDTO(</b>
+<b class="nc">&nbsp;                        mentorUser.getUsername(),</b>
+<b class="nc">&nbsp;                        mentor.getClassification().toString(),</b>
+<b class="nc">&nbsp;                        mentor.getMajor()</b>
+&nbsp;                ));
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        System.out.println(&quot;[Match WS]: Found &quot; + matchedPersonDTOList.size() + &quot; matches for user: &quot; + user.getId());</b>
+<b class="nc">&nbsp;        return matchedPersonDTOList;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Scheduled(fixedRate = 5000)
+&nbsp;    public void checkAndBroadcastNewMatches() {
+<b class="fc">&nbsp;        System.out.println(&quot;[Match WS]: Checking for new matches...&quot;);</b>
+<b class="fc">&nbsp;        List&lt;MatchedPairMentorMentee&gt; newMatches = matchMentorMenteeService.findNewMatches();</b>
+&nbsp;
+<b class="pc">&nbsp;        if (!newMatches.isEmpty()) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;[Match WS]: Found &quot; + newMatches.size() + &quot; new matches&quot;);</b>
+<b class="nc">&nbsp;            for (MatchedPairMentorMentee match : newMatches) {</b>
+<b class="nc">&nbsp;                notifyMatchParticipants(match);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void notifyMatchParticipants(MatchedPairMentorMentee match) {
+&nbsp;        try {
+&nbsp;            // Notify mentor
+<b class="nc">&nbsp;            List&lt;Session&gt; mentorSessions = userSessions.get(match.getMentor().getId());</b>
+<b class="nc">&nbsp;            if (mentorSessions != null) {</b>
+<b class="nc">&nbsp;                for (Session session : mentorSessions) {</b>
+<b class="nc">&nbsp;                    sendMatchesToSession(session, getMatchesForUser(match.getMentor().getId()));</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;
+&nbsp;            // Notify mentee
+<b class="nc">&nbsp;            List&lt;Session&gt; menteeSessions = userSessions.get(match.getMentee().getId());</b>
+<b class="nc">&nbsp;            if (menteeSessions != null) {</b>
+<b class="nc">&nbsp;                for (Session session : menteeSessions) {</b>
+<b class="nc">&nbsp;                    sendMatchesToSession(session, getMatchesForUser(match.getMentee().getId()));</b>
+&nbsp;                }
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;[Match WS]: Error notifying match participants: &quot; + e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-08 00:32</div>
+</div>
+</body>
+</html>

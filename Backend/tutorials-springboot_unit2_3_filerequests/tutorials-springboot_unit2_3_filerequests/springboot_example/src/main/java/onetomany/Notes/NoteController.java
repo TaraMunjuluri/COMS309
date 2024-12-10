@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import onetomany.ExceptionHandlers.NoteNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -72,12 +73,9 @@ public class NoteController {
             @ApiResponse(responseCode = "404", description = "Note not found", content = @Content)
     })
     @PutMapping("/{userId}/{noteId}")
-    public Note updateNote(
-            @Parameter(description = "ID of the user updating the note", required = true) @PathVariable Integer userId,
-            @Parameter(description = "ID of the note to update", required = true) @PathVariable Integer noteId,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Updated note details", required = true,
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Note.class)))
+    public ResponseEntity<Note> updateNote(
+            @PathVariable Integer userId,
+            @PathVariable Integer noteId,
             @RequestBody Note updatedNote) {
 
         Note existingNote = noteRepository.findById(noteId)
@@ -90,7 +88,10 @@ public class NoteController {
         existingNote.setTitle(updatedNote.getTitle());
         existingNote.setContent(updatedNote.getContent());
         existingNote.setLastModified(LocalDateTime.now());
-        return noteRepository.save(existingNote);
+
+        noteRepository.save(existingNote);
+
+        return ResponseEntity.ok(existingNote);
     }
 
     @Operation(summary = "Delete a note for a user")
@@ -99,10 +100,7 @@ public class NoteController {
             @ApiResponse(responseCode = "404", description = "Note not found", content = @Content)
     })
     @DeleteMapping("/{userId}/{noteId}")
-    public void deleteNote(
-            @Parameter(description = "ID of the user deleting the note", required = true) @PathVariable Integer userId,
-            @Parameter(description = "ID of the note to delete", required = true) @PathVariable Integer noteId) {
-
+    public ResponseEntity<Void> deleteNote(@PathVariable Integer userId, @PathVariable Integer noteId) {
         Note note = noteRepository.findById(noteId)
                 .orElseThrow(() -> new NoteNotFoundException("Note not found with ID: " + noteId));
 
@@ -111,6 +109,7 @@ public class NoteController {
         }
 
         noteRepository.deleteById(noteId);
+        return ResponseEntity.noContent().build(); // Return a 204 No Content response
     }
 
     @Operation(summary = "Search notes for a user by query")
@@ -127,3 +126,4 @@ public class NoteController {
         return noteRepository.findByUserIdAndTitleContainingIgnoreCase(userId, query);
     }
 }
+

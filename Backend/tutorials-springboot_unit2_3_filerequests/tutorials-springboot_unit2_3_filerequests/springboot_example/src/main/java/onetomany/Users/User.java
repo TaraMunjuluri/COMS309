@@ -95,8 +95,14 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "phone_id"))
     private List<Phone> phones = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_interests",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "interest_id", referencedColumnName = "id")
+    )
     private Set<Interests> interests = new HashSet<>();
+
 
     // Add getters and setters for interests
     public Set<Interests> getInterests() {
