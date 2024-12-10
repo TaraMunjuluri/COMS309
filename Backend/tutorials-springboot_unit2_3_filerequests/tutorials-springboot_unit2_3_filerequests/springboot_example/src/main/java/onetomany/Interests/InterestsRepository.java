@@ -3,10 +3,9 @@ package onetomany.Interests;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface InterestsRepository extends JpaRepository<Interests, Long> {
-    List<Interests> findByMajor(String major);
-    List<Interests> findByClassification(String classification);
+    Optional<Interests> findByName(String name);
 }
