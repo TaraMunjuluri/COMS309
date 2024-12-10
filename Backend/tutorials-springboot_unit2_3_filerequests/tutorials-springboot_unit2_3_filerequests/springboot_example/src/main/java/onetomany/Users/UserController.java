@@ -12,6 +12,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -46,7 +47,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.rowset.serial.SerialBlob;
-
+import onetomany.Lang.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -55,6 +56,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.web.servlet.LocaleResolver;
 
 
 @RestController
@@ -66,6 +68,15 @@ public class UserController {
 
     @Autowired
     LaptopRepository laptopRepository;
+
+//    @Autowired
+//    private MessageSource messageSource;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private LocaleResolver localeResolver;
 
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
@@ -327,6 +338,108 @@ public ResponseEntity<Map<String, Object>> toggleThemeMode(
             return "User not found.";
         }
     }
+
+    //demo4
+    @Operation(summary = "Switch user language preference")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Language updated successfully"),
+            @ApiResponse(responseCode = "401", description = "User not logged in"),
+            @ApiResponse(responseCode = "400", description = "Invalid language code")
+    })
+    @PutMapping("/users/language")
+    public ResponseEntity<Map<String, Object>> switchLanguage(
+            @RequestBody Map<String, String> languageRequest,
+            HttpServletRequest request
+    ) {
+
+        HttpSession session = request.getSession(false);
+
+
+        if (session == null || session.getAttribute("loggedInUser") == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "User not logged in");
+            return ResponseEntity.status(401).body(response);
+        }
+
+
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+
+        String languageCode = languageRequest.get("languageCode");
+
+
+        try {
+            Language newLanguage = Language.fromCode(languageCode);
+
+
+            loggedInUser.setLanguage(newLanguage);
+            userRepository.save(loggedInUser);
+
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Language updated successfully");
+            response.put("language", newLanguage.getCode());
+
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Invalid language code");
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @Operation(summary = "Get user's current language preference")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Language retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "User not logged in")
+    })
+    @GetMapping("/users/language")
+    public ResponseEntity<Map<String, Object>> getCurrentLanguage(HttpServletRequest request) {
+        // Get the current session
+        HttpSession session = request.getSession(false);
+
+        // Check if user is logged in
+        if (session == null || session.getAttribute("loggedInUser") == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "User not logged in");
+            return ResponseEntity.status(401).body(response);
+        }
+
+        // Get the logged-in user
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+        // Prepare response
+        Map<String, Object> response = new HashMap<>();
+        response.put("language", loggedInUser.getLanguage().getCode());
+
+        return ResponseEntity.ok(response);
+    }
+
+//    @GetMapping("/changeLanguage")
+//    public String changeLanguage(@RequestParam("lang") String lang, HttpServletRequest request) {
+//        Locale locale = new Locale(lang);
+//        localeResolver.setLocale(request, null, locale); // Set locale in the session or request
+//        return "redirect:/home"; // Redirect to a page where you need to show localized content
+//    }
+
+    // Method to change the language of the user based on their userId
+    @PostMapping("/{userId}/change-language")
+    public String changeLanguage(@PathVariable Long userId, @RequestParam String languageCode) {
+        // Validate the language code if necessary (optional)
+        if (languageCode == null || languageCode.isEmpty()) {
+            return "Language code cannot be empty!";
+        }
+
+        // Call the service to update the user's language
+        try {
+            Language language = Language.fromCode(languageCode);
+            userService.saveUserLanguage(userId, languageCode);
+            return "Language updated successfully!";
+        } catch (Exception e) {
+            return "Error updating language: " + e.getMessage();
+        }
+    }
+    //demo 4
 
     @Operation(summary = "Get user's avatar")
     @ApiResponses(value = {

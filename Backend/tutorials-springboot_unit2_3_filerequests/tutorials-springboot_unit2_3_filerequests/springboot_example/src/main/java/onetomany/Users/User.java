@@ -1,7 +1,6 @@
 package onetomany.Users;
 
 
-//import onetomany.Achievements.Achievement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import onetomany.Achievements.Achievement;
@@ -12,7 +11,8 @@ import onetomany.Phones.Phone;
 import javax.persistence.*;
 import java.sql.Blob;
 import java.util.*;
-
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Entity
 @Table(name = "users")
@@ -38,6 +38,11 @@ public class User {
 
     private String major;
 
+    //demo 4
+    @Enumerated(EnumType.STRING)
+    @Column(name = "language")
+    private Language language = Language.ENGLISH; // Default language
+    //demo 4
 
     private String classification;
     @JsonIgnore
@@ -125,6 +130,21 @@ public class User {
 
     // Getters and Setters
 
+    //demo 4
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
+    // Optional: Add a method to set language by code
+    public void setLanguageByCode(String languageCode) {
+        this.language = Language.fromCode(languageCode);
+    }
+
+    //demo 4
     private String theme = "light"; // Default to light mode
 
     // Getters and setters
