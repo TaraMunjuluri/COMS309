@@ -48,28 +48,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         // Set up navigation view
         NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
+        navigationView.setNavigationItemSelectedListener(this);
 
-            // Handle navigation item selections
-            if (id == R.id.nav_profile) {
-                navigateToActivity(ProfileActivity.class);
-            } else if (id == R.id.nav_match) {
-                navigateToActivity(UserMatch.class);
-            } else if (id == R.id.nav_chat) {
-                navigateToActivity(ChatActivity.class);
-            } else if (id == R.id.nav_settings) {
-                navigateToActivity(SettingsActivity.class);
-            } else if (id == R.id.nav_achievements) {
-                navigateToActivity(AchievementsActivity.class);
-            } else if (id == R.id.nav_logout) {
-                navigateToActivity(LoginActivity.class);
-            }
-
-            // Close the navigation drawer
-            drawerLayout.closeDrawer(GravityCompat.START);
-            return true;
-        });
+        // Card listeners
+        findViewById(R.id.card_match).setOnClickListener(v -> navigateToActivity(UserMatch.class));
+        findViewById(R.id.card_chat).setOnClickListener(v -> navigateToActivity(ChatActivity.class));
     }
 
     /**
@@ -98,15 +81,35 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     /**
-     * Placeholder for handling navigation item selections.
-     * This method is overridden to satisfy the NavigationView.OnNavigationItemSelectedListener interface.
+     * Handles navigation item selections.
      *
      * @param item The selected menu item.
-     * @return False since this implementation is overridden by the lambda in setNavigationItemSelectedListener.
+     * @return True if the item selection was successfully handled.
      */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+        int id = item.getItemId();
+
+        // Handle navigation item selections
+        if (id == R.id.nav_profile) {
+            navigateToActivity(ProfileActivity.class);
+        } else if (id == R.id.nav_match) {
+            navigateToActivity(UserMatch.class);
+        } else if (id == R.id.nav_chat) {
+            navigateToActivity(ChatActivity.class);
+        } else if (id == R.id.nav_settings) {
+            navigateToActivity(SettingsActivity.class);
+        } else if (id == R.id.nav_achievements) {
+            navigateToActivity(AchievementsActivity.class);
+        } else if (id == R.id.nav_rating) {
+            navigateToActivity(RatingActivity.class);
+        } else if (id == R.id.nav_logout) {
+            navigateToActivity(LoginActivity.class);
+        }
+
+        // Close the navigation drawer after handling selection
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     /**

@@ -1,8 +1,11 @@
 package onetomany.MenteeSurvey;
 
+import onetomany.RatingMentor.MenteeRating;
 import onetomany.Users.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Mentee {
@@ -22,6 +25,10 @@ public class Mentee {
 
     @Enumerated(EnumType.STRING)
     private AreaOfMenteeship areaOfMenteeship;
+
+    @OneToMany(mappedBy = "mentee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MenteeRating> ratings = new ArrayList<>();
+
 
     // Default constructor
     public Mentee() {
