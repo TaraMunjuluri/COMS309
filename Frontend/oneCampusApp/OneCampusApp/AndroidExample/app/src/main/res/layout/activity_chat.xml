@@ -11,10 +11,10 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/primary"
+        android:background="@color/caribbeanCurrent"
         android:elevation="4dp"
         app:title="Chat"
-        app:titleTextColor="@android:color/white"/>
+        app:titleTextColor="@android:color/white" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -63,9 +63,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Send"
-                app:cornerRadius="24dp"
                 android:textColor="@android:color/white"
-                app:backgroundTint="@color/accent"/>
+                app:backgroundTint="@color/teaRose"
+                app:cornerRadius="24dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

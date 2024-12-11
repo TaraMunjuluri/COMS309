@@ -142,11 +142,12 @@ public class UserController {
         }
 
         // Save the user with the plain text password
-        userRepository.save(user);
-
+//        userRepository.save(user);
+        User registeredUser = userService.registerNewUser(user); //achievement
         // Return a JSON response instead of a plain string
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Signup successful");
+        response.put("user", registeredUser);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -171,12 +172,21 @@ public class UserController {
             response.put("message", "Invalid credentials");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
+
+        // Use service method for login (which will handle first login achievement)
+
+        User loggedInUser = userService.loginUser(existingUser.getUsername());
+
         HttpSession session = request.getSession();
         session.setAttribute("loggedInUser", existingUser);
+        session.setAttribute("loggedInUser", loggedInUser);
+
 
 //        return new ResponseEntity<>("Login successful", HttpStatus.OK);
         response.put("message", "Login successful");
-        response.put("user", existingUser);  // Optionally include user details in response
+//        response.put("user", existingUser);  // Optionally include user details in response
+        response.put("user", loggedInUser);  // Optionally include user details in response
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

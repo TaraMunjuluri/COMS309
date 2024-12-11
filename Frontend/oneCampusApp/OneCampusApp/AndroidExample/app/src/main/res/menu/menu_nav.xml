@@ -18,6 +18,9 @@
         android:id="@+id/nav_settings"
         android:title="Settings" />
     <item
+        android:id="@+id/nav_rating"
+        android:title="Rate Us" />
+    <item
         android:id="@+id/nav_logout"
         android:title="Logout" />
 

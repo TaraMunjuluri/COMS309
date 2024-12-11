@@ -8,12 +8,12 @@
     <!-- Back button -->
     <ImageButton
         android:id="@+id/back_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="115dp"
+        android:layout_height="111dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/arrow_back"
-    android:contentDescription="Back"
-    android:padding="8dp" />
+        android:contentDescription="Back"
+        android:padding="8dp"
+        />
 
     <!-- Title -->
     <TextView

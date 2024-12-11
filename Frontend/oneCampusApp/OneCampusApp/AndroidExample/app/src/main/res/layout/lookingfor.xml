@@ -31,18 +31,23 @@
         android:layout_marginBottom="20dp" /> <!-- Adds space below this button -->
     <Button
         android:id="@+id/btnGetAllMentors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get All Mentors" />
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:backgroundTint="@color/caribbeanCurrent"
+        android:text="Get All Mentors"
+        android:layout_marginBottom="20dp"/>
     <Button
         android:id="@+id/btnProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile" />
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:backgroundTint="@color/airForceBlue"
+        android:text="Profile"
+        android:layout_marginBottom="20dp"/>
     <Button
         android:id="@+id/nav_match"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:backgroundTint="@color/cambridgeBlue"
         android:text="Connect" />
 
 

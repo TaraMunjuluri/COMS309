@@ -11,6 +11,7 @@ import onetomany.Users.UserRepository;
 import onetomany.images.Image;
 import onetomany.images.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,7 +49,7 @@ public class ProfileImageController {
         try {
             // Verify user exists
             if (!userRepository.existsById(Long.valueOf(userId))) {
-                throw new UnauthorizedException("User not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
 
             // Create directory if it doesn't exist
@@ -78,11 +79,20 @@ public class ProfileImageController {
     @Operation(summary = "Get all images uploaded by a specific user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Images retrieved successfully",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Image.class)))
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Image.class))),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
     @GetMapping("/user/{userId}")
-    public List<Image> getUserImages(@PathVariable Integer userId) {
-        return imageRepository.findByUserId(userId);
+    public ResponseEntity<List<Image>> getUserImages(@PathVariable Integer userId) {
+        // Check if the user exists
+        if (!userRepository.existsById(Long.valueOf(userId))) {
+            // Return 404 if the user does not exist
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        // Retrieve images and return them with 200 OK
+        List<Image> images = imageRepository.findByUserId(userId);
+        return ResponseEntity.ok(images);
     }
 
     @Operation(summary = "Get image details by image ID")

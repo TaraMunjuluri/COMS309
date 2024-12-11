@@ -54,6 +54,8 @@ public class User {
     @JoinColumn(name = "laptop_id")
     private Laptop laptop;
 
+    @Column(name = "first_login_completed", columnDefinition = "boolean default false")
+    private boolean firstLoginCompleted = false;
 
     @JsonIgnore
     @ManyToMany
@@ -74,14 +76,33 @@ public class User {
     }
 
 
+    public boolean hasLoggedInBefore() {
+        return firstLoginCompleted;
+    }
+
+    // Getter and setter for firstLoginCompleted
+    public boolean isFirstLoginCompleted() {
+        return firstLoginCompleted;
+    }
+
+    public void setFirstLoginCompleted(boolean firstLoginCompleted) {
+        this.firstLoginCompleted = firstLoginCompleted;
+    }
+    
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_phones",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "phone_id"))
     private List<Phone> phones = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_interests",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "interest_id", referencedColumnName = "id")
+    )
     private Set<Interests> interests = new HashSet<>();
+
 
     // Add getters and setters for interests
     public Set<Interests> getInterests() {
