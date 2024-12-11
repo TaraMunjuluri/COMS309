@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/rating_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rate Our App"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"
+        android:textStyle="bold" />
+
+    <!-- Rating Bar -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select a star rating:"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <RatingBar
+        android:id="@+id/rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#FFD600"
+        android:numStars="5"
+        android:rating="0"
+        android:stepSize="1.0" />
+
+    <!-- Review Input -->
+    <EditText
+        android:id="@+id/review_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Write your review here..."
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="top"
+        android:lines="4"
+        android:textColor="@color/black"
+         />
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/submit_rating_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:backgroundTint="@color/cambridgeBlue"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="8dp"
+        android:textAllCaps="false" />
+</LinearLayout>
