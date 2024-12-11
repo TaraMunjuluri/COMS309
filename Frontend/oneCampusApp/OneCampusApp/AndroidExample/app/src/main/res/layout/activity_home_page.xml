@@ -20,14 +20,107 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         <!-- Content area of the page -->
-        <FrameLayout
-            android:id="@+id/content_frame"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <!-- Your homepage content here -->
-        </FrameLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
+                <!-- Welcome Banner -->
+                <TextView
+                    android:id="@+id/tv_welcome_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center"
+                    android:text="Welcome to OneCampus!"
+                    android:textColor="@android:color/black"
+                    android:textSize="34sp"
+                    android:textStyle="bold" />
+
+                <!-- Cards Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_marginBottom="16dp">
+
+                    <!-- Match Card -->
+                    <LinearLayout
+                        android:id="@+id/card_match"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Find Matches"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black" />
+                    </LinearLayout>
+
+                    <!-- Chat Card -->
+                    <LinearLayout
+                        android:id="@+id/card_chat"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_chat"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Group Chat"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Recent Activity Section -->
+                <TextView
+                    android:id="@+id/tv_recent_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Recent Activity"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/tv_no_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No recent activity to show."
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
     <!-- Navigation drawer (side menu) -->
@@ -39,6 +132,6 @@
         android:fitsSystemWindows="true"
         android:background="@android:color/white"
         app:menu="@menu/menu_nav"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
+        android:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
