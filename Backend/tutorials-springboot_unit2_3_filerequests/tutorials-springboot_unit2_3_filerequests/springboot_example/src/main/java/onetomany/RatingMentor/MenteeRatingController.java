@@ -161,6 +161,32 @@ public class MenteeRatingController {
         }
     }
 
+    @PostMapping("/rate")
+    public ResponseEntity<?> rateMentorByUsername(
+            @RequestParam String menteeUsername,
+            @RequestParam String mentorUsername,
+            @RequestParam int rating) {
+        try {
+            MenteeRating ratingResponse = menteeRatingService.rateMentorByUsername(menteeUsername, mentorUsername, rating);
+            return ResponseEntity.ok(ratingResponse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/mentor/average")
+    public ResponseEntity<?> getMentorAverageRatingByUsername(@RequestParam String mentorUsername) {
+        try {
+            Long mentorId = menteeRatingService.getMentorIdByUsername(mentorUsername);
+            Double averageRating = menteeRatingService.getMentorAverageRating(mentorId);
+            return ResponseEntity.ok(averageRating != null ? averageRating : 0.0);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(e.getMessage()));
+        }
+    }
+
     // Inner class for error responses
     public static class ErrorResponse {
         private String message;
