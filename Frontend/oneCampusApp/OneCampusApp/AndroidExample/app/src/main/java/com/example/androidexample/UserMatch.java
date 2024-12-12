@@ -216,4 +216,37 @@ public class UserMatch extends AppCompatActivity {
             }
         });
     }
+    private void updateMatchStatus(User user, String action) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("userId", -1);
+
+        OkHttpClient client = new OkHttpClient();
+        String url = "http://10.90.74.238:8080/api/matches/" + user.getMatchId() + "/update-status?action=" + action;
+
+        Request request = new Request.Builder().url(url).build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(() -> Toast.makeText(UserMatch.this, "Failed to update match status", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String message = response.body().string();
+                    runOnUiThread(() -> Toast.makeText(UserMatch.this, message, Toast.LENGTH_SHORT).show());
+
+                    // Remove rejected matches from the list
+                    if (action.equalsIgnoreCase("reject")) {
+                        runOnUiThread(() -> {
+                            users.remove(user);
+                            adapter.notifyDataSetChanged();
+                        });
+                    }
+                }
+            }
+        });
+    }
+
 }

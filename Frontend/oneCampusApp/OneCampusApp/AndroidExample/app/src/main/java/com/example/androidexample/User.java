@@ -6,6 +6,8 @@ public class User {
     private String major;
     private String classification;
     private int userId;
+    private int matchId;
+    private String profileImageUrl;
 
     // Constructor
     public User(String name, String major, String classification, int userId) {
@@ -13,6 +15,9 @@ public class User {
         this.major = major;
         this.classification = classification;
         this.userId = userId;
+        this.matchId = matchId;
+        this.profileImageUrl = profileImageUrl;
+
     }
 
     // Getters and Setters
@@ -43,8 +48,16 @@ public class User {
     public int getUserId() {
         return userId;
     }
-
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+    public int getMatchId() {
+        return matchId;
+    }
+    public void setMatchId(int matchId) {
+        this.matchId = matchId;
+    }
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 }

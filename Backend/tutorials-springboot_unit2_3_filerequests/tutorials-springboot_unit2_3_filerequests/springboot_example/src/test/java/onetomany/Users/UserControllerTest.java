@@ -1,71 +1,89 @@
-package onetomany.Users;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Date;
-
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import java.util.Optional;
-import onetomany.Laptops.*;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-@WebMvcTest(UserController.class)
-public class UserControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private UserRepository userRepository;
-
-    @MockBean
-    private LaptopRepository laptopRepository;
-
-//    @Test
-//    public void testGetUserById_UserNotFound() throws Exception {
-//        // Arrange: Mock the UserRepository to throw an exception when looking for a non-existent user
-//        when(userRepository.findById(999L))
-//                .thenThrow(new IllegalArgumentException("User not found with ID: 999"));
+//// Aelia Tests
 //
-//        // Act & Assert: Perform the GET request and expect a 400 status with the appropriate message
-//        mockMvc.perform(get("/api/users/999")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(content().string("User not found with ID: 999"));
+//package onetomany.Users;
+//
+//import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.extension.ExtendWith;
+//import org.mockito.InjectMocks;
+//import org.mockito.Mock;
+//import org.mockito.junit.jupiter.MockitoExtension;
+//import org.springframework.http.HttpStatus;
+//import org.springframework.http.ResponseEntity;
+//import org.springframework.mock.web.MockHttpServletRequest;
+//
+//import java.util.HashMap;
+//import java.util.Map;
+//
+//import static org.assertj.core.api.Assertions.assertThat;
+//import static org.mockito.Mockito.*;
+//
+//@ExtendWith(MockitoExtension.class)
+//public class UserControllerTest {
+//
+//    @Mock
+//    private UserRepository userRepository;
+//
+//    @Mock
+//    private UserService userService;
+//
+//    @InjectMocks
+//    private UserController userController;
+//
+//    private MockHttpServletRequest request;
+//
+//    @BeforeEach
+//    void setUp() {
+//        request = new MockHttpServletRequest();
 //    }
 //
 //    @Test
-//    public void testGetUserById_UserFound() throws Exception {
-//        // Arrange: Mock the UserRepository to return a user object when a valid ID is provided
-//        User mockUser = new User( "testname", "testuser@example.com", new Date());
-//        when(userRepository.findById(1L)).thenAnswer(invocation -> Optional.of(mockUser));
-//        // Act & Assert: Perform the GET request and expect a 200 status with the user details in JSON format
-//        mockMvc.perform(get("/api/users/1")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(content().json("{"
-//                        + "\"id\": 1,"
-//                        + "\"username\": \"testuser\","
-//                        + "\"email\": \"testuser@example.com\""
-//                        + "}"));
+//    void testSignup_Success() {
+//        // Arrange
+//        User newUser = new User();
+//        newUser.setEmailId("test@example.com");
+//        newUser.setUsername("testuser");
+//        newUser.setPassword("password123");
+//
+//        when(userRepository.findByEmailId("test@example.com")).thenReturn(null);
+//        when(userRepository.findByUsername("testuser")).thenReturn(null);
+//        when(userService.registerNewUser(newUser)).thenReturn(newUser);
+//
+//        // Act
+//        ResponseEntity<Map<String, Object>> response = userController.signup(newUser);
+//
+//        // Assert
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+//        assertThat(response.getBody()).isNotNull();
+//        assertThat(response.getBody().get("message")).isEqualTo("Signup successful");
+//        assertThat(response.getBody().get("user")).isEqualTo(newUser);
+//
+//        verify(userRepository, times(1)).findByEmailId("test@example.com");
+//        verify(userRepository, times(1)).findByUsername("testuser");
+//        verify(userService, times(1)).registerNewUser(newUser);
 //    }
-
+//
 //    @Test
-//    public void testGetAllUsers() throws Exception {
-//        // Test case to get all users (GET /users)
-//        mockMvc.perform(get("/users"))
-//                .andExpect(status().isOk()) // status 200 OK
-//                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray()) // check if response is an array
-//                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").exists()) // check if an ID exists in the first user
-//                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").exists()); // check if a name exists in the first user
+//    void testLogin_InvalidCredentials() {
+//        // Arrange
+//        User loginUser = new User();
+//        loginUser.setEmailId("test@example.com");
+//        loginUser.setPassword("wrongpassword");
+//
+//        User existingUser = new User();
+//        existingUser.setEmailId("test@example.com");
+//        existingUser.setPassword("correctpassword");
+//
+//        when(userRepository.findByEmailId("test@example.com")).thenReturn(existingUser);
+//
+//        // Act
+//        ResponseEntity<Map<String, Object>> response = userController.login(loginUser, request);
+//
+//        // Assert
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+//        assertThat(response.getBody()).isNotNull();
+//        assertThat(response.getBody().get("message")).isEqualTo("Invalid credentials");
+//
+//        verify(userRepository, times(1)).findByEmailId("test@example.com");
 //    }
-}
-
+//}

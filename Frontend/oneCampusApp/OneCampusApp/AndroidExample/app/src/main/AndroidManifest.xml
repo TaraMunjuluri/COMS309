@@ -26,6 +26,18 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".AverageRatingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ViewRatingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubmitRatingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MenteeRatingActivity"
+            android:exported="false" />
+        <activity
             android:name=".RatingActivity"
             android:exported="false" />
         <activity

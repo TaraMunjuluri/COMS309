@@ -38,4 +38,6 @@ public interface MenteeRatingRepository extends JpaRepository<MenteeRating, Long
     // Calculate average rating for a specific mentor
     @Query("SELECT AVG(mr.rating) FROM MenteeRating mr WHERE mr.mentor = :mentor")
     Double calculateAverageRatingForMentor(@Param("mentor") Mentor mentor);
+
+    List<MenteeRating> findByMentorUsername(String mentorUsername);
 }

@@ -14,4 +14,7 @@ public interface MenteeRepository extends JpaRepository<onetomany.MenteeSurvey.M
     List<Mentee> findByAreaOfMenteeship(AreaOfMenteeship areaOfMenteeship);
 
     Mentee findByUser(User user);
+
+    Mentee findByUsername(String username); // Add this method
+
 }

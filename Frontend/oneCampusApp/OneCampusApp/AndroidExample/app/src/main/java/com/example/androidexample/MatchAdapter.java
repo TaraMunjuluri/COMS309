@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide; // Assuming Glide is used for image loading
 import java.util.List;
 
 /**
@@ -23,19 +24,8 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.UserViewHold
      * Interface for handling user interactions on match and reject buttons.
      */
     public interface OnUserRequestClickListener {
-        /**
-         * Called when the match button is clicked.
-         *
-         * @param user The user associated with the match action.
-         */
-        void onMatchClicked(User user);
-
-        /**
-         * Called when the reject button is clicked.
-         *
-         * @param user The user associated with the reject action.
-         */
-        void onRejectClicked(User user);
+        void onMatchClicked(User user);   // Called when the match button is clicked
+        void onRejectClicked(User user); // Called when the reject button is clicked
     }
 
     /**
@@ -60,12 +50,7 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.UserViewHold
         public Button matchButton;
         public Button rejectButton;
 
-        /**
-         * Constructor for UserViewHolder. Initializes the views.
-         *
-         * @param itemView The view for an individual user item.
-         */
-        public UserViewHolder(View itemView) {
+        public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             profileImage = itemView.findViewById(R.id.profile_image);
             profileName = itemView.findViewById(R.id.profile_name);
@@ -82,22 +67,28 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.UserViewHold
          * @param listener The listener to handle button actions.
          */
         public void bind(User user, OnUserRequestClickListener listener) {
-            profileName.setText(user.getName());
+            profileName.setText(user.getName()); // Replace with getName() if applicable
             profileMajor.setText(user.getMajor());
             profileClassification.setText(user.getClassification());
 
-            matchButton.setOnClickListener(v -> listener.onMatchClicked(user));
-            rejectButton.setOnClickListener(v -> listener.onRejectClicked(user));
+            // Load profile image if available
+            if (user.getProfileImageUrl() != null) {
+                Glide.with(profileImage.getContext())
+                        .load(user.getProfileImageUrl())
+                        .placeholder(R.drawable.user_profile) // Optional placeholder
+                        .into(profileImage);
+            } else {
+                profileImage.setImageResource(R.drawable.user_profile); // Fallback image
+            }
+
+            // Set button click listeners
+            if (listener != null) {
+                matchButton.setOnClickListener(v -> listener.onMatchClicked(user));
+                rejectButton.setOnClickListener(v -> listener.onRejectClicked(user));
+            }
         }
     }
 
-    /**
-     * Creates a new ViewHolder for a user item.
-     *
-     * @param parent   The parent ViewGroup.
-     * @param viewType The view type of the new View.
-     * @return A new UserViewHolder instance.
-     */
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -106,24 +97,23 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.UserViewHold
         return new UserViewHolder(view);
     }
 
-    /**
-     * Binds user data to the ViewHolder at the specified position.
-     *
-     * @param holder   The ViewHolder to bind data to.
-     * @param position The position of the user in the list.
-     */
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         holder.bind(users.get(position), listener);
     }
 
-    /**
-     * Returns the total number of user items.
-     *
-     * @return The size of the user list.
-     */
     @Override
     public int getItemCount() {
         return users.size();
+    }
+
+    /**
+     * Updates the user list and refreshes the RecyclerView.
+     *
+     * @param newUsers The updated list of users.
+     */
+    public void updateUsers(List<User> newUsers) {
+        this.users = newUsers;
+        notifyDataSetChanged();
     }
 }
