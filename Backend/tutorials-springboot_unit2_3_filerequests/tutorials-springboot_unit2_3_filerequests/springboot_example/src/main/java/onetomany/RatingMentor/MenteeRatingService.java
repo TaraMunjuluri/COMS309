@@ -287,4 +287,9 @@ public class MenteeRatingService {
         User menteeUser = userRepository.findByUsername(menteeUsername);
         return menteeUser.getId();
     }
+
+    public Mentee getMenteeByUsername(String username) {
+        // Assuming there's a method in the MenteeRepository that finds a Mentee by their username
+        return menteeRepository.findByUsername(username);
+    }
 }
