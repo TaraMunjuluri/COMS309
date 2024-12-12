@@ -101,6 +101,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             navigateToActivity(SettingsActivity.class);
         } else if (id == R.id.nav_achievements) {
             navigateToActivity(AchievementsActivity.class);
+        } else if (id == R.id.nav_rateMentor) {
+            navigateToActivity(SubmitRatingActivity.class);
         } else if (id == R.id.nav_rating) {
             navigateToActivity(RatingActivity.class);
         } else if (id == R.id.nav_logout) {
