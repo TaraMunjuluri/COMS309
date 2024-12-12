@@ -27,7 +27,7 @@ maven-test:
     # - cd Backend/target/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example        
     - cd Backend/tutorials-springboot_unit2_3_filerequests/tutorials-springboot_unit2_3_filerequests/springboot_example
     # change 'Backend' to where you have the pom.xml (do not add / in the beginning)
-    - sudo mv target/*.jar /target/web-demo.jar 
+    - sudo mv target/*.onetomany-1.0.0.jar /target/onetomany-1.0.0.jar.jar 
     - sudo systemctl stop system-web-demo
     - sudo systemctl start system-web-demo
   # only:
