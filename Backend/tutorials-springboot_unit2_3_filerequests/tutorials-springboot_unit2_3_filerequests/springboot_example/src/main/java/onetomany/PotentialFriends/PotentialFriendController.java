@@ -4,8 +4,8 @@ import onetomany.Interests.InterestsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -19,11 +19,16 @@ public class PotentialFriendController {
     private InterestsRepository interestsRepository;
 
     @PostMapping("/update-potential-friends/{userId}")
+    @Transactional
     public ResponseEntity<?> updatePotentialFriends(@PathVariable Long userId) {
         try {
+            // Delete existing potential friends
             potentialFriendRepository.deleteByUserId(userId);
+
+            // Find users with shared interests
             List<Object[]> sharedInterests = interestsRepository.findUsersWithSharedInterests(userId);
 
+            // Create new potential friend entries
             for (Object[] result : sharedInterests) {
                 Number friendId = (Number) result[0];
                 Number sharedCount = (Number) result[1];

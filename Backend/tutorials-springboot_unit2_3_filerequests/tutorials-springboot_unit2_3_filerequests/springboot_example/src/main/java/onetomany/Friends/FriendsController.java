@@ -4,6 +4,7 @@ import onetomany.PotentialFriends.PotentialFriend;
 import onetomany.PotentialFriends.PotentialFriendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class FriendsController {
     private PotentialFriendRepository potentialFriendRepository;
 
     @PostMapping("/{userId}/add/{friendId}")
+    @Transactional
     public ResponseEntity<?> addFriend(@PathVariable Long userId, @PathVariable Long friendId) {
         try {
             // Check if they're already friends
@@ -50,6 +52,7 @@ public class FriendsController {
     }
 
     @DeleteMapping("/{userId}/remove/{friendId}")
+    @Transactional
     public ResponseEntity<?> removeFriend(@PathVariable Long userId, @PathVariable Long friendId) {
         friendsRepository.deleteByUserIdAndFriendId(userId, friendId);
         friendsRepository.deleteByUserIdAndFriendId(friendId, userId);
