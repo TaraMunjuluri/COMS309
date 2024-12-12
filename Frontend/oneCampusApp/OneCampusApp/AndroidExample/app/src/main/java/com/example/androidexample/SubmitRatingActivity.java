@@ -31,12 +31,21 @@ public class SubmitRatingActivity extends AppCompatActivity {
         submitButton = findViewById(R.id.submitButton);
 
         submitButton.setOnClickListener(v -> {
-            String menteeUsername = menteeUsernameInput.getText().toString();
-            String mentorUsername = mentorUsernameInput.getText().toString();
-            String rating = ratingInput.getText().toString();
+            String menteeUsername = menteeUsernameInput.getText().toString().trim();
+            String mentorUsername = mentorUsernameInput.getText().toString().trim();
+            String ratingStr = ratingInput.getText().toString().trim();
 
-            if (!menteeUsername.isEmpty() && !mentorUsername.isEmpty() && !rating.isEmpty()) {
-                submitRating(menteeUsername, mentorUsername, Integer.parseInt(rating));
+            if (!menteeUsername.isEmpty() && !mentorUsername.isEmpty() && !ratingStr.isEmpty()) {
+                try {
+                    int rating = Integer.parseInt(ratingStr);
+                    if (rating >= 1 && rating <= 5) {
+                        submitRating(menteeUsername, mentorUsername, rating);
+                    } else {
+                        Toast.makeText(this, "Rating must be between 1 and 5.", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (NumberFormatException e) {
+                    Toast.makeText(this, "Please enter a valid number for the rating.", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(this, "Please fill all fields.", Toast.LENGTH_SHORT).show();
             }
@@ -44,8 +53,10 @@ public class SubmitRatingActivity extends AppCompatActivity {
     }
 
     private void submitRating(String menteeUsername, String mentorUsername, int rating) {
-        String url = "http://coms-3090-033.class.las.iastate.edu:8080/mentee-ratings/rate?menteeUsername"
-                + menteeUsername + "&mentorUsername=" + mentorUsername + "&rating=" + rating;
+        String url = "http://coms-3090-033.class.las.iastate.edu:8080/mentee-ratings/rate" +
+                "?menteeUsername=" + menteeUsername +
+                "&mentorUsername=" + mentorUsername +
+                "&rating=" + rating;
 
         // Create a request queue
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -53,11 +64,15 @@ public class SubmitRatingActivity extends AppCompatActivity {
         // Create a StringRequest to submit the rating
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
+                    Log.d("SubmitRatingSuccess", "Response: " + response);
                     Toast.makeText(this, "Rating submitted successfully!", Toast.LENGTH_SHORT).show();
                 },
                 error -> {
-                    Log.e("SubmitRatingError", error.toString());
-                    Toast.makeText(this, "Failed to submit rating.", Toast.LENGTH_SHORT).show();
+                    Log.e("SubmitRatingError", "Error: " + error.toString());
+                    if (error.networkResponse != null) {
+                        Log.e("SubmitRatingError", "HTTP Status Code: " + error.networkResponse.statusCode);
+                    }
+                    Toast.makeText(this, "Failed to submit rating. Please check your input or try again later.", Toast.LENGTH_SHORT).show();
                 });
 
         // Add the request to the queue
