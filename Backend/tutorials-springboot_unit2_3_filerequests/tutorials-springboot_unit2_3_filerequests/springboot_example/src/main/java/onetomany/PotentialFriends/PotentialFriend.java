@@ -1,4 +1,5 @@
-package onetomany.Friends;
+package onetomany.PotentialFriends;
+
 
 import javax.persistence.*;
 
@@ -9,11 +10,19 @@ public class PotentialFriend {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_id")
     private Long userId;
+
+    @Column(name = "potential_friend_id")
     private Long potentialFriendId;
+
+    @Column(name = "shared_interests_count")
     private Integer sharedInterestsCount;
 
-    // Getters and setters
+    @Column(name = "common_interest_count")
+    private Integer commonInterestCount;
+
+    // Add getters and setters
     public Long getId() {
         return id;
     }
@@ -44,5 +53,13 @@ public class PotentialFriend {
 
     public void setSharedInterestsCount(Integer sharedInterestsCount) {
         this.sharedInterestsCount = sharedInterestsCount;
+    }
+
+    public Integer getCommonInterestCount() {
+        return commonInterestCount;
+    }
+
+    public void setCommonInterestCount(Integer commonInterestCount) {
+        this.commonInterestCount = commonInterestCount;
     }
 }

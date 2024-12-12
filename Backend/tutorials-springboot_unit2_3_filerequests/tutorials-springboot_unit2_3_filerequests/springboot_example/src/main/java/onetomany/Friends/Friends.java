@@ -1,5 +1,6 @@
 package onetomany.Friends;
 
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -10,19 +11,27 @@ public class Friends {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    @Column(name = "friend_id")
     private Long friendId;
-    private Integer sharedInterestsCount;
-    private LocalDateTime friendsSince;  // Track when they became friends
 
-    // Constructors
+    @Column(name = "friends_since")
+    private LocalDateTime friendsSince;
+
+    @Column(name = "shared_interests_count")
+    private Integer sharedInterestsCount;
+
+    @Column(name = "user_id")
+    private Long userId;
+
+    // Default constructor
     public Friends() {}
 
+    // Constructor with fields
     public Friends(Long userId, Long friendId, Integer sharedInterestsCount) {
         this.userId = userId;
         this.friendId = friendId;
         this.sharedInterestsCount = sharedInterestsCount;
-        this.friendsSince = LocalDateTime.now();
+        this.friendsSince = LocalDateTime.now();  // Set current time when creating friendship
     }
 
     // Getters and Setters
@@ -34,20 +43,20 @@ public class Friends {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public Long getFriendId() {
         return friendId;
     }
 
     public void setFriendId(Long friendId) {
         this.friendId = friendId;
+    }
+
+    public LocalDateTime getFriendsSince() {
+        return friendsSince;
+    }
+
+    public void setFriendsSince(LocalDateTime friendsSince) {
+        this.friendsSince = friendsSince;
     }
 
     public Integer getSharedInterestsCount() {
@@ -58,11 +67,11 @@ public class Friends {
         this.sharedInterestsCount = sharedInterestsCount;
     }
 
-    public LocalDateTime getFriendsSince() {
-        return friendsSince;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setFriendsSince(LocalDateTime friendsSince) {
-        this.friendsSince = friendsSince;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
