@@ -44,12 +44,11 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;import org.springframework.data.jpa.repository.JpaRepository;
 &nbsp;import org.springframework.stereotype.Repository;
 &nbsp;
-&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
 &nbsp;
 &nbsp;@Repository
 &nbsp;public interface InterestsRepository extends JpaRepository&lt;Interests, Long&gt; {
-&nbsp;    List&lt;Interests&gt; findByMajor(String major);
-&nbsp;    List&lt;Interests&gt; findByClassification(String classification);
+&nbsp;    Optional&lt;Interests&gt; findByName(String name);
 &nbsp;}
 </code>
 </pre>
@@ -74,7 +73,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-08 00:32</div>
+    <div style="float:right;">generated on 2024-12-11 18:43</div>
 </div>
 </body>
 </html>

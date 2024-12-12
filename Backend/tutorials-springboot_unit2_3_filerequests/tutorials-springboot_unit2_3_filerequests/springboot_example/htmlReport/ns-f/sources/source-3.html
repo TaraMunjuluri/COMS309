@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > Message</title>
+  <title>Coverage Report > MenteeRatingService</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">onetomany.chatbox</a>
+    <a href="../index.html">onetomany.RatingMentor</a>
 </div>
 
-<h1>Coverage Summary for Class: Message (onetomany.chatbox)</h1>
+<h1>Coverage Summary for Class: MenteeRatingService (onetomany.RatingMentor)</h1>
 
 <table class="coverageStats">
 
@@ -42,13 +42,13 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">Message</td>
+  <td class="name">MenteeRatingService</td>
 <td class="coverageStat">
   <span class="percent">
-    6.7%
+    16.7%
   </span>
   <span class="absValue">
-    (1/15)
+    (1/6)
   </span>
 </td>
 <td class="coverageStat">
@@ -56,29 +56,29 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/54)
+    (0/10)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    11.1%
+    2.8%
   </span>
   <span class="absValue">
-    (2/18)
+    (1/36)
   </span>
 </td>
 </tr>
   <tr>
-    <td class="name">Message$HibernateProxy$nDOWNClc</td>
+    <td class="name">MenteeRatingService$$EnhancerBySpringCGLIB$$4097910d</td>
   </tr>
 <tr>
   <td class="name"><strong>Total</strong></td>
 <td class="coverageStat">
   <span class="percent">
-    6.7%
+    16.7%
   </span>
   <span class="absValue">
-    (1/15)
+    (1/6)
   </span>
 </td>
 <td class="coverageStat">
@@ -86,15 +86,15 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/54)
+    (0/10)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    11.1%
+    2.8%
   </span>
   <span class="absValue">
-    (2/18)
+    (1/36)
   </span>
 </td>
 </tr>
@@ -105,119 +105,295 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.chatbox;
+<code class="sourceCode" id="sourceCode">&nbsp;//package onetomany.RatingMentor;
+&nbsp;//
+&nbsp;//import onetomany.Matches.MatchedPairMentorMentee;
+&nbsp;//import onetomany.Matches.MatchedPairRepository;
+&nbsp;//import onetomany.MenteeSurvey.Mentee;
+&nbsp;//import onetomany.MenteeSurvey.MenteeRepository;
+&nbsp;//import onetomany.MentorSurvey.Mentor;
+&nbsp;//import onetomany.MentorSurvey.MentorRepository;
+&nbsp;//import onetomany.Users.User;
+&nbsp;//import onetomany.Users.UserRepository;
+&nbsp;//import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;//import org.springframework.stereotype.Service;
+&nbsp;//import onetomany.RatingMentor.MenteeRatingRepository;
+&nbsp;//import java.util.List;
+&nbsp;//
+&nbsp;////@Service
+&nbsp;////public class MenteeRatingService {
+&nbsp;////
+&nbsp;////    private final MenteeRatingRepository menteeRatingRepository;
+&nbsp;////
+&nbsp;////    public MenteeRatingService(MenteeRatingRepository menteeRatingRepository) {
+&nbsp;////        this.menteeRatingRepository = menteeRatingRepository;
+&nbsp;////    }
+&nbsp;////
+&nbsp;////    public MenteeRating saveRating(Mentee mentee, Mentor mentor, int rating) {
+&nbsp;////        MenteeRating menteeRating = new MenteeRating(mentee, mentor, rating);
+&nbsp;////        return menteeRatingRepository.save(menteeRating);
+&nbsp;////    }
+&nbsp;////
+&nbsp;////    public List&lt;MenteeRating&gt; getRatingsByMentee(Mentee mentee) {
+&nbsp;////        return menteeRatingRepository.findByMentee(mentee);
+&nbsp;////    }
+&nbsp;////
+&nbsp;////    public List&lt;MenteeRating&gt; getRatingsByMentor(Mentor mentor) {
+&nbsp;////        return menteeRatingRepository.findByMentor(mentor);
+&nbsp;////    }
+&nbsp;////}
+&nbsp;//
+&nbsp;//@Service
+&nbsp;//public class MenteeRatingService {
+&nbsp;//
+&nbsp;//    @Autowired
+&nbsp;//    private MatchedPairRepository matchedPairRepository;
+&nbsp;//
+&nbsp;//    @Autowired
+&nbsp;//    private MenteeRatingRepository menteeRatingRepository;
+&nbsp;//
+&nbsp;//    @Autowired
+&nbsp;//    private UserRepository userRepository;
+&nbsp;//
+&nbsp;//    @Autowired
+&nbsp;//    private MentorRepository mentorRepository;
+&nbsp;//
+&nbsp;//    @Autowired
+&nbsp;//    private MenteeRepository menteeRepository;
+&nbsp;//
+&nbsp;//    public MenteeRating rateMentor(Long menteeId, Long mentorId, int rating) {
+&nbsp;//        // Ensure that both mentor and mentee exist
+&nbsp;//        User mentor = userRepository.findById(mentorId)
+&nbsp;//                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Mentor not found&quot;));
+&nbsp;//
+&nbsp;//        User mentee = userRepository.findById(menteeId)
+&nbsp;//                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Mentee not found&quot;));
+&nbsp;//
+&nbsp;//        // Check if a matched pair exists for this mentor and mentee
+&nbsp;//        MatchedPairMentorMentee matchedPair = matchedPairRepository.findByMentorAndMentee(mentor, mentee);
+&nbsp;//        if (matchedPair == null) {
+&nbsp;//            throw new IllegalArgumentException(&quot;No matched pair exists for this mentor and mentee&quot;);
+&nbsp;//        }
+&nbsp;//
+&nbsp;//        // Create and save the rating
+&nbsp;//        MenteeRating menteeRating = new MenteeRating();
+&nbsp;//        Mentor mentorEntity = mentorRepository.findByUser(mentor); // Assuming mentorRepository finds Mentor by User
+&nbsp;//        menteeRating.setMentor(mentorEntity);
+&nbsp;////        menteeRating.setMentor(mentor);
+&nbsp;////        menteeRating.setMentee(mentee);
+&nbsp;//        Mentee menteeEntity = menteeRepository.findByUser(mentee);  // &#39;mentee&#39; is the User object
+&nbsp;//        menteeRating.setMentee(menteeEntity);
+&nbsp;//        menteeRating.setRating(rating);
+&nbsp;//
+&nbsp;//        return menteeRatingRepository.save(menteeRating);
+&nbsp;//    }
+&nbsp;//}
+&nbsp;
+&nbsp;
+&nbsp;//start working version
+&nbsp;//package onetomany.RatingMentor;
+&nbsp;//
+&nbsp;//import onetomany.Matches.MatchedPairMentorMentee;
+&nbsp;//import onetomany.Matches.MatchedPairRepository;
+&nbsp;//import onetomany.MenteeSurvey.Mentee;
+&nbsp;//import onetomany.MenteeSurvey.MenteeRepository;
+&nbsp;//import onetomany.MentorSurvey.Mentor;
+&nbsp;//import onetomany.MentorSurvey.MentorRepository;
+&nbsp;//import onetomany.Users.User;
+&nbsp;//import onetomany.Users.UserRepository;
+&nbsp;//import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;//import org.springframework.stereotype.Service;
+&nbsp;//import org.springframework.transaction.annotation.Transactional;
+&nbsp;//
+&nbsp;//import java.time.LocalDateTime;
+&nbsp;//import java.util.Optional;
+&nbsp;//
+&nbsp;//@Service
+&nbsp;//public class MenteeRatingService {
+&nbsp;//    @Autowired
+&nbsp;//    private MatchedPairRepository matchedPairRepository;
+&nbsp;//
+&nbsp;//    @Autowired
+&nbsp;//    private MenteeRatingRepository menteeRatingRepository;
+&nbsp;//
+&nbsp;//    @Autowired
+&nbsp;//    private UserRepository userRepository;
+&nbsp;//
+&nbsp;//    @Autowired
+&nbsp;//    private MentorRepository mentorRepository;
+&nbsp;//
+&nbsp;//    @Autowired
+&nbsp;//    private MenteeRepository menteeRepository;
+&nbsp;//
+&nbsp;//    @Transactional
+&nbsp;//    public MenteeRating rateMentor(Long menteeId, Long mentorId, int rating) {
+&nbsp;//        // Ensure that both mentor and mentee exist
+&nbsp;//        User mentorUser = userRepository.findById(mentorId)
+&nbsp;//                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Mentor not found&quot;));
+&nbsp;//
+&nbsp;//        User menteeUser = userRepository.findById(menteeId)
+&nbsp;//                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Mentee not found&quot;));
+&nbsp;//
+&nbsp;//        // Check if a matched pair exists for this mentor and mentee
+&nbsp;//        MatchedPairMentorMentee matchedPair = matchedPairRepository.findByMentorAndMentee(mentorUser, menteeUser);
+&nbsp;//        if (matchedPair == null) {
+&nbsp;//            throw new IllegalArgumentException(&quot;No active match exists for this mentor and mentee&quot;);
+&nbsp;//        }
+&nbsp;//
+&nbsp;//        // Convert User to Mentor and Mentee entities
+&nbsp;//        Mentor mentorEntity = mentorRepository.findByUser(mentorUser);
+&nbsp;//        Mentee menteeEntity = menteeRepository.findByUser(menteeUser);
+&nbsp;//
+&nbsp;//        // Check if a rating already exists
+&nbsp;//        Optional&lt;MenteeRating&gt; existingRating = menteeRatingRepository.findByMenteeAndMentor(menteeEntity, mentorEntity);
+&nbsp;//
+&nbsp;//        MenteeRating menteeRating;
+&nbsp;//        if (existingRating.isPresent()) {
+&nbsp;//            // Update existing rating
+&nbsp;//            menteeRating = existingRating.get();
+&nbsp;//            menteeRating.setRating(rating);
+&nbsp;//            menteeRating.setRatingDate(LocalDateTime.now());
+&nbsp;//        } else {
+&nbsp;//            // Create new rating
+&nbsp;//            menteeRating = new MenteeRating(menteeEntity, mentorEntity, rating);
+&nbsp;//        }
+&nbsp;//
+&nbsp;//        return menteeRatingRepository.save(menteeRating);
+&nbsp;//    }
+&nbsp;//
+&nbsp;//    @Transactional(readOnly = true)
+&nbsp;//    public Double getMentorAverageRating(Long mentorId) {
+&nbsp;//        User mentorUser = userRepository.findById(mentorId)
+&nbsp;//                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Mentor not found&quot;));
+&nbsp;//
+&nbsp;//        Mentor mentorEntity = mentorRepository.findByUser(mentorUser);
+&nbsp;//        return menteeRatingRepository.calculateAverageRatingForMentor(mentorEntity);
+&nbsp;//    }
+&nbsp;//}
+&nbsp;
+&nbsp;//end working version
+&nbsp;
+&nbsp;package onetomany.RatingMentor;
+&nbsp;
+&nbsp;import onetomany.Matches.MatchedPairMentorMentee;
+&nbsp;import onetomany.Matches.MatchedPairRepository;
+&nbsp;import onetomany.MenteeSurvey.Mentee;
+&nbsp;import onetomany.MenteeSurvey.MenteeRepository;
+&nbsp;import onetomany.MentorSurvey.Mentor;
+&nbsp;import onetomany.MentorSurvey.MentorRepository;
+&nbsp;import onetomany.Users.User;
+&nbsp;import onetomany.Users.UserRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
 &nbsp;
 &nbsp;import java.time.LocalDateTime;
-&nbsp;import java.util.Date;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
 &nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class MenteeRatingService {</b>
+&nbsp;    @Autowired
+&nbsp;    private MatchedPairRepository matchedPairRepository;
 &nbsp;
-&nbsp;import javax.persistence.*;
+&nbsp;    @Autowired
+&nbsp;    private MenteeRatingRepository menteeRatingRepository;
 &nbsp;
-&nbsp;import lombok.Data;
-&nbsp;import onetomany.Users.User;
+&nbsp;    @Autowired
+&nbsp;    private UserRepository userRepository;
 &nbsp;
+&nbsp;    @Autowired
+&nbsp;    private MentorRepository mentorRepository;
 &nbsp;
-&nbsp;@Entity
-&nbsp;@Table(name = &quot;messages&quot;)
-<b class="nc">&nbsp;@Data</b>
-&nbsp;public class Message {
-&nbsp;    @Id
-&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
-&nbsp;    private Long id;
+&nbsp;    @Autowired
+&nbsp;    private MenteeRepository menteeRepository;
 &nbsp;
+&nbsp;    @Transactional
+&nbsp;    public MenteeRating rateMentor(Long menteeId, Long mentorId, int rating) {
+&nbsp;        // Validate rating
+<b class="nc">&nbsp;        if (rating &lt; 1 || rating &gt; 5) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Rating must be between 1 and 5&quot;);</b>
+&nbsp;        }
 &nbsp;
-&nbsp;    @Column
-&nbsp;    private String userName;
+&nbsp;        // Ensure that both mentor and mentee exist
+<b class="nc">&nbsp;        User mentorUser = userRepository.findById(mentorId)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Mentor not found&quot;));</b>
 &nbsp;
+<b class="nc">&nbsp;        User menteeUser = userRepository.findById(menteeId)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Mentee not found&quot;));</b>
 &nbsp;
-&nbsp;    @Lob
-&nbsp;    private String content;
+&nbsp;        // Check if a matched pair exists for this mentor and mentee
+<b class="nc">&nbsp;        MatchedPairMentorMentee matchedPair = matchedPairRepository.findByMentorAndMentee(mentorUser, menteeUser);</b>
+<b class="nc">&nbsp;        if (matchedPair == null) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;No active match exists for this mentor and mentee&quot;);</b>
+&nbsp;        }
 &nbsp;
+&nbsp;        // Convert User to Mentor and Mentee entities
+<b class="nc">&nbsp;        Mentor mentorEntity = mentorRepository.findByUser(mentorUser);</b>
+<b class="nc">&nbsp;        Mentee menteeEntity = menteeRepository.findByUser(menteeUser);</b>
 &nbsp;
-&nbsp;    @ManyToOne
-&nbsp;    @JoinColumn(name = &quot;user_id&quot;)
-&nbsp;    private User user; // The sender of the message
+&nbsp;        // Check if a rating already exists
+<b class="nc">&nbsp;        Optional&lt;MenteeRating&gt; existingRating = menteeRatingRepository.findByMenteeAndMentor(menteeEntity, mentorEntity);</b>
 &nbsp;
+&nbsp;        MenteeRating menteeRating;
+<b class="nc">&nbsp;        if (existingRating.isPresent()) {</b>
+&nbsp;            // Update existing rating
+<b class="nc">&nbsp;            menteeRating = existingRating.get();</b>
+<b class="nc">&nbsp;            menteeRating.setRating(rating);</b>
+<b class="nc">&nbsp;            menteeRating.setRatingDate(LocalDateTime.now());</b>
+&nbsp;        } else {
+&nbsp;            // Create new rating
+<b class="nc">&nbsp;            menteeRating = new MenteeRating(menteeEntity, mentorEntity, rating);</b>
+&nbsp;        }
 &nbsp;
-&nbsp;    private LocalDateTime timestamp;
-&nbsp;
-&nbsp;
-<b class="fc">&nbsp;    @Temporal(TemporalType.TIMESTAMP)</b>
-&nbsp;    @Column(name = &quot;sent&quot;)
-&nbsp;    private Date sent = new Date();
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-<b class="fc">&nbsp;    public Message() {};</b>
-&nbsp;
-&nbsp;
-<b class="nc">&nbsp;    public Message(String userName, String content) {</b>
-<b class="nc">&nbsp;        this.userName = userName;</b>
-<b class="nc">&nbsp;        this.content = content;</b>
+<b class="nc">&nbsp;        return menteeRatingRepository.save(menteeRating);</b>
 &nbsp;    }
 &nbsp;
+&nbsp;    @Transactional(readOnly = true)
+&nbsp;    public Double getMentorAverageRating(Long mentorId) {
+&nbsp;        // Validate mentor exists
+<b class="nc">&nbsp;        User mentorUser = userRepository.findById(mentorId)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Mentor not found&quot;));</b>
 &nbsp;
-&nbsp;    public Long getId() {
-<b class="nc">&nbsp;        return id;</b>
+<b class="nc">&nbsp;        Mentor mentorEntity = mentorRepository.findByUser(mentorUser);</b>
+&nbsp;
+&nbsp;        // Get all ratings for this mentor
+<b class="nc">&nbsp;        List&lt;MenteeRating&gt; ratings = menteeRatingRepository.findByMentor(mentorEntity);</b>
+&nbsp;
+&nbsp;        // Calculate average rating
+<b class="nc">&nbsp;        if (ratings.isEmpty()) {</b>
+<b class="nc">&nbsp;            return 0.0;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        double sum = ratings.stream()</b>
+<b class="nc">&nbsp;                .mapToInt(MenteeRating::getRating)</b>
+<b class="nc">&nbsp;                .sum();</b>
+&nbsp;
+<b class="nc">&nbsp;        return sum / (double) ratings.size();</b>
 &nbsp;    }
 &nbsp;
+&nbsp;    @Transactional
+&nbsp;    public MenteeRating rateMentorByUsername(String menteeUsername, String mentorUsername, int rating) {
+&nbsp;        // Find users by usernames
+<b class="nc">&nbsp;        User mentorUser = userRepository.findByUsername(mentorUsername);</b>
 &nbsp;
-&nbsp;    public void setId(Long id) {
-<b class="nc">&nbsp;        this.id = id;</b>
+<b class="nc">&nbsp;        User menteeUser = userRepository.findByUsername(menteeUsername);</b>
+&nbsp;
+&nbsp;        // Reuse existing rateMentor method with user IDs
+<b class="nc">&nbsp;        return rateMentor(menteeUser.getId(), mentorUser.getId(), rating);</b>
 &nbsp;    }
 &nbsp;
-&nbsp;
-&nbsp;    public String getUserName() {
-<b class="nc">&nbsp;        return userName;</b>
+&nbsp;    // Add a method to get mentor&#39;s ID by username
+&nbsp;    public Long getMentorIdByUsername(String mentorUsername) {
+<b class="nc">&nbsp;        User mentorUser = userRepository.findByUsername(mentorUsername);</b>
+<b class="nc">&nbsp;        return mentorUser.getId();</b>
 &nbsp;    }
 &nbsp;
-&nbsp;
-&nbsp;    public void setUserName(String userName) {
-<b class="nc">&nbsp;        this.userName = userName;</b>
+&nbsp;    // Add a method to get mentee&#39;s ID by username
+&nbsp;    public Long getMenteeIdByUsername(String menteeUsername) {
+<b class="nc">&nbsp;        User menteeUser = userRepository.findByUsername(menteeUsername);</b>
+<b class="nc">&nbsp;        return menteeUser.getId();</b>
 &nbsp;    }
-&nbsp;
-&nbsp;
-&nbsp;    public String getContent() {
-<b class="nc">&nbsp;        return content;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;
-&nbsp;    public void setContent(String content) {
-<b class="nc">&nbsp;        this.content = content;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;
-&nbsp;    public Date getSent() {
-<b class="nc">&nbsp;        return sent;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;
-&nbsp;    public void setSent(Date sent) {
-<b class="nc">&nbsp;        this.sent = sent;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;
-&nbsp;    public User getUser() {
-<b class="nc">&nbsp;        return user;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;
-&nbsp;    public void setUser(User user) {
-<b class="nc">&nbsp;        this.user = user;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;
-&nbsp;    public LocalDateTime getTimestamp() {
-<b class="nc">&nbsp;        return timestamp;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;
-&nbsp;    public void setTimestamp(LocalDateTime timestamp) {
-<b class="nc">&nbsp;        this.timestamp = timestamp;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;
 &nbsp;}
 </code>
 </pre>
@@ -242,7 +418,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-08 00:32</div>
+    <div style="float:right;">generated on 2024-12-11 18:43</div>
 </div>
 </body>
 </html>

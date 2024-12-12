@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > MatchedPairMentorMentee</title>
+  <title>Coverage Report > LaptopRepository</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,84 +19,19 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">onetomany.Matches</a>
+    <a href="../index.html">onetomany.Laptops</a>
 </div>
 
-<h1>Coverage Summary for Class: MatchedPairMentorMentee (onetomany.Matches)</h1>
+<h1>Coverage Summary for Class: LaptopRepository (onetomany.Laptops)</h1>
 
 <table class="coverageStats">
-
 <tr>
   <th class="name">Class</th>
-<th class="coverageStat 
-">
-  Method, %
-</th>
-<th class="coverageStat 
-">
-  Line, %
-</th>
 </tr>
 <tr>
-  <td class="name">MatchedPairMentorMentee</td>
-<td class="coverageStat">
-  <span class="percent">
-    10%
-  </span>
-  <span class="absValue">
-    (1/10)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    7.7%
-  </span>
-  <span class="absValue">
-    (1/13)
-  </span>
-</td>
+  <td class="name">LaptopRepository</td>
 </tr>
-  <tr>
-    <td class="name">MatchedPairMentorMentee$Area</td>
-<td class="coverageStat">
-  <span class="percent">
-    100%
-  </span>
-  <span class="absValue">
-    (2/2)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    100%
-  </span>
-  <span class="absValue">
-    (2/2)
-  </span>
-</td>
-  </tr>
-  <tr>
-    <td class="name">MatchedPairMentorMentee$HibernateProxy$rpT4U2pu</td>
-  </tr>
-<tr>
-  <td class="name"><strong>Total</strong></td>
-<td class="coverageStat">
-  <span class="percent">
-    25%
-  </span>
-  <span class="absValue">
-    (3/12)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    20%
-  </span>
-  <span class="absValue">
-    (3/15)
-  </span>
-</td>
-</tr>
+
 </table>
 
 <br/>
@@ -104,77 +39,19 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.Matches;
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.Laptops;
 &nbsp;
-&nbsp;import onetomany.Users.User;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
 &nbsp;
-&nbsp;import javax.persistence.*;
+&nbsp;/**
+&nbsp; * 
+&nbsp; * @author Vivek Bengre
+&nbsp; * 
+&nbsp; */ 
 &nbsp;
-&nbsp;@Entity
-&nbsp;public class MatchedPairMentorMentee {
-&nbsp;
-&nbsp;
-&nbsp;    @Id
-&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
-&nbsp;    private Long id;
-&nbsp;
-&nbsp;    @ManyToOne
-&nbsp;    @JoinColumn(name = &quot;mentor_id&quot;, nullable = false)
-&nbsp;    private User mentor;
-&nbsp;
-&nbsp;    @ManyToOne
-&nbsp;    @JoinColumn(name = &quot;mentee_id&quot;, nullable = false)
-&nbsp;    private User mentee;
-&nbsp;
-&nbsp;    @Enumerated(EnumType.STRING)
-&nbsp;    private Area matchedArea;
-&nbsp;
-&nbsp;
-<b class="fc">&nbsp;    public MatchedPairMentorMentee() {}</b>
-&nbsp;
-<b class="nc">&nbsp;    public MatchedPairMentorMentee(User mentor, User mentee, Area area) {</b>
-<b class="nc">&nbsp;        this.mentor = mentor;</b>
-<b class="nc">&nbsp;        this.mentee = mentee;</b>
-<b class="nc">&nbsp;        this.matchedArea = area;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    // Getters and setters
-&nbsp;
-<b class="fc">&nbsp;    public enum Area {</b>
-<b class="fc">&nbsp;        CAREER, EDUCATION, GENERAL</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public Long getId() {
-<b class="nc">&nbsp;        return id;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public void setId(Long id) {
-<b class="nc">&nbsp;        this.id = id;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public User getMentor() {
-<b class="nc">&nbsp;        return mentor;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public void setMentor(User mentor) {
-<b class="nc">&nbsp;        this.mentor = mentor;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public User getMentee() {
-<b class="nc">&nbsp;        return mentee;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public void setMentee(User mentee) {
-<b class="nc">&nbsp;        this.mentee = mentee;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public Area getMatchedArea() {
-<b class="nc">&nbsp;        return matchedArea;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public void setMatchedArea(Area matchedArea) {
-<b class="nc">&nbsp;        this.matchedArea = matchedArea;</b>
-&nbsp;    }
+&nbsp;public interface LaptopRepository extends JpaRepository&lt;Laptop, Long&gt; {
+&nbsp;    Laptop findById(int id);
+&nbsp;    void deleteById(int id);
 &nbsp;}
 </code>
 </pre>
@@ -199,7 +76,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-08 00:32</div>
+    <div style="float:right;">generated on 2024-12-11 18:43</div>
 </div>
 </body>
 </html>

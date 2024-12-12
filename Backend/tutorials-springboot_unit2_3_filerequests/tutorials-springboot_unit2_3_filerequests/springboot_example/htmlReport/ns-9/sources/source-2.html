@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > MentorController</title>
+  <title>Coverage Report > MenteeController</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">onetomany.MentorSurvey</a>
+    <a href="../index.html">onetomany.MenteeSurvey</a>
 </div>
 
-<h1>Coverage Summary for Class: MentorController (onetomany.MentorSurvey)</h1>
+<h1>Coverage Summary for Class: MenteeController (onetomany.MenteeSurvey)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -45,7 +45,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">MentorController</td>
+  <td class="name">MenteeController</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -56,10 +56,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    16.7%
+    25%
   </span>
   <span class="absValue">
-    (1/6)
+    (1/4)
   </span>
 </td>
 <td class="coverageStat">
@@ -67,15 +67,15 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/18)
+    (0/6)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    2.6%
+    6.2%
   </span>
   <span class="absValue">
-    (1/38)
+    (1/16)
   </span>
 </td>
 </tr>
@@ -87,15 +87,14 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.MentorSurvey;
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.MenteeSurvey;
 &nbsp;
 &nbsp;import io.swagger.v3.oas.annotations.Operation;
 &nbsp;import io.swagger.v3.oas.annotations.media.Content;
 &nbsp;import io.swagger.v3.oas.annotations.media.Schema;
 &nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
 &nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponses;
-&nbsp;import onetomany.ExceptionHandlers.MentorAlreadyExistsException;
-&nbsp;import onetomany.ExceptionHandlers.MentorNotFoundException;
+&nbsp;import onetomany.ExceptionHandlers.MenteeAlreadyExistsException;
 &nbsp;import onetomany.ExceptionHandlers.UnauthorizedException;
 &nbsp;import onetomany.Users.User;
 &nbsp;import onetomany.services.MatchMentorMenteeService;
@@ -107,30 +106,31 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;import java.util.List;
 &nbsp;
 &nbsp;@RestController
-&nbsp;@RequestMapping(&quot;/mentor&quot;)
-<b class="fc">&nbsp;public class MentorController {</b>
+&nbsp;@RequestMapping(&quot;/mentee&quot;)
+<b class="fc">&nbsp;public class MenteeController {</b>
 &nbsp;
 &nbsp;    @Autowired
-&nbsp;    MentorRepository mentorRepository;
+&nbsp;    MenteeRepository menteeRepository;
 &nbsp;
 &nbsp;    @Autowired
 &nbsp;    private MatchMentorMenteeService matchMentorMenteeService;
 &nbsp;
-&nbsp;    @Operation(summary = &quot;Create a new mentor for the logged-in user&quot;)
+&nbsp;    @Operation(summary = &quot;Create a new mentee for the logged-in user&quot;)
 &nbsp;    @ApiResponses(value = {
-&nbsp;            @ApiResponse(responseCode = &quot;201&quot;, description = &quot;Mentor created successfully&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;201&quot;, description = &quot;Mentee created successfully&quot;),
 &nbsp;            @ApiResponse(responseCode = &quot;401&quot;, description = &quot;User not logged in&quot;, content = @Content),
-&nbsp;            @ApiResponse(responseCode = &quot;409&quot;, description = &quot;User is already a mentor&quot;, content = @Content)
+&nbsp;            @ApiResponse(responseCode = &quot;409&quot;, description = &quot;User is already a mentee&quot;, content = @Content)
 &nbsp;    })
 &nbsp;    @PostMapping(&quot;/create&quot;)
-&nbsp;    public String createMentor(
+&nbsp;    public String createMentee(
 &nbsp;            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-&nbsp;                    description = &quot;Details of the mentor to create&quot;,
+&nbsp;                    description = &quot;Details of the mentee to create&quot;,
 &nbsp;                    required = true,
-&nbsp;                    content = @Content(mediaType = &quot;application/json&quot;, schema = @Schema(implementation = Mentor.class))
+&nbsp;                    content = @Content(mediaType = &quot;application/json&quot;, schema = @Schema(implementation = Mentee.class))
 &nbsp;            )
-&nbsp;            @RequestBody Mentor mentor, HttpServletRequest request) {
+&nbsp;            @RequestBody Mentee mentee, HttpServletRequest request) {
 &nbsp;
+&nbsp;        // Check if user is logged in
 <b class="nc">&nbsp;        HttpSession session = request.getSession(false);</b>
 <b class="nc">&nbsp;        if (session == null || session.getAttribute(&quot;loggedInUser&quot;) == null) {</b>
 <b class="nc">&nbsp;            throw new UnauthorizedException(&quot;User not logged in&quot;);</b>
@@ -138,121 +138,53 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 <b class="nc">&nbsp;        User loggedInUser = (User) session.getAttribute(&quot;loggedInUser&quot;);</b>
 &nbsp;
-&nbsp;        // Check if the user is already a mentor
-<b class="nc">&nbsp;        Mentor existingMentor = mentorRepository.findByUser(loggedInUser);</b>
-<b class="nc">&nbsp;        if (existingMentor != null) {</b>
-<b class="nc">&nbsp;            throw new MentorAlreadyExistsException(&quot;User is already a mentor&quot;);</b>
+&nbsp;        // Check if the user is already a mentee
+<b class="nc">&nbsp;        Mentee existingMentee = menteeRepository.findByUser(loggedInUser);</b>
+<b class="nc">&nbsp;        if (existingMentee != null) {</b>
+<b class="nc">&nbsp;            throw new MenteeAlreadyExistsException(&quot;User is already a mentee&quot;);</b>
 &nbsp;        }
 &nbsp;
-&nbsp;        // Associate the mentor with the logged-in user
-<b class="nc">&nbsp;        mentor.setUser(loggedInUser);</b>
+&nbsp;        // Associate the mentee with the logged-in user
+<b class="nc">&nbsp;        mentee.setUser(loggedInUser);</b>
 &nbsp;
-&nbsp;        // Save the new mentor
-<b class="nc">&nbsp;        mentorRepository.save(mentor);</b>
+&nbsp;        // Save the new mentee
+<b class="nc">&nbsp;        menteeRepository.save(mentee);</b>
 &nbsp;
 &nbsp;        // Trigger matching logic
 <b class="nc">&nbsp;        matchMentorMenteeService.findNewMatches();</b>
 &nbsp;
-<b class="nc">&nbsp;        return &quot;Mentor created successfully&quot;;</b>
+<b class="nc">&nbsp;        return &quot;Mentee created successfully&quot;;</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    @Operation(summary = &quot;Retrieve all mentors&quot;)
+&nbsp;    @Operation(summary = &quot;Retrieve all mentees&quot;)
 &nbsp;    @ApiResponses(value = {
-&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Mentors retrieved successfully&quot;)
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Mentees retrieved successfully&quot;)
 &nbsp;    })
 &nbsp;    @GetMapping(&quot;/all&quot;)
-&nbsp;    public List&lt;Mentor&gt; getAllMentors() {
-<b class="nc">&nbsp;        return mentorRepository.findAll();</b>
+&nbsp;    public List&lt;Mentee&gt; getAllMentees() {
+<b class="nc">&nbsp;        return menteeRepository.findAll();</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    @Operation(summary = &quot;Delete the logged-in user&#39;s mentor record&quot;)
+&nbsp;    @Operation(summary = &quot;Save a new mentee&quot;)
 &nbsp;    @ApiResponses(value = {
-&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Mentor deleted successfully&quot;),
-&nbsp;            @ApiResponse(responseCode = &quot;401&quot;, description = &quot;User not logged in&quot;, content = @Content),
-&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Mentor not found&quot;, content = @Content)
-&nbsp;    })
-&nbsp;    @DeleteMapping(&quot;/delete&quot;)
-&nbsp;    public String deleteMentor(HttpServletRequest request) {
-<b class="nc">&nbsp;        HttpSession session = request.getSession(false);</b>
-<b class="nc">&nbsp;        if (session == null || session.getAttribute(&quot;loggedInUser&quot;) == null) {</b>
-<b class="nc">&nbsp;            throw new UnauthorizedException(&quot;User not logged in&quot;);</b>
-&nbsp;        }
-&nbsp;
-<b class="nc">&nbsp;        User loggedInUser = (User) session.getAttribute(&quot;loggedInUser&quot;);</b>
-&nbsp;
-&nbsp;        // Find the existing mentor record for the logged-in user
-<b class="nc">&nbsp;        Mentor existingMentor = mentorRepository.findByUser(loggedInUser);</b>
-<b class="nc">&nbsp;        if (existingMentor == null) {</b>
-<b class="nc">&nbsp;            throw new MentorNotFoundException(&quot;Mentor not found&quot;);</b>
-&nbsp;        }
-&nbsp;
-&nbsp;        // Delete the mentor record
-<b class="nc">&nbsp;        mentorRepository.delete(existingMentor);</b>
-&nbsp;
-<b class="nc">&nbsp;        return &quot;Mentor deleted successfully&quot;;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    @Operation(summary = &quot;Update the logged-in user&#39;s mentor record&quot;)
-&nbsp;    @ApiResponses(value = {
-&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Mentor updated successfully&quot;),
-&nbsp;            @ApiResponse(responseCode = &quot;401&quot;, description = &quot;User not logged in&quot;, content = @Content),
-&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Mentor not found&quot;, content = @Content)
-&nbsp;    })
-&nbsp;    @PutMapping(&quot;/update&quot;)
-&nbsp;    public String updateMentor(
-&nbsp;            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-&nbsp;                    description = &quot;Updated mentor details&quot;,
-&nbsp;                    required = true,
-&nbsp;                    content = @Content(mediaType = &quot;application/json&quot;, schema = @Schema(implementation = Mentor.class))
-&nbsp;            )
-&nbsp;            @RequestBody Mentor updatedMentor, HttpServletRequest request) {
-&nbsp;
-<b class="nc">&nbsp;        HttpSession session = request.getSession(false);</b>
-<b class="nc">&nbsp;        if (session == null || session.getAttribute(&quot;loggedInUser&quot;) == null) {</b>
-<b class="nc">&nbsp;            throw new UnauthorizedException(&quot;User not logged in&quot;);</b>
-&nbsp;        }
-&nbsp;
-<b class="nc">&nbsp;        User loggedInUser = (User) session.getAttribute(&quot;loggedInUser&quot;);</b>
-&nbsp;
-&nbsp;        // Find the existing mentor record for the logged-in user
-<b class="nc">&nbsp;        Mentor existingMentor = mentorRepository.findByUser(loggedInUser);</b>
-<b class="nc">&nbsp;        if (existingMentor == null) {</b>
-<b class="nc">&nbsp;            throw new MentorNotFoundException(&quot;Mentor not found&quot;);</b>
-&nbsp;        }
-&nbsp;
-&nbsp;        // Update the mentor&#39;s details
-<b class="nc">&nbsp;        existingMentor.setMajor(updatedMentor.getMajor());</b>
-<b class="nc">&nbsp;        existingMentor.setClassification(updatedMentor.getClassification());</b>
-<b class="nc">&nbsp;        existingMentor.setAreaOfMentorship(updatedMentor.getAreaOfMentorship());</b>
-&nbsp;
-&nbsp;        // Save the updated mentor information
-<b class="nc">&nbsp;        mentorRepository.save(existingMentor);</b>
-&nbsp;
-&nbsp;        // Trigger matching logic after updating
-<b class="nc">&nbsp;        matchMentorMenteeService.findNewMatches();</b>
-&nbsp;
-<b class="nc">&nbsp;        return &quot;Mentor updated successfully&quot;;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    @Operation(summary = &quot;Save a new mentor record&quot;)
-&nbsp;    @ApiResponses(value = {
-&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Mentor saved successfully&quot;)
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Mentee saved successfully&quot;)
 &nbsp;    })
 &nbsp;    @PostMapping
-&nbsp;    public Mentor saveMentor(
+&nbsp;    public Mentee saveMentee(
 &nbsp;            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-&nbsp;                    description = &quot;Details of the mentor to save&quot;,
+&nbsp;                    description = &quot;Details of the mentee to save&quot;,
 &nbsp;                    required = true,
-&nbsp;                    content = @Content(mediaType = &quot;application/json&quot;, schema = @Schema(implementation = Mentor.class))
+&nbsp;                    content = @Content(mediaType = &quot;application/json&quot;, schema = @Schema(implementation = Mentee.class))
 &nbsp;            )
-&nbsp;            @RequestBody Mentor mentor) {
+&nbsp;            @RequestBody Mentee mentee) {
 &nbsp;
-<b class="nc">&nbsp;        Mentor savedMentor = mentorRepository.save(mentor);</b>
+&nbsp;        // Save the mentee
+<b class="nc">&nbsp;        Mentee savedMentee = menteeRepository.save(mentee);</b>
 &nbsp;
-&nbsp;        // Trigger matching after saving a mentor
+&nbsp;        // Trigger matching after saving a mentee
 <b class="nc">&nbsp;        matchMentorMenteeService.findNewMatches();</b>
 &nbsp;
-<b class="nc">&nbsp;        return savedMentor;</b>
+<b class="nc">&nbsp;        return savedMentee;</b>
 &nbsp;    }
 &nbsp;}
 </code>
@@ -278,7 +210,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-08 00:32</div>
+    <div style="float:right;">generated on 2024-12-11 18:43</div>
 </div>
 </body>
 </html>

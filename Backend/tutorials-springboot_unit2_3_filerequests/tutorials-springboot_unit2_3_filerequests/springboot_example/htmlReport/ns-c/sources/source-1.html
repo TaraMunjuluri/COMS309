@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > PotentialFriends</title>
+  <title>Coverage Report > Phone</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">onetomany.PotentialFriends</a>
+    <a href="../index.html">onetomany.Phones</a>
 </div>
 
-<h1>Coverage Summary for Class: PotentialFriends (onetomany.PotentialFriends)</h1>
+<h1>Coverage Summary for Class: Phone (onetomany.Phones)</h1>
 
 <table class="coverageStats">
 
@@ -38,7 +38,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">PotentialFriends</td>
+  <td class="name">Phone</td>
 <td class="coverageStat">
   <span class="percent">
     6.2%
@@ -49,15 +49,15 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    8.3%
+    4.8%
   </span>
   <span class="absValue">
-    (2/24)
+    (1/21)
   </span>
 </td>
 </tr>
   <tr>
-    <td class="name">PotentialFriends$HibernateProxy$pwKTIa0V</td>
+    <td class="name">Phone$HibernateProxy$qwyPgzBx</td>
   </tr>
 <tr>
   <td class="name"><strong>Total</strong></td>
@@ -71,10 +71,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    8.3%
+    4.8%
   </span>
   <span class="absValue">
-    (2/24)
+    (1/21)
   </span>
 </td>
 </tr>
@@ -85,99 +85,93 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.PotentialFriends;
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.Phones;
+&nbsp;
+&nbsp;import javax.persistence.Entity;
+&nbsp;import javax.persistence.GeneratedValue;
+&nbsp;import javax.persistence.GenerationType;
+&nbsp;import javax.persistence.Id;
+&nbsp;import javax.persistence.JoinColumn;
+&nbsp;import javax.persistence.ManyToOne;
 &nbsp;
 &nbsp;import com.fasterxml.jackson.annotation.JsonIgnore;
+&nbsp;
 &nbsp;import onetomany.Users.User;
 &nbsp;
-&nbsp;import javax.persistence.*;
-&nbsp;import java.util.HashSet;
-&nbsp;import java.util.Set;
-&nbsp;
 &nbsp;@Entity
-&nbsp;@Table(name = &quot;potential_friends&quot;)
-&nbsp;public class PotentialFriends {
+&nbsp;public class Phone {
 &nbsp;
-&nbsp;    @Id
+&nbsp;    /* 
+&nbsp;     * The annotation @ID marks the field below as the primary key for the table created by springboot
+&nbsp;     * The @GeneratedValue generates a value if not already present, The strategy in this case is to start from 1 and increment for each table
+&nbsp;     */
 &nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
-&nbsp;    private Long id;
+&nbsp;    @Id
+&nbsp;    private int id;
+&nbsp;    private String name;
+&nbsp;    private String manufacturer;
+&nbsp;    private double cameraQuality;
+&nbsp;    private double battery;
+&nbsp;    private int price;
 &nbsp;
-&nbsp;    @Column(name = &quot;user_id&quot;)
-&nbsp;    private long userId;
-&nbsp;
-&nbsp;    @Column(name = &quot;potential_friend_id&quot;)
-&nbsp;    private long potentialFriendId;
-&nbsp;
-&nbsp;    private int commonInterestCount;
-&nbsp;
-<b class="fc">&nbsp;    @ElementCollection</b>
-&nbsp;    @CollectionTable(
-&nbsp;            name = &quot;potential_friend_interests&quot;,
-&nbsp;            joinColumns = @JoinColumn(name = &quot;potential_friend_id&quot;)
-&nbsp;    )
-&nbsp;    @Column(name = &quot;interest&quot;)
-&nbsp;    private Set&lt;String&gt; commonInterests = new HashSet&lt;&gt;();
-&nbsp;
-&nbsp;    @ManyToOne(fetch = FetchType.LAZY)
-&nbsp;    @JoinColumn(name = &quot;user_id&quot;, insertable = false, updatable = false)
+&nbsp;    /*
+&nbsp;     * @ManyToOne tells springboot that multiple instances of Phone can map to one instance of OR multiple rows of the phone table can map to one user row
+&nbsp;     * @JoinColumn specifies the ownership of the key i.e. The Phone table will contain a foreign key from the User table and the column name will be user_id
+&nbsp;     * @JsonIgnore is to assure that there is no infinite loop while returning either user/phone objects (phone-&gt;user-&gt;[phones]-&gt;...)
+&nbsp;     */
+&nbsp;    @ManyToOne
+&nbsp;    @JoinColumn(name = &quot;user_id&quot;)
 &nbsp;    @JsonIgnore
 &nbsp;    private User user;
 &nbsp;
-&nbsp;    @ManyToOne(fetch = FetchType.LAZY)
-&nbsp;    @JoinColumn(name = &quot;potential_friend_id&quot;, insertable = false, updatable = false)
-&nbsp;    @JsonIgnore
-&nbsp;    private User potentialFriend;
+&nbsp;     // =============================== Constructors ================================== //
 &nbsp;
-&nbsp;    // Constructors
-<b class="fc">&nbsp;    public PotentialFriends() {}</b>
+<b class="fc">&nbsp;    public Phone(){</b>
 &nbsp;
-<b class="nc">&nbsp;    public PotentialFriends(long userId, long potentialFriendId, Set&lt;String&gt; commonInterests) {</b>
-<b class="nc">&nbsp;        this.userId = userId;</b>
-<b class="nc">&nbsp;        this.potentialFriendId = potentialFriendId;</b>
-<b class="nc">&nbsp;        this.commonInterests = commonInterests;</b>
-<b class="nc">&nbsp;        this.commonInterestCount = commonInterests.size();</b>
+&nbsp;    }
+&nbsp;    
+<b class="nc">&nbsp;    public Phone( String manufacturer, double cameraQuality, double battery, String name, int price) {</b>
+<b class="nc">&nbsp;        this.manufacturer = manufacturer;</b>
+<b class="nc">&nbsp;        this.cameraQuality = cameraQuality;</b>
+<b class="nc">&nbsp;        this.battery = battery;</b>
+<b class="nc">&nbsp;        this.name = name;</b>
+<b class="nc">&nbsp;        this.price = price;</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    // Getters and Setters
-&nbsp;    public Long getId() {
+&nbsp;
+&nbsp;    // =============================== Getters and Setters for each field ================================== //
+&nbsp;
+&nbsp;
+&nbsp;    public int getId() {
 <b class="nc">&nbsp;        return id;</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    public void setId(Long id) {
+&nbsp;    public void setId(int id) {
 <b class="nc">&nbsp;        this.id = id;</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    public long getUserId() {
-<b class="nc">&nbsp;        return userId;</b>
+&nbsp;    public String getManufacturer() {
+<b class="nc">&nbsp;        return manufacturer;</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    public void setUserId(long userId) {
-<b class="nc">&nbsp;        this.userId = userId;</b>
+&nbsp;    public void setManufacturer(String manufacturer) {
+<b class="nc">&nbsp;        this.manufacturer = manufacturer;</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    public long getPotentialFriendId() {
-<b class="nc">&nbsp;        return potentialFriendId;</b>
+&nbsp;    public double getCameraQuality() {
+<b class="nc">&nbsp;        return cameraQuality;</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    public void setPotentialFriendId(long potentialFriendId) {
-<b class="nc">&nbsp;        this.potentialFriendId = potentialFriendId;</b>
+&nbsp;    public void setCameraQuality(double cameraQuality) {
+<b class="nc">&nbsp;        this.cameraQuality = cameraQuality;</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    public int getCommonInterestCount() {
-<b class="nc">&nbsp;        return commonInterestCount;</b>
+&nbsp;    public double getBattery() {
+<b class="nc">&nbsp;        return battery;</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    public void setCommonInterestCount(int commonInterestCount) {
-<b class="nc">&nbsp;        this.commonInterestCount = commonInterestCount;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public Set&lt;String&gt; getCommonInterests() {
-<b class="nc">&nbsp;        return commonInterests;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public void setCommonInterests(Set&lt;String&gt; commonInterests) {
-<b class="nc">&nbsp;        this.commonInterests = commonInterests;</b>
-<b class="nc">&nbsp;        this.commonInterestCount = commonInterests.size();</b>
+&nbsp;    public void setBattery(double battery) {
+<b class="nc">&nbsp;        this.battery = battery;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public User getUser() {
@@ -186,17 +180,24 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 &nbsp;    public void setUser(User user) {
 <b class="nc">&nbsp;        this.user = user;</b>
-<b class="nc">&nbsp;        this.userId = user.getId();</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    public User getPotentialFriend() {
-<b class="nc">&nbsp;        return potentialFriend;</b>
+&nbsp;    public int getPrice() {
+<b class="nc">&nbsp;        return price;</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    public void setPotentialFriend(User potentialFriend) {
-<b class="nc">&nbsp;        this.potentialFriend = potentialFriend;</b>
-<b class="nc">&nbsp;        this.potentialFriendId = potentialFriend.getId();</b>
+&nbsp;    public void setPrice(int price) {
+<b class="nc">&nbsp;        this.price = price;</b>
 &nbsp;    }
+&nbsp;
+&nbsp;    public String getName() {
+<b class="nc">&nbsp;        return name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setName(String name) {
+<b class="nc">&nbsp;        this.name = name;</b>
+&nbsp;    }
+&nbsp;
 &nbsp;}
 </code>
 </pre>
@@ -221,7 +222,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-08 00:32</div>
+    <div style="float:right;">generated on 2024-12-11 18:43</div>
 </div>
 </body>
 </html>

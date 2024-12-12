@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > MatchMentorMenteeService</title>
+  <title>Coverage Report > ChatSocket</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">onetomany.services</a>
+    <a href="../index.html">onetomany.chatbox</a>
 </div>
 
-<h1>Coverage Summary for Class: MatchMentorMenteeService (onetomany.services)</h1>
+<h1>Coverage Summary for Class: ChatSocket (onetomany.chatbox)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -45,7 +45,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">MatchMentorMenteeService</td>
+  <td class="name">ChatSocket</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -56,26 +56,26 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    100%
+    23.5%
   </span>
   <span class="absValue">
-    (2/2)
+    (4/17)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    75%
+    0%
   </span>
   <span class="absValue">
-    (6/8)
+    (0/22)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    80%
+    12.5%
   </span>
   <span class="absValue">
-    (20/25)
+    (9/72)
   </span>
 </td>
 </tr>
@@ -87,122 +87,385 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;//package onetomany.services;
+<code class="sourceCode" id="sourceCode">&nbsp;//package onetomany.chatbox;
 &nbsp;//
-&nbsp;//import onetomany.MenteeSurvey.Mentee;
-&nbsp;//import onetomany.MentorSurvey.Mentor;
-&nbsp;//import onetomany.Users.User;
-&nbsp;//import onetomany.matches.MatchedPairRepository;
-&nbsp;//import onetomany.MenteeSurvey.MenteeRepository;
-&nbsp;//import onetomany.MentorSurvey.MentorRepository;
-&nbsp;//import org.springframework.beans.factory.annotation.Autowired;
-&nbsp;//import org.springframework.stereotype.Service;
-&nbsp;//
-&nbsp;//import java.util.ArrayList;
+&nbsp;//import java.io.IOException;
+&nbsp;//import java.util.Hashtable;
 &nbsp;//import java.util.List;
+&nbsp;//import java.util.Map;
 &nbsp;//
-&nbsp;//@Service
-&nbsp;//public class MatchMentorMenteeService {
+&nbsp;//import javax.websocket.*;
+&nbsp;//import javax.websocket.server.PathParam;
+&nbsp;//import javax.websocket.server.ServerEndpoint;
+&nbsp;////import jakarta.websocket.OnClose;
+&nbsp;////import jakarta.websocket.OnError;
+&nbsp;////import jakarta.websocket.OnMessage;
+&nbsp;////import jakarta.websocket.OnOpen;
+&nbsp;////import jakarta.websocket.Session;
+&nbsp;////import jakarta.websocket.server.PathParam;
+&nbsp;////import jakarta.websocket.server.ServerEndpoint;
+&nbsp;//
+&nbsp;//import org.slf4j.Logger;
+&nbsp;//import org.slf4j.LoggerFactory;
+&nbsp;//import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;//import org.springframework.stereotype.Controller;
+&nbsp;//
+&nbsp;//import java.util.concurrent.ConcurrentHashMap;
+&nbsp;//import java.util.concurrent.*;
+&nbsp;//
+&nbsp;//
+&nbsp;//
+&nbsp;//@Controller
+&nbsp;//@ServerEndpoint(value = &quot;/chat/{username}&quot;)
+&nbsp;//public class ChatSocket {
+&nbsp;//
+&nbsp;//    private static MessageRepository msgRepo;
 &nbsp;//
 &nbsp;//    @Autowired
-&nbsp;//    private MentorRepository mentorRepository;
-&nbsp;//
-&nbsp;//    @Autowired
-&nbsp;//    private MenteeRepository menteeRepository;
-&nbsp;//
-&nbsp;//    @Autowired
-&nbsp;//    private MatchedPairRepository matchedPairRepository;
-&nbsp;//
-&nbsp;//
-&nbsp;//    public List&lt;onetomany.matches.MatchedPairMentorMentee&gt; findNewMatches() {
-&nbsp;//        List&lt;Mentor&gt; mentors = mentorRepository.findAll();
-&nbsp;//        List&lt;Mentee&gt; mentees = menteeRepository.findAll();
-&nbsp;//        List&lt;onetomany.matches.MatchedPairMentorMentee&gt; newMatches = new ArrayList&lt;&gt;();
-&nbsp;//
-&nbsp;//        for (Mentor mentor : mentors) {
-&nbsp;//            for (Mentee mentee : mentees) {
-&nbsp;//                if (mentor.getAreaOfMentorship().toString().equals(mentee.getAreaOfMenteeship().toString())) {
-&nbsp;//                    onetomany.matches.MatchedPairMentorMentee.Area matchedArea = onetomany.matches.MatchedPairMentorMentee.Area.valueOf(mentor.getAreaOfMentorship().toString());
-&nbsp;//
-&nbsp;//                    User mentorUser = mentor.getUser();
-&nbsp;//                    User menteeUser = mentee.getUser();
-&nbsp;//
-&nbsp;//                    if (!matchedPairRepository.existsByMentorAndMentee(mentorUser, menteeUser)) {
-&nbsp;//                        onetomany.matches.MatchedPairMentorMentee newMatch = new onetomany.matches.MatchedPairMentorMentee(mentorUser, menteeUser, matchedArea);
-&nbsp;//                        matchedPairRepository.save(newMatch);
-&nbsp;//                        newMatches.add(newMatch);
-&nbsp;//                    }
-&nbsp;//                }
-&nbsp;//            }
-&nbsp;//        }
-&nbsp;//        return newMatches;
+&nbsp;//    public void setMessageRepository(MessageRepository repo) {
+&nbsp;//        msgRepo = repo;
 &nbsp;//    }
 &nbsp;//
+&nbsp;//    private static Map&lt;Session, String&gt; sessionUsernameMap = new ConcurrentHashMap&lt;&gt;();
+&nbsp;//    private static Map&lt;String, Session&gt; usernameSessionMap = new ConcurrentHashMap&lt;&gt;();
+&nbsp;//    private final Logger logger = LoggerFactory.getLogger(ChatSocket.class);
+&nbsp;//
+&nbsp;//    private static final int INACTIVITY_TIMEOUT = 20000;  // 10 seconds (in milliseconds)
+&nbsp;//    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+&nbsp;//    private Map&lt;Session, ScheduledFuture&lt;?&gt;&gt; inactivityTasks = new ConcurrentHashMap&lt;&gt;();
+&nbsp;//    private Map&lt;Session, Long&gt; lastActivityTime = new ConcurrentHashMap&lt;&gt;();
+&nbsp;//
+&nbsp;//    @OnOpen
+&nbsp;//    public void onOpen(Session session, @PathParam(&quot;username&quot;) String username) throws IOException {
+&nbsp;//        logger.info(&quot;Entered into Open&quot;);
+&nbsp;//        sessionUsernameMap.put(session, username);
+&nbsp;//        usernameSessionMap.put(username, session);
+&nbsp;//
+&nbsp;//        // Send chat history to the newly connected user
+&nbsp;//        sendMessageToParticularUser(username, getChatHistory());
+&nbsp;//
+&nbsp;//        // Broadcast that a new user joined
+&nbsp;//        broadcast(&quot;User:&quot; + username + &quot; has Joined the Chat&quot;);
+&nbsp;//
+&nbsp;//        // Start inactivity timer
+&nbsp;//        resetInactivityTimer(session);
+&nbsp;//    }
+&nbsp;//
+&nbsp;//    @OnMessage
+&nbsp;//    public void onMessage(Session session, String message) throws IOException {
+&nbsp;//        String username = sessionUsernameMap.get(session);
+&nbsp;//
+&nbsp;//        // Reset inactivity timer whenever a message is received
+&nbsp;//        resetInactivityTimer(session);
+&nbsp;//
+&nbsp;//        // Typing notification
+&nbsp;//        if (message.equals(&quot;TYPING_START&quot;)) {
+&nbsp;//            broadcastTypingStatus(username, true);
+&nbsp;//        } else if (message.equals(&quot;TYPING_STOP&quot;)) {
+&nbsp;//            broadcastTypingStatus(username, false);
+&nbsp;//        } else {
+&nbsp;//            // Handle regular messages
+&nbsp;//            logger.info(&quot;Entered into Message: Got Message:&quot; + message);
+&nbsp;//            if (message.startsWith(&quot;@&quot;)) {
+&nbsp;//                String destUsername = message.split(&quot; &quot;)[0].substring(1);
+&nbsp;//                sendMessageToParticularUser(destUsername, &quot;[DM] &quot; + username + &quot;: &quot; + message);
+&nbsp;//                sendMessageToParticularUser(username, &quot;[DM] &quot; + username + &quot;: &quot; + message);
+&nbsp;//            } else {
+&nbsp;//                broadcast(username + &quot;: &quot; + message);
+&nbsp;//            }
+&nbsp;//            msgRepo.save(new Message(username, message));
+&nbsp;//        }
+&nbsp;//    }
+&nbsp;//
+&nbsp;//    @OnClose
+&nbsp;//    public void onClose(Session session) throws IOException {
+&nbsp;//        String username = sessionUsernameMap.get(session);
+&nbsp;//        sessionUsernameMap.remove(session);
+&nbsp;//        usernameSessionMap.remove(username);
+&nbsp;//
+&nbsp;//        // Broadcast that the user disconnected
+&nbsp;//        broadcast(username + &quot; disconnected&quot;);
+&nbsp;//
+&nbsp;//        // Cancel inactivity task
+&nbsp;//        cancelInactivityTimer(session);
+&nbsp;//    }
+&nbsp;//
+&nbsp;//    @OnError
+&nbsp;//    public void onError(Session session, Throwable throwable) {
+&nbsp;//        logger.info(&quot;Entered into Error&quot;);
+&nbsp;//        throwable.printStackTrace();
+&nbsp;//    }
+&nbsp;//
+&nbsp;//    private void resetInactivityTimer(Session session) {
+&nbsp;//        // Cancel any existing inactivity task
+&nbsp;//        cancelInactivityTimer(session);
+&nbsp;//
+&nbsp;//        // Start a new task to check for inactivity after the timeout period
+&nbsp;//        inactivityTasks.put(session, scheduler.schedule(() -&gt; handleInactivity(session), INACTIVITY_TIMEOUT, TimeUnit.MILLISECONDS));
+&nbsp;//        lastActivityTime.put(session, System.currentTimeMillis());
+&nbsp;//    }
+&nbsp;//
+&nbsp;//    private void cancelInactivityTimer(Session session) {
+&nbsp;//        if (inactivityTasks.containsKey(session)) {
+&nbsp;//            inactivityTasks.get(session).cancel(false);
+&nbsp;//            inactivityTasks.remove(session);
+&nbsp;//        }
+&nbsp;//    }
+&nbsp;//
+&nbsp;//    private void handleInactivity(Session session) {
+&nbsp;//        // If no message was received for the timeout period, consider the user inactive
+&nbsp;//        long currentTime = System.currentTimeMillis();
+&nbsp;//        long lastActive = lastActivityTime.getOrDefault(session, currentTime);
+&nbsp;//
+&nbsp;//        if (currentTime - lastActive &gt;= INACTIVITY_TIMEOUT) {
+&nbsp;//            String username = sessionUsernameMap.get(session);
+&nbsp;//            try {
+&nbsp;//                // Notify the user or close the session due to inactivity
+&nbsp;//                sendMessageToParticularUser(username, &quot;You have been inactive for 10 seconds and will be disconnected.&quot;);
+&nbsp;//                session.close();  // Disconnect the user
+&nbsp;//            } catch (IOException e) {
+&nbsp;//                logger.error(&quot;Error while closing session due to inactivity: &quot; + e.getMessage());
+&nbsp;//            }
+&nbsp;//        }
+&nbsp;//    }
+&nbsp;//
+&nbsp;//    private void sendMessageToParticularUser(String username, String message) {
+&nbsp;//        try {
+&nbsp;//            usernameSessionMap.get(username).getBasicRemote().sendText(message);
+&nbsp;//        } catch (IOException e) {
+&nbsp;//            logger.info(&quot;Exception: &quot; + e.getMessage());
+&nbsp;//            e.printStackTrace();
+&nbsp;//        }
+&nbsp;//    }
+&nbsp;//
+&nbsp;//    private void broadcast(String message) {
+&nbsp;//        sessionUsernameMap.forEach((session, username) -&gt; {
+&nbsp;//            try {
+&nbsp;//                session.getBasicRemote().sendText(message);
+&nbsp;//            } catch (IOException e) {
+&nbsp;//                logger.info(&quot;Exception: &quot; + e.getMessage());
+&nbsp;//                e.printStackTrace();
+&nbsp;//            }
+&nbsp;//        });
+&nbsp;//    }
+&nbsp;//
+&nbsp;//    private void broadcastTypingStatus(String username, boolean isTyping) {
+&nbsp;//        String message = isTyping ? username + &quot; is typing...&quot; : username + &quot; stopped typing&quot;;
+&nbsp;//        sessionUsernameMap.forEach((session, user) -&gt; {
+&nbsp;//            try {
+&nbsp;//                session.getBasicRemote().sendText(message);
+&nbsp;//            } catch (IOException e) {
+&nbsp;//                logger.info(&quot;Exception: &quot; + e.getMessage());
+&nbsp;//                e.printStackTrace();
+&nbsp;//            }
+&nbsp;//        });
+&nbsp;//    }
+&nbsp;//
+&nbsp;//    private String getChatHistory() {
+&nbsp;//        List&lt;Message&gt; messages = msgRepo.findAll();
+&nbsp;//        StringBuilder sb = new StringBuilder();
+&nbsp;//        if (messages != null &amp;&amp; !messages.isEmpty()) {
+&nbsp;//            for (Message message : messages) {
+&nbsp;//                sb.append(message.getUserName()).append(&quot;: &quot;).append(message.getContent()).append(&quot;\n&quot;);
+&nbsp;//            }
+&nbsp;//        }
+&nbsp;//        return sb.toString();
+&nbsp;//    }
 &nbsp;//}
-&nbsp;package onetomany.services;
+&nbsp;//
 &nbsp;
-&nbsp;import onetomany.MenteeSurvey.Mentee;
-&nbsp;import onetomany.MentorSurvey.Mentor;
-&nbsp;import onetomany.Users.User;
-&nbsp;import onetomany.Matches.MatchedPairRepository;
-&nbsp;import onetomany.MenteeSurvey.MenteeRepository;
-&nbsp;import onetomany.MentorSurvey.MentorRepository;
-&nbsp;import org.springframework.beans.factory.annotation.Autowired;
-&nbsp;import org.springframework.stereotype.Service;
 &nbsp;
-&nbsp;import java.util.ArrayList;
+&nbsp;
+&nbsp;package onetomany.chatbox;
+&nbsp;
+&nbsp;import java.io.IOException;
 &nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.concurrent.ConcurrentHashMap;
+&nbsp;import java.util.concurrent.*;
 &nbsp;
-&nbsp;@Service
-<b class="fc">&nbsp;public class MatchMentorMenteeService {</b>
+&nbsp;import javax.websocket.*;
+&nbsp;import javax.websocket.server.PathParam;
+&nbsp;import javax.websocket.server.ServerEndpoint;
+&nbsp;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.context.ApplicationContext;
+&nbsp;import org.springframework.stereotype.Controller;
+&nbsp;import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+&nbsp;
+&nbsp;import onetomany.BadWords.ProfanityFilterService;
+&nbsp;
+&nbsp;@Controller
+&nbsp;@ServerEndpoint(value = &quot;/chat/{username}&quot;)
+<b class="fc">&nbsp;public class ChatSocket {</b>
+&nbsp;
+&nbsp;    private static MessageRepository msgRepo;
+&nbsp;    private static ProfanityFilterService profanityFilterService;
+&nbsp;
+&nbsp;    // This method allows dependency injection in a WebSocket endpoint
+&nbsp;    @Autowired
+&nbsp;    public void setMessageRepository(MessageRepository repo) {
+<b class="fc">&nbsp;        msgRepo = repo;</b>
+&nbsp;    }
 &nbsp;
 &nbsp;    @Autowired
-&nbsp;    private MentorRepository mentorRepository;
+&nbsp;    public void setProfanityFilterService(ProfanityFilterService service) {
+<b class="fc">&nbsp;        profanityFilterService = service;</b>
+&nbsp;    }
 &nbsp;
-&nbsp;    @Autowired
-&nbsp;    private MenteeRepository menteeRepository;
+<b class="fc">&nbsp;    private static Map&lt;Session, String&gt; sessionUsernameMap = new ConcurrentHashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;    private static Map&lt;String, Session&gt; usernameSessionMap = new ConcurrentHashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;    private final Logger logger = LoggerFactory.getLogger(ChatSocket.class);</b>
 &nbsp;
-&nbsp;    @Autowired
-&nbsp;    private MatchedPairRepository matchedPairRepository;
+&nbsp;    private static final int INACTIVITY_TIMEOUT = 50000;  // 50 seconds (in milliseconds)
+<b class="fc">&nbsp;    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();</b>
+<b class="fc">&nbsp;    private Map&lt;Session, ScheduledFuture&lt;?&gt;&gt; inactivityTasks = new ConcurrentHashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;    private Map&lt;Session, Long&gt; lastActivityTime = new ConcurrentHashMap&lt;&gt;();</b>
 &nbsp;
-&nbsp;    public List&lt;onetomany.Matches.MatchedPairMentorMentee&gt; findNewMatches() {
-<b class="fc">&nbsp;        List&lt;Mentor&gt; mentors = mentorRepository.findAll();</b>
-<b class="fc">&nbsp;        List&lt;Mentee&gt; mentees = menteeRepository.findAll();</b>
-<b class="fc">&nbsp;        List&lt;onetomany.Matches.MatchedPairMentorMentee&gt; newMatches = new ArrayList&lt;&gt;();</b>
+&nbsp;    @OnOpen
+&nbsp;    public void onOpen(Session session, @PathParam(&quot;username&quot;) String username) throws IOException {
+<b class="nc">&nbsp;        logger.info(&quot;Entered into Open&quot;);</b>
+<b class="nc">&nbsp;        sessionUsernameMap.put(session, username);</b>
+<b class="nc">&nbsp;        usernameSessionMap.put(username, session);</b>
 &nbsp;
-<b class="fc">&nbsp;        System.out.println(&quot;Found &quot; + mentors.size() + &quot; mentors and &quot; + mentees.size() + &quot; mentees&quot;);</b>
+&nbsp;        // Send chat history to the newly connected user
+<b class="nc">&nbsp;        sendMessageToParticularUser(username, getChatHistory());</b>
 &nbsp;
-<b class="fc">&nbsp;        for (Mentor mentor : mentors) {</b>
-<b class="fc">&nbsp;            for (Mentee mentee : mentees) {</b>
-<b class="fc">&nbsp;                System.out.println(&quot;Checking mentor area: &quot; + mentor.getAreaOfMentorship() +</b>
-<b class="fc">&nbsp;                        &quot; with mentee area: &quot; + mentee.getAreaOfMenteeship());</b>
+&nbsp;        // Broadcast that a new user joined
+<b class="nc">&nbsp;        broadcast(&quot;User:&quot; + username + &quot; has Joined the Chat&quot;);</b>
 &nbsp;
-<b class="pc">&nbsp;                if (mentor.getAreaOfMentorship().toString().equals(mentee.getAreaOfMenteeship().toString())) {</b>
-<b class="fc">&nbsp;                    System.out.println(&quot;Found matching area for mentor: &quot; + mentor.getUser().getUsername() +</b>
-<b class="fc">&nbsp;                            &quot; and mentee: &quot; + mentee.getUser().getUsername());</b>
+&nbsp;        // Start inactivity timer
+<b class="nc">&nbsp;        resetInactivityTimer(session);</b>
+&nbsp;    }
 &nbsp;
-<b class="fc">&nbsp;                    onetomany.Matches.MatchedPairMentorMentee.Area matchedArea =</b>
-<b class="fc">&nbsp;                            onetomany.Matches.MatchedPairMentorMentee.Area.valueOf(mentor.getAreaOfMentorship().toString());</b>
+&nbsp;    @OnMessage
+&nbsp;    public void onMessage(Session session, String message) throws IOException {
+<b class="nc">&nbsp;        String username = sessionUsernameMap.get(session);</b>
 &nbsp;
-<b class="fc">&nbsp;                    User mentorUser = mentor.getUser();</b>
-<b class="fc">&nbsp;                    User menteeUser = mentee.getUser();</b>
+&nbsp;        // Reset inactivity timer whenever a message is received
+<b class="nc">&nbsp;        resetInactivityTimer(session);</b>
 &nbsp;
-<b class="pc">&nbsp;                    if (!matchedPairRepository.existsByMentorAndMentee(mentorUser, menteeUser)) {</b>
-<b class="nc">&nbsp;                        System.out.println(&quot;Creating new match between mentor: &quot; + mentorUser.getUsername() +</b>
-<b class="nc">&nbsp;                                &quot; and mentee: &quot; + menteeUser.getUsername());</b>
+&nbsp;        // Typing notification
+<b class="nc">&nbsp;        if (message.equals(&quot;TYPING_START&quot;)) {</b>
+<b class="nc">&nbsp;            broadcastTypingStatus(username, true);</b>
+<b class="nc">&nbsp;        } else if (message.equals(&quot;TYPING_STOP&quot;)) {</b>
+<b class="nc">&nbsp;            broadcastTypingStatus(username, false);</b>
+&nbsp;        } else {
+&nbsp;            // Check for profanity before processing the message
+<b class="nc">&nbsp;            if (profanityFilterService != null &amp;&amp; profanityFilterService.containsProfanity(message)) {</b>
+&nbsp;                // Send profanity warning to the specific user
+<b class="nc">&nbsp;                sendMessageToParticularUser(username, &quot;Warning: Profanity is not allowed!&quot;);</b>
+&nbsp;                return;
+&nbsp;            }
 &nbsp;
-<b class="nc">&nbsp;                        onetomany.Matches.MatchedPairMentorMentee newMatch =</b>
-&nbsp;                                new onetomany.Matches.MatchedPairMentorMentee(mentorUser, menteeUser, matchedArea);
-<b class="nc">&nbsp;                        matchedPairRepository.save(newMatch);</b>
-<b class="nc">&nbsp;                        newMatches.add(newMatch);</b>
-&nbsp;                    } else {
-<b class="fc">&nbsp;                        System.out.println(&quot;Match already exists between mentor: &quot; + mentorUser.getUsername() +</b>
-<b class="fc">&nbsp;                                &quot; and mentee: &quot; + menteeUser.getUsername());</b>
-&nbsp;                    }
-&nbsp;                }
+&nbsp;            // Handle regular messages
+<b class="nc">&nbsp;            logger.info(&quot;Entered into Message: Got Message:&quot; + message);</b>
+<b class="nc">&nbsp;            if (message.startsWith(&quot;@&quot;)) {</b>
+<b class="nc">&nbsp;                String destUsername = message.split(&quot; &quot;)[0].substring(1);</b>
+<b class="nc">&nbsp;                sendMessageToParticularUser(destUsername, &quot;[DM] &quot; + username + &quot;: &quot; + message);</b>
+<b class="nc">&nbsp;                sendMessageToParticularUser(username, &quot;[DM] &quot; + username + &quot;: &quot; + message);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                broadcast(username + &quot;: &quot; + message);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            msgRepo.save(new Message(username, message));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @OnClose
+&nbsp;    public void onClose(Session session) throws IOException {
+<b class="nc">&nbsp;        String username = sessionUsernameMap.get(session);</b>
+<b class="nc">&nbsp;        sessionUsernameMap.remove(session);</b>
+<b class="nc">&nbsp;        usernameSessionMap.remove(username);</b>
+&nbsp;
+&nbsp;        // Broadcast that the user disconnected
+<b class="nc">&nbsp;        broadcast(username + &quot; disconnected&quot;);</b>
+&nbsp;
+&nbsp;        // Cancel inactivity task
+<b class="nc">&nbsp;        cancelInactivityTimer(session);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @OnError
+&nbsp;    public void onError(Session session, Throwable throwable) {
+<b class="nc">&nbsp;        logger.info(&quot;Entered into Error&quot;);</b>
+<b class="nc">&nbsp;        throwable.printStackTrace();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void resetInactivityTimer(Session session) {
+&nbsp;        // Cancel any existing inactivity task
+<b class="nc">&nbsp;        cancelInactivityTimer(session);</b>
+&nbsp;
+&nbsp;        // Start a new task to check for inactivity after the timeout period
+<b class="nc">&nbsp;        inactivityTasks.put(session, scheduler.schedule(() -&gt; handleInactivity(session), INACTIVITY_TIMEOUT, TimeUnit.MILLISECONDS));</b>
+<b class="nc">&nbsp;        lastActivityTime.put(session, System.currentTimeMillis());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void cancelInactivityTimer(Session session) {
+<b class="nc">&nbsp;        if (inactivityTasks.containsKey(session)) {</b>
+<b class="nc">&nbsp;            inactivityTasks.get(session).cancel(false);</b>
+<b class="nc">&nbsp;            inactivityTasks.remove(session);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void handleInactivity(Session session) {
+&nbsp;        // If no message was received for the timeout period, consider the user inactive
+<b class="nc">&nbsp;        long currentTime = System.currentTimeMillis();</b>
+<b class="nc">&nbsp;        long lastActive = lastActivityTime.getOrDefault(session, currentTime);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (currentTime - lastActive &gt;= INACTIVITY_TIMEOUT) {</b>
+<b class="nc">&nbsp;            String username = sessionUsernameMap.get(session);</b>
+&nbsp;            try {
+&nbsp;                // Notify the user or close the session due to inactivity
+<b class="nc">&nbsp;                sendMessageToParticularUser(username, &quot;You have been inactive for 20 seconds and will be disconnected.&quot;);</b>
+<b class="nc">&nbsp;                session.close();  // Disconnect the user</b>
+<b class="nc">&nbsp;            } catch (IOException e) {</b>
+<b class="nc">&nbsp;                logger.error(&quot;Error while closing session due to inactivity: &quot; + e.getMessage());</b>
 &nbsp;            }
 &nbsp;        }
-<b class="fc">&nbsp;        return newMatches;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void sendMessageToParticularUser(String username, String message) {
+&nbsp;        try {
+<b class="nc">&nbsp;            usernameSessionMap.get(username).getBasicRemote().sendText(message);</b>
+<b class="nc">&nbsp;        } catch (IOException e) {</b>
+<b class="nc">&nbsp;            logger.info(&quot;Exception: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void broadcast(String message) {
+<b class="nc">&nbsp;        sessionUsernameMap.forEach((session, username) -&gt; {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                session.getBasicRemote().sendText(message);</b>
+<b class="nc">&nbsp;            } catch (IOException e) {</b>
+<b class="nc">&nbsp;                logger.info(&quot;Exception: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;                e.printStackTrace();</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    private void broadcastTypingStatus(String username, boolean isTyping) {
+<b class="nc">&nbsp;        String message = isTyping ? username + &quot; is typing...&quot; : username + &quot; stopped typing&quot;;</b>
+<b class="nc">&nbsp;        sessionUsernameMap.forEach((session, user) -&gt; {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                session.getBasicRemote().sendText(message);</b>
+<b class="nc">&nbsp;            } catch (IOException e) {</b>
+<b class="nc">&nbsp;                logger.info(&quot;Exception: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;                e.printStackTrace();</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    private String getChatHistory() {
+<b class="nc">&nbsp;        List&lt;Message&gt; messages = msgRepo.findAll();</b>
+<b class="nc">&nbsp;        StringBuilder sb = new StringBuilder();</b>
+<b class="nc">&nbsp;        if (messages != null &amp;&amp; !messages.isEmpty()) {</b>
+<b class="nc">&nbsp;            for (Message message : messages) {</b>
+<b class="nc">&nbsp;                sb.append(message.getUserName()).append(&quot;: &quot;).append(message.getContent()).append(&quot;\n&quot;);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return sb.toString();</b>
 &nbsp;    }
 &nbsp;}
 </code>
@@ -228,7 +491,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-08 00:32</div>
+    <div style="float:right;">generated on 2024-12-11 18:43</div>
 </div>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > PotentialFriendsRepository</title>
+  <title>Coverage Report > PhoneRepository</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,17 +19,17 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">onetomany.PotentialFriends</a>
+    <a href="../index.html">onetomany.Phones</a>
 </div>
 
-<h1>Coverage Summary for Class: PotentialFriendsRepository (onetomany.PotentialFriends)</h1>
+<h1>Coverage Summary for Class: PhoneRepository (onetomany.Phones)</h1>
 
 <table class="coverageStats">
 <tr>
   <th class="name">Class</th>
 </tr>
 <tr>
-  <td class="name">PotentialFriendsRepository</td>
+  <td class="name">PhoneRepository</td>
 </tr>
 
 </table>
@@ -39,16 +39,12 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.PotentialFriends;
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.Phones;
 &nbsp;
 &nbsp;import org.springframework.data.jpa.repository.JpaRepository;
-&nbsp;import org.springframework.stereotype.Repository;
-&nbsp;import java.util.List;
 &nbsp;
-&nbsp;@Repository
-&nbsp;public interface PotentialFriendsRepository extends JpaRepository&lt;PotentialFriends, Long&gt; {
-&nbsp;    List&lt;PotentialFriends&gt; findByUserIdOrderByCommonInterestCountDesc(long userId);
-&nbsp;    void deleteByUserId(long userId);
+&nbsp;public interface PhoneRepository extends JpaRepository&lt;Phone, Long&gt; {
+&nbsp;    Phone findById(int id);
 &nbsp;}
 </code>
 </pre>
@@ -73,7 +69,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-08 00:32</div>
+    <div style="float:right;">generated on 2024-12-11 18:43</div>
 </div>
 </body>
 </html>

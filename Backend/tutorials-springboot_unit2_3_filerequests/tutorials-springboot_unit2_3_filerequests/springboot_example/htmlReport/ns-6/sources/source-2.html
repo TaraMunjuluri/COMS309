@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > LaptopController</title>
+  <title>Coverage Report > LanguageConfig</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,25 +19,18 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">onetomany.Laptops</a>
+    <a href="../index.html">onetomany.Lang</a>
 </div>
 
-<h1>Coverage Summary for Class: LaptopController (onetomany.Laptops)</h1>
+<h1>Coverage Summary for Class: LanguageConfig (onetomany.Lang)</h1>
 
 <table class="coverageStats">
+
 <tr>
   <th class="name">Class</th>
 <th class="coverageStat 
 ">
-  Class, %
-</th>
-<th class="coverageStat 
-">
   Method, %
-</th>
-<th class="coverageStat 
-">
-  Branch, %
 </th>
 <th class="coverageStat 
 ">
@@ -45,41 +38,46 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">LaptopController</td>
+  <td class="name">LanguageConfig</td>
 <td class="coverageStat">
   <span class="percent">
-    100%
+    66.7%
   </span>
   <span class="absValue">
-    (1/1)
+    (2/3)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    12.5%
+    57.1%
   </span>
   <span class="absValue">
-    (1/8)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    0%
-  </span>
-  <span class="absValue">
-    (0/24)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    1.8%
-  </span>
-  <span class="absValue">
-    (1/57)
+    (4/7)
   </span>
 </td>
 </tr>
-
+  <tr>
+    <td class="name">LanguageConfig$$EnhancerBySpringCGLIB$$534e6db7</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (2/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    57.1%
+  </span>
+  <span class="absValue">
+    (4/7)
+  </span>
+</td>
+</tr>
 </table>
 
 <br/>
@@ -87,269 +85,33 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.Laptops;
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.Lang;
 &nbsp;
-&nbsp;import java.io.File;
-&nbsp;import java.io.IOException;
-&nbsp;import java.nio.file.Files;
-&nbsp;import java.nio.file.Path;
-&nbsp;import java.nio.file.Paths;
-&nbsp;import java.util.List;
+&nbsp;import org.springframework.context.MessageSource;
+&nbsp;import org.springframework.context.annotation.Bean;
+&nbsp;import org.springframework.context.annotation.Configuration;
+&nbsp;import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+&nbsp;import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+&nbsp;import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+&nbsp;import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 &nbsp;
-&nbsp;import javax.servlet.http.HttpServletRequest;
+&nbsp;import java.util.Locale;
 &nbsp;
-&nbsp;import org.springframework.beans.factory.annotation.Autowired;
-&nbsp;import org.springframework.core.io.ByteArrayResource;
-&nbsp;import org.springframework.core.io.Resource;
-&nbsp;import org.springframework.http.HttpHeaders;
-&nbsp;import org.springframework.http.MediaType;
-&nbsp;import org.springframework.http.ResponseEntity;
-&nbsp;import org.springframework.web.bind.annotation.DeleteMapping;
-&nbsp;import org.springframework.web.bind.annotation.GetMapping;
-&nbsp;import org.springframework.web.bind.annotation.PathVariable;
-&nbsp;import org.springframework.web.bind.annotation.PostMapping;
-&nbsp;import org.springframework.web.bind.annotation.PutMapping;
-&nbsp;import org.springframework.web.bind.annotation.RequestBody;
-&nbsp;import org.springframework.web.bind.annotation.RequestParam;
-&nbsp;import org.springframework.web.bind.annotation.RestController;
-&nbsp;import org.springframework.web.multipart.MultipartFile;
+&nbsp;@Configuration
+<b class="fc">&nbsp;public class LanguageConfig implements WebMvcConfigurer {</b>
 &nbsp;
-&nbsp;import io.swagger.v3.oas.annotations.Operation;
-&nbsp;import io.swagger.v3.oas.annotations.Parameter;
-&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
-&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponses;
-&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
-&nbsp;import io.swagger.v3.oas.annotations.media.Content;
-&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
-&nbsp;
-&nbsp;/**
-&nbsp; * Controller class for managing laptop-related operations.
-&nbsp; *
-&nbsp; * Provides endpoints to create, update, retrieve, and delete laptops,
-&nbsp; * as well as handle file uploads and downloads associated with laptops.
-&nbsp; */
-&nbsp;@RestController
-&nbsp;@Tag(name = &quot;Laptop Controller&quot;, description = &quot;Manage Laptop entities and associated files.&quot;)
-<b class="fc">&nbsp;public class LaptopController {</b>
-&nbsp;
-&nbsp;    private static final String uploadPath = &quot;/uploadedFiles/&quot;;
-&nbsp;
-&nbsp;    @Autowired
-&nbsp;    LaptopRepository laptopRepository;
-&nbsp;
-&nbsp;    @Autowired
-&nbsp;    HttpServletRequest httpServletRequest;
-&nbsp;
-&nbsp;    private static final String success = &quot;{\&quot;message\&quot;:\&quot;success\&quot;}&quot;;
-&nbsp;    private static final String failure = &quot;{\&quot;message\&quot;:\&quot;failure\&quot;}&quot;;
-&nbsp;
-&nbsp;    /**
-&nbsp;     * Retrieves all laptops from the repository.
-&nbsp;     *
-&nbsp;     * @return List of all laptops.
-&nbsp;     */
-&nbsp;    @Operation(summary = &quot;Get all laptops&quot;, description = &quot;Retrieve a list of all laptops in the system.&quot;)
-&nbsp;    @ApiResponses(value = {
-&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;List of laptops retrieved successfully&quot;)
-&nbsp;    })
-&nbsp;    @GetMapping(path = &quot;/laptops&quot;)
-&nbsp;    public List&lt;Laptop&gt; getAllLaptops() {
-<b class="nc">&nbsp;        return laptopRepository.findAll();</b>
+&nbsp;    @Bean
+&nbsp;    public SessionLocaleResolver localeResolver() {
+<b class="nc">&nbsp;        SessionLocaleResolver resolver = new SessionLocaleResolver();</b>
+<b class="nc">&nbsp;        resolver.setDefaultLocale(Locale.ENGLISH);  // Default to English</b>
+<b class="nc">&nbsp;        return resolver;</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    /**
-&nbsp;     * Retrieves a specific laptop by its ID.
-&nbsp;     *
-&nbsp;     * @param id Laptop ID.
-&nbsp;     * @return The laptop with the specified ID.
-&nbsp;     */
-&nbsp;    @Operation(summary = &quot;Get laptop by ID&quot;, description = &quot;Retrieve a laptop by its unique ID.&quot;)
-&nbsp;    @ApiResponses(value = {
-&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Laptop found&quot;),
-&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Laptop not found&quot;)
-&nbsp;    })
-&nbsp;    @GetMapping(path = &quot;/laptops/{id}&quot;)
-&nbsp;    public Laptop getLaptopById(
-&nbsp;            @Parameter(description = &quot;ID of the laptop to retrieve&quot;, required = true) @PathVariable int id) {
-<b class="nc">&nbsp;        return laptopRepository.findById(id);</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    /**
-&nbsp;     * Creates a new laptop.
-&nbsp;     *
-&nbsp;     * @param laptop The laptop to be created.
-&nbsp;     * @return Success or failure message.
-&nbsp;     */
-&nbsp;    @Operation(summary = &quot;Create a new laptop&quot;, description = &quot;Create a new laptop record in the system.&quot;)
-&nbsp;    @ApiResponses(value = {
-&nbsp;            @ApiResponse(responseCode = &quot;201&quot;, description = &quot;Laptop created successfully&quot;),
-&nbsp;            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Invalid input provided&quot;)
-&nbsp;    })
-&nbsp;    @PostMapping(path = &quot;/laptops&quot;)
-&nbsp;    public String createLaptop(
-&nbsp;            @Parameter(description = &quot;Details of the laptop to create&quot;, required = true,
-&nbsp;                    content = @Content(mediaType = &quot;application/json&quot;, schema = @Schema(implementation = Laptop.class)))
-&nbsp;            @RequestBody Laptop laptop) {
-<b class="nc">&nbsp;        if (laptop == null) {</b>
-<b class="nc">&nbsp;            return failure;</b>
-&nbsp;        }
-<b class="nc">&nbsp;        laptopRepository.save(laptop);</b>
-<b class="nc">&nbsp;        return success;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    /**
-&nbsp;     * Updates an existing laptop by its ID.
-&nbsp;     *
-&nbsp;     * @param id Laptop ID.
-&nbsp;     * @param request Updated laptop details.
-&nbsp;     * @return Updated laptop.
-&nbsp;     */
-&nbsp;    @Operation(summary = &quot;Update laptop by ID&quot;, description = &quot;Update an existing laptop record by its ID.&quot;)
-&nbsp;    @ApiResponses(value = {
-&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Laptop updated successfully&quot;),
-&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Laptop not found&quot;)
-&nbsp;    })
-&nbsp;    @PutMapping(path = &quot;/laptops/{id}&quot;)
-&nbsp;    public Laptop updateLaptop(
-&nbsp;            @Parameter(description = &quot;ID of the laptop to update&quot;, required = true) @PathVariable int id,
-&nbsp;            @RequestBody Laptop request) {
-<b class="nc">&nbsp;        Laptop laptop = laptopRepository.findById(id);</b>
-<b class="nc">&nbsp;        if (laptop == null) {</b>
-<b class="nc">&nbsp;            return null;</b>
-&nbsp;        }
-<b class="nc">&nbsp;        laptopRepository.save(request);</b>
-<b class="nc">&nbsp;        return laptopRepository.findById(id);</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    /**
-&nbsp;     * Deletes a specific laptop by its ID.
-&nbsp;     *
-&nbsp;     * @param id Laptop ID.
-&nbsp;     * @return Success message.
-&nbsp;     */
-&nbsp;    @Operation(summary = &quot;Delete laptop by ID&quot;, description = &quot;Delete a laptop record by its unique ID.&quot;)
-&nbsp;    @ApiResponses(value = {
-&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Laptop deleted successfully&quot;),
-&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Laptop not found&quot;)
-&nbsp;    })
-&nbsp;    @DeleteMapping(path = &quot;/laptops/{id}&quot;)
-&nbsp;    public String deleteLaptop(
-&nbsp;            @Parameter(description = &quot;ID of the laptop to delete&quot;, required = true) @PathVariable int id) {
-<b class="nc">&nbsp;        Laptop laptop = laptopRepository.findById(id);</b>
-<b class="nc">&nbsp;        if (laptop == null) {</b>
-<b class="nc">&nbsp;            return success;</b>
-&nbsp;        }
-&nbsp;
-&nbsp;        // Delete the associated file if it exists
-<b class="nc">&nbsp;        File currentInvoice = new File(laptop.getInvoicePath());</b>
-<b class="nc">&nbsp;        if (currentInvoice != null &amp;&amp; currentInvoice.exists()) {</b>
-<b class="nc">&nbsp;            currentInvoice.delete();</b>
-&nbsp;        }
-&nbsp;
-<b class="nc">&nbsp;        laptopRepository.deleteById(id);</b>
-<b class="nc">&nbsp;        return success;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    /**
-&nbsp;     * Uploads an invoice for a laptop and associates it with the laptop&#39;s record.
-&nbsp;     *
-&nbsp;     * @param id Laptop ID.
-&nbsp;     * @param invoiceFile The invoice file to be uploaded.
-&nbsp;     * @return Success or failure message.
-&nbsp;     * @throws IOException If file handling fails.
-&nbsp;     */
-&nbsp;    @Operation(summary = &quot;Upload invoice for laptop&quot;, description = &quot;Upload an invoice for a laptop and associate it with the laptop&#39;s record.&quot;)
-&nbsp;    @ApiResponses(value = {
-&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Invoice uploaded successfully&quot;),
-&nbsp;            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Invalid file or laptop not found&quot;)
-&nbsp;    })
-&nbsp;    @PutMapping(path = &quot;/laptops/{id}/invoice&quot;)
-&nbsp;    public String uploadLaptopInvoice(
-&nbsp;            @Parameter(description = &quot;ID of the laptop to upload invoice for&quot;, required = true) @PathVariable int id,
-&nbsp;            @RequestParam(&quot;invoice&quot;) MultipartFile invoiceFile) throws IOException {
-<b class="nc">&nbsp;        if (invoiceFile.isEmpty()) {</b>
-<b class="nc">&nbsp;            return failure;</b>
-&nbsp;        }
-&nbsp;
-&nbsp;        // Get the full path for file upload
-<b class="nc">&nbsp;        String fullPath = httpServletRequest.getServletContext().getRealPath(uploadPath);</b>
-&nbsp;
-&nbsp;        // Create directory if it doesn&#39;t exist
-<b class="nc">&nbsp;        if (!new File(fullPath).exists()) {</b>
-<b class="nc">&nbsp;            new File(fullPath).mkdir();</b>
-&nbsp;        }
-&nbsp;
-<b class="nc">&nbsp;        fullPath += (&quot;laptop_invoice_&quot; + id + &quot;_&quot; + invoiceFile.getOriginalFilename());</b>
-&nbsp;
-&nbsp;        // Get the laptop associated with the ID
-<b class="nc">&nbsp;        Laptop laptop = laptopRepository.findById(id);</b>
-<b class="nc">&nbsp;        String currentPath = laptop.getInvoicePath();</b>
-&nbsp;
-&nbsp;        // Delete the existing invoice file if present
-<b class="nc">&nbsp;        if (currentPath != null) {</b>
-<b class="nc">&nbsp;            File currentInvoice = new File(currentPath);</b>
-<b class="nc">&nbsp;            if (currentInvoice.exists()) {</b>
-<b class="nc">&nbsp;                currentInvoice.delete();</b>
-&nbsp;            }
-&nbsp;        }
-&nbsp;
-&nbsp;        // Update the laptop record with the new invoice path
-<b class="nc">&nbsp;        laptop.setInvoicePath(fullPath);</b>
-<b class="nc">&nbsp;        laptopRepository.save(laptop);</b>
-&nbsp;
-&nbsp;        // Save the file to disk
-<b class="nc">&nbsp;        File tempFile = new File(fullPath);</b>
-<b class="nc">&nbsp;        invoiceFile.transferTo(tempFile);</b>
-&nbsp;
-<b class="nc">&nbsp;        return success;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    /**
-&nbsp;     * Retrieves the invoice associated with a laptop.
-&nbsp;     *
-&nbsp;     * @param id Laptop ID.
-&nbsp;     * @return The invoice file as a ResponseEntity.
-&nbsp;     * @throws IOException If file handling fails.
-&nbsp;     */
-&nbsp;    @Operation(summary = &quot;Get invoice for laptop&quot;, description = &quot;Retrieve the invoice file associated with a laptop.&quot;)
-&nbsp;    @ApiResponses(value = {
-&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Invoice retrieved successfully&quot;),
-&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Invoice not found&quot;)
-&nbsp;    })
-&nbsp;    @GetMapping(path = &quot;/laptops/{id}/invoice&quot;)
-&nbsp;    public ResponseEntity&lt;Resource&gt; getLaptopInvoice(
-&nbsp;            @Parameter(description = &quot;ID of the laptop to retrieve the invoice for&quot;, required = true) @PathVariable int id) throws IOException {
-<b class="nc">&nbsp;        Laptop laptop = laptopRepository.findById(id);</b>
-&nbsp;
-<b class="nc">&nbsp;        if (laptop == null || laptop.getInvoicePath() == null) {</b>
-<b class="nc">&nbsp;            return null;</b>
-&nbsp;        }
-&nbsp;
-<b class="nc">&nbsp;        File file = new File(laptop.getInvoicePath());</b>
-<b class="nc">&nbsp;        if (!file.exists()) {</b>
-<b class="nc">&nbsp;            return null;</b>
-&nbsp;        }
-&nbsp;
-&nbsp;        // Extract file name from path
-<b class="nc">&nbsp;        String[] splitPath = laptop.getInvoicePath().split(&quot;/&quot;);</b>
-<b class="nc">&nbsp;        String fileName = splitPath[splitPath.length - 1];</b>
-&nbsp;
-&nbsp;        // Set headers for the response
-<b class="nc">&nbsp;        HttpHeaders header = new HttpHeaders();</b>
-<b class="nc">&nbsp;        header.add(HttpHeaders.CONTENT_DISPOSITION, &quot;attachment; filename=&quot; + fileName);</b>
-<b class="nc">&nbsp;        header.add(&quot;Cache-Control&quot;, &quot;no-cache, no-store, must-revalidate&quot;);</b>
-<b class="nc">&nbsp;        header.add(&quot;Pragma&quot;, &quot;no-cache&quot;);</b>
-<b class="nc">&nbsp;        header.add(&quot;Expires&quot;, &quot;0&quot;);</b>
-&nbsp;
-&nbsp;        // Convert file to ByteArrayResource
-<b class="nc">&nbsp;        Path path = Paths.get(file.getAbsolutePath());</b>
-<b class="nc">&nbsp;        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));</b>
-&nbsp;
-<b class="nc">&nbsp;        return ResponseEntity.ok()</b>
-<b class="nc">&nbsp;                .headers(header)</b>
-<b class="nc">&nbsp;                .contentLength(file.length())</b>
-<b class="nc">&nbsp;                .contentType(MediaType.APPLICATION_OCTET_STREAM)</b>
-<b class="nc">&nbsp;                .body(resource);</b>
+&nbsp;    @Override
+&nbsp;    public void addInterceptors(InterceptorRegistry registry) {
+<b class="fc">&nbsp;        LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();</b>
+<b class="fc">&nbsp;        interceptor.setParamName(&quot;lang&quot;);  // The parameter name that you will use in the URL to change the language</b>
+<b class="fc">&nbsp;        registry.addInterceptor(interceptor);</b>
 &nbsp;    }
 &nbsp;}
 </code>
@@ -375,7 +137,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-08 00:32</div>
+    <div style="float:right;">generated on 2024-12-11 18:43</div>
 </div>
 </body>
 </html>

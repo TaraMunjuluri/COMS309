@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > NoteRepository</title>
+  <title>Coverage Report > MentorRepository</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,17 +19,17 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">onetomany.Notes</a>
+    <a href="../index.html">onetomany.MentorSurvey</a>
 </div>
 
-<h1>Coverage Summary for Class: NoteRepository (onetomany.Notes)</h1>
+<h1>Coverage Summary for Class: MentorRepository (onetomany.MentorSurvey)</h1>
 
 <table class="coverageStats">
 <tr>
   <th class="name">Class</th>
 </tr>
 <tr>
-  <td class="name">NoteRepository</td>
+  <td class="name">MentorRepository</td>
 </tr>
 
 </table>
@@ -39,17 +39,19 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.Notes;
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.MentorSurvey;
 &nbsp;
+&nbsp;import onetomany.Users.User;
 &nbsp;import org.springframework.data.jpa.repository.JpaRepository;
 &nbsp;
 &nbsp;import java.util.List;
 &nbsp;
-&nbsp;public interface NoteRepository extends JpaRepository&lt;Note, Integer&gt; {
-&nbsp;    List&lt;Note&gt; findByUserId(Integer userId);
-&nbsp;    List&lt;Note&gt; findByUserIdOrderByLastModifiedDesc(Integer userId);
-&nbsp;    void deleteByUserIdAndNoteId(Integer userId, Integer noteId);
-&nbsp;    List&lt;Note&gt; findByUserIdAndTitleContainingIgnoreCase(Integer userId, String searchTerm);
+&nbsp;public interface MentorRepository extends JpaRepository&lt;Mentor, Long&gt; {
+&nbsp;  //  Mentor findByUserId(int userId);  // Method to check if a user is already a mentor
+&nbsp;// In MenteeRepository
+&nbsp;  List&lt;Mentor&gt; findByAreaOfMentorship(Mentor.AreaOfMentorship areaOfMentorship);
+&nbsp;
+&nbsp;    Mentor findByUser(User user);
 &nbsp;}
 </code>
 </pre>
@@ -74,7 +76,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-08 00:32</div>
+    <div style="float:right;">generated on 2024-12-11 18:43</div>
 </div>
 </body>
 </html>

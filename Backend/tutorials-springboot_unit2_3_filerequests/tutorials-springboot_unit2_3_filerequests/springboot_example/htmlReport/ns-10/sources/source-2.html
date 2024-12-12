@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > ImageRepository</title>
+  <title>Coverage Report > User</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,19 +19,65 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">onetomany.images</a>
+    <a href="../index.html">onetomany.Users</a>
 </div>
 
-<h1>Coverage Summary for Class: ImageRepository (onetomany.images)</h1>
+<h1>Coverage Summary for Class: User (onetomany.Users)</h1>
 
 <table class="coverageStats">
+
 <tr>
   <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
 </tr>
 <tr>
-  <td class="name">ImageRepository</td>
+  <td class="name">User</td>
+<td class="coverageStat">
+  <span class="percent">
+    4.7%
+  </span>
+  <span class="absValue">
+    (2/43)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13.2%
+  </span>
+  <span class="absValue">
+    (7/53)
+  </span>
+</td>
 </tr>
-
+  <tr>
+    <td class="name">User$HibernateProxy$kH2ZdrnJ</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    4.7%
+  </span>
+  <span class="absValue">
+    (2/43)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13.2%
+  </span>
+  <span class="absValue">
+    (7/53)
+  </span>
+</td>
+</tr>
 </table>
 
 <br/>
@@ -39,15 +85,322 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.images;
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.Users;
 &nbsp;
 &nbsp;
-&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
-&nbsp;import java.util.List;
 &nbsp;
-&nbsp;public interface ImageRepository extends JpaRepository&lt;onetomany.images.Image, Integer&gt; {
-&nbsp;    List&lt;onetomany.images.Image&gt; findByUserId(Integer userId);
-&nbsp;    void deleteByUserIdAndImageId(Integer userId, Integer imageId);
+&nbsp;import com.fasterxml.jackson.annotation.JsonIgnore;
+&nbsp;import onetomany.Achievements.Achievement;
+&nbsp;import onetomany.Interests.Interests;
+&nbsp;import onetomany.Laptops.Laptop;
+&nbsp;import onetomany.Phones.Phone;
+&nbsp;
+&nbsp;import javax.persistence.*;
+&nbsp;import java.sql.Blob;
+&nbsp;import java.util.*;
+&nbsp;import javax.persistence.EnumType;
+&nbsp;import javax.persistence.Enumerated;
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;users&quot;)
+&nbsp;public class User {
+&nbsp;
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    private long id;
+&nbsp;
+&nbsp;
+&nbsp;    private String username;
+&nbsp;    private String password;
+&nbsp;    private String name;
+&nbsp;    private String emailId;
+&nbsp;    private Date joiningDate;
+&nbsp;    private boolean ifActive;
+&nbsp;    private String extension;
+&nbsp;
+&nbsp;
+&nbsp;    private String appMode;
+&nbsp;
+&nbsp;
+&nbsp;    private String major;
+&nbsp;
+&nbsp;    //demo 4
+<b class="fc">&nbsp;    @Enumerated(EnumType.STRING)</b>
+&nbsp;    @Column(name = &quot;language&quot;)
+&nbsp;    private Language language = Language.ENGLISH; // Default language
+&nbsp;    //demo 4
+&nbsp;
+&nbsp;    private String classification;
+&nbsp;    @JsonIgnore
+&nbsp;    @Lob
+&nbsp;    private Blob avatar;
+&nbsp;
+&nbsp;
+&nbsp;    @OneToOne(cascade = CascadeType.ALL)
+&nbsp;    @JoinColumn(name = &quot;laptop_id&quot;)
+&nbsp;    private Laptop laptop;
+&nbsp;
+<b class="fc">&nbsp;    @Column(name = &quot;first_login_completed&quot;, columnDefinition = &quot;boolean default false&quot;)</b>
+&nbsp;    private boolean firstLoginCompleted = false;
+&nbsp;
+<b class="fc">&nbsp;    @JsonIgnore</b>
+&nbsp;    @ManyToMany
+&nbsp;    @JoinTable(
+&nbsp;            name = &quot;user_achievements&quot;,
+&nbsp;            joinColumns = @JoinColumn(name = &quot;user_id&quot;),
+&nbsp;            inverseJoinColumns = @JoinColumn(name = &quot;achievement_id&quot;))
+&nbsp;    private Set&lt;Achievement&gt; achievements = new HashSet&lt;&gt;();
+&nbsp;
+&nbsp;
+&nbsp;    public Set&lt;Achievement&gt; getAchievements() {
+<b class="nc">&nbsp;        return achievements;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setAchievements(Set&lt;Achievement&gt; achievements) {
+<b class="nc">&nbsp;        this.achievements = achievements;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public boolean hasLoggedInBefore() {
+<b class="nc">&nbsp;        return firstLoginCompleted;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Getter and setter for firstLoginCompleted
+&nbsp;    public boolean isFirstLoginCompleted() {
+<b class="nc">&nbsp;        return firstLoginCompleted;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setFirstLoginCompleted(boolean firstLoginCompleted) {
+<b class="nc">&nbsp;        this.firstLoginCompleted = firstLoginCompleted;</b>
+&nbsp;    }
+&nbsp;    
+<b class="fc">&nbsp;    @OneToMany(cascade = CascadeType.ALL)</b>
+&nbsp;    @JoinTable(name = &quot;user_phones&quot;,
+&nbsp;            joinColumns = @JoinColumn(name = &quot;user_id&quot;),
+&nbsp;            inverseJoinColumns = @JoinColumn(name = &quot;phone_id&quot;))
+&nbsp;    private List&lt;Phone&gt; phones = new ArrayList&lt;&gt;();
+&nbsp;
+<b class="fc">&nbsp;    @ManyToMany(cascade = CascadeType.ALL)</b>
+&nbsp;    @JoinTable(
+&nbsp;            name = &quot;user_interests&quot;,
+&nbsp;            joinColumns = @JoinColumn(name = &quot;user_id&quot;, referencedColumnName = &quot;id&quot;),
+&nbsp;            inverseJoinColumns = @JoinColumn(name = &quot;interest_id&quot;, referencedColumnName = &quot;id&quot;)
+&nbsp;    )
+&nbsp;    private Set&lt;Interests&gt; interests = new HashSet&lt;&gt;();
+&nbsp;
+&nbsp;
+&nbsp;    // Add getters and setters for interests
+&nbsp;    public Set&lt;Interests&gt; getInterests() {
+<b class="nc">&nbsp;        return interests;</b>
+&nbsp;    }
+&nbsp;    public void setInterests(Set&lt;Interests&gt; interests) {
+<b class="nc">&nbsp;        this.interests = interests;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;//    @OneToMany(mappedBy = &quot;user&quot;, cascade = CascadeType.ALL)
+&nbsp;//    private List&lt;Message&gt; messages;
+&nbsp;//
+&nbsp;//
+&nbsp;//    // Getters and Setters for `messages`
+&nbsp;//    public List&lt;Message&gt; getMessages() {
+&nbsp;//        return messages;
+&nbsp;//    }
+&nbsp;
+&nbsp;
+&nbsp;//    public void setMessages(List&lt;Message&gt; messages) {
+&nbsp;//        this.messages = messages;
+&nbsp;//    }
+&nbsp;//
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    // Constructors
+<b class="nc">&nbsp;    public User(String name, String emailId, Date joiningDate) {</b>
+<b class="nc">&nbsp;        this.name = name;</b>
+<b class="nc">&nbsp;        this.emailId = emailId;</b>
+<b class="nc">&nbsp;        this.joiningDate = joiningDate;</b>
+<b class="nc">&nbsp;        this.ifActive = true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;    public User() {</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Getters and Setters
+&nbsp;
+&nbsp;    //demo 4
+&nbsp;    public Language getLanguage() {
+<b class="nc">&nbsp;        return language;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setLanguage(Language language) {
+<b class="nc">&nbsp;        this.language = language;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Optional: Add a method to set language by code
+&nbsp;    public void setLanguageByCode(String languageCode) {
+<b class="nc">&nbsp;        this.language = Language.fromCode(languageCode);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //demo 4
+<b class="fc">&nbsp;    private String theme = &quot;light&quot;; // Default to light mode</b>
+&nbsp;
+&nbsp;    // Getters and setters
+&nbsp;    public String getTheme() {
+<b class="nc">&nbsp;        return theme;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setTheme(String theme) {
+<b class="nc">&nbsp;        this.theme = theme;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public long getId() {
+<b class="nc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setId(long id) {
+<b class="nc">&nbsp;        this.id = id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public String getUsername() {
+<b class="nc">&nbsp;        return username;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setUsername(String username) {
+<b class="nc">&nbsp;        this.username = username;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public String getPassword() {
+<b class="nc">&nbsp;        return password;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setPassword(String password) {
+<b class="nc">&nbsp;        this.password = password;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public String getName() {
+<b class="nc">&nbsp;        return name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setName(String name) {
+<b class="nc">&nbsp;        this.name = name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public String getEmailId() {
+<b class="nc">&nbsp;        return emailId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setEmailId(String emailId) {
+<b class="nc">&nbsp;        this.emailId = emailId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public Date getJoiningDate() {
+<b class="nc">&nbsp;        return joiningDate;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setJoiningDate(Date joiningDate) {
+<b class="nc">&nbsp;        this.joiningDate = joiningDate;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public boolean getIsActive() {
+<b class="nc">&nbsp;        return ifActive;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setIfActive(boolean ifActive) {
+<b class="nc">&nbsp;        this.ifActive = ifActive;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public Laptop getLaptop() {
+<b class="nc">&nbsp;        return laptop;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setLaptop(Laptop laptop) {
+<b class="nc">&nbsp;        this.laptop = laptop;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public List&lt;Phone&gt; getPhones() {
+<b class="nc">&nbsp;        return phones;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setPhones(List&lt;Phone&gt; phones) {
+<b class="nc">&nbsp;        this.phones = phones;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public Blob getAvatar() {
+<b class="nc">&nbsp;        return avatar;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setAvatar(Blob avatar) {
+<b class="nc">&nbsp;        this.avatar = avatar;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public String getExtension() {
+<b class="nc">&nbsp;        return extension;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setExtension(String extension) {
+<b class="nc">&nbsp;        this.extension = extension;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void addPhone(Phone phone) {
+<b class="nc">&nbsp;        this.phones.add(phone);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public String getAppMode() {
+<b class="nc">&nbsp;        return appMode; // Getter for appMode</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setAppMode(String appMode) {
+<b class="nc">&nbsp;        this.appMode = appMode; // Setter for appMode</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public String getMajor() {
+<b class="nc">&nbsp;        return major;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setMajor(String major) {
+<b class="nc">&nbsp;        this.major = major;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public String getClassification() {
+<b class="nc">&nbsp;        return classification;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setClassification(String classification) {
+<b class="nc">&nbsp;        this.classification = classification;</b>
+&nbsp;    }
 &nbsp;}
 </code>
 </pre>
@@ -72,7 +425,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-08 00:32</div>
+    <div style="float:right;">generated on 2024-12-11 18:43</div>
 </div>
 </body>
 </html>
