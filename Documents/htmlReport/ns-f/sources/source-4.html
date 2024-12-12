@@ -1,0 +1,109 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MenteeRatingRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">onetomany.RatingMentor</a>
+</div>
+
+<h1>Coverage Summary for Class: MenteeRatingRepository (onetomany.RatingMentor)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">MenteeRatingRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;//package onetomany.RatingMentor;
+&nbsp;//
+&nbsp;//import onetomany.Matches.MatchedPairMentorMentee;
+&nbsp;//import onetomany.MenteeSurvey.Mentee;
+&nbsp;//import onetomany.MentorSurvey.Mentor;
+&nbsp;//import onetomany.Users.User;
+&nbsp;//import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;//
+&nbsp;//import java.util.List;
+&nbsp;//
+&nbsp;//public interface MenteeRatingRepository extends JpaRepository&lt;MenteeRating, Long&gt; {
+&nbsp;//    List&lt;MenteeRating&gt; findByMentee(Mentee mentee);
+&nbsp;//    List&lt;MenteeRating&gt; findByMentor(Mentor mentor);
+&nbsp;//
+&nbsp;//}
+&nbsp;
+&nbsp;package onetomany.RatingMentor;
+&nbsp;
+&nbsp;import onetomany.MenteeSurvey.Mentee;
+&nbsp;import onetomany.MentorSurvey.Mentor;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.data.jpa.repository.Query;
+&nbsp;import org.springframework.data.repository.query.Param;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;public interface MenteeRatingRepository extends JpaRepository&lt;MenteeRating, Long&gt; {
+&nbsp;    // Find ratings by mentee
+&nbsp;    List&lt;MenteeRating&gt; findByMentee(Mentee mentee);
+&nbsp;
+&nbsp;    // Find ratings by mentor
+&nbsp;    List&lt;MenteeRating&gt; findByMentor(Mentor mentor);
+&nbsp;
+&nbsp;    // Find a specific rating by mentee and mentor
+&nbsp;    Optional&lt;MenteeRating&gt; findByMenteeAndMentor(Mentee mentee, Mentor mentor);
+&nbsp;
+&nbsp;    // Calculate average rating for a specific mentor
+&nbsp;    @Query(&quot;SELECT AVG(mr.rating) FROM MenteeRating mr WHERE mr.mentor = :mentor&quot;)
+&nbsp;    Double calculateAverageRatingForMentor(@Param(&quot;mentor&quot;) Mentor mentor);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 18:43</div>
+</div>
+</body>
+</html>

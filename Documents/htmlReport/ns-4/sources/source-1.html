@@ -1,0 +1,207 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GlobalControllerExceptionHandler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">onetomany.ExceptionHandlers</a>
+</div>
+
+<h1>Coverage Summary for Class: GlobalControllerExceptionHandler (onetomany.ExceptionHandlers)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GlobalControllerExceptionHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    9.1%
+  </span>
+  <span class="absValue">
+    (1/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    9.1%
+  </span>
+  <span class="absValue">
+    (1/11)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GlobalControllerExceptionHandler$ResourceNotFoundException</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    8.3%
+  </span>
+  <span class="absValue">
+    (1/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    7.7%
+  </span>
+  <span class="absValue">
+    (1/13)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.ExceptionHandlers;
+&nbsp;
+&nbsp;import org.springframework.core.convert.ConversionFailedException;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.ExceptionHandler;
+&nbsp;import org.springframework.web.bind.annotation.ResponseStatus;
+&nbsp;import org.springframework.web.bind.annotation.RestControllerAdvice;
+&nbsp;
+&nbsp;/**
+&nbsp; * Global exception handler for handling application-wide exceptions.
+&nbsp; */
+&nbsp;@RestControllerAdvice
+<b class="fc">&nbsp;public class GlobalControllerExceptionHandler {</b>
+&nbsp;
+&nbsp;    @ExceptionHandler(ConversionFailedException.class)
+&nbsp;    @ResponseStatus(HttpStatus.BAD_REQUEST)
+&nbsp;    public String handleConversion(RuntimeException ex) {
+<b class="nc">&nbsp;        return ex.getMessage();  // Returns a 400 Bad Request with the exception message.</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(InterestNotFoundException.class)
+&nbsp;    @ResponseStatus(HttpStatus.NOT_FOUND)
+&nbsp;    public String handleInterestNotFound(RuntimeException ex) {
+<b class="nc">&nbsp;        return ex.getMessage();  // Returns a 404 Not Found with the exception message.</b>
+&nbsp;    }
+&nbsp;    @ExceptionHandler(UnauthorizedException.class)
+&nbsp;    @ResponseStatus(HttpStatus.UNAUTHORIZED) // 401 Unauthorized
+&nbsp;    public String handleUnauthorizedException(UnauthorizedException ex) {
+<b class="nc">&nbsp;        return ex.getMessage();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(MenteeAlreadyExistsException.class)
+&nbsp;    @ResponseStatus(HttpStatus.CONFLICT) // 409 Conflict
+&nbsp;    public String handleMenteeAlreadyExistsException(MenteeAlreadyExistsException ex) {
+<b class="nc">&nbsp;        return ex.getMessage();</b>
+&nbsp;    }
+&nbsp;    @ExceptionHandler(NoteNotFoundException.class)
+&nbsp;    @ResponseStatus(HttpStatus.NOT_FOUND)
+&nbsp;    public String handleNoteNotFoundException(NoteNotFoundException ex) {
+<b class="nc">&nbsp;        return ex.getMessage();</b>
+&nbsp;    }
+&nbsp;    @ExceptionHandler(MentorAlreadyExistsException.class)
+&nbsp;    @ResponseStatus(HttpStatus.CONFLICT)
+&nbsp;    public String handleMentorAlreadyExistsException(MentorAlreadyExistsException ex) {
+<b class="nc">&nbsp;        return ex.getMessage();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(MentorNotFoundException.class)
+&nbsp;    @ResponseStatus(HttpStatus.NOT_FOUND)
+&nbsp;    public String handleMentorNotFoundException(MentorNotFoundException ex) {
+<b class="nc">&nbsp;        return ex.getMessage();</b>
+&nbsp;    }
+&nbsp;    @ExceptionHandler(ImageNotFoundException.class)
+&nbsp;    @ResponseStatus(HttpStatus.NOT_FOUND)
+&nbsp;    public String handleImageNotFoundException(ImageNotFoundException ex) {
+<b class="nc">&nbsp;        return ex.getMessage();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(RuntimeException.class)
+&nbsp;    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+&nbsp;    public String handleGenericRuntimeException(RuntimeException ex) {
+<b class="nc">&nbsp;        return ex.getMessage();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(IllegalArgumentException.class)
+&nbsp;    public ResponseEntity&lt;String&gt; handleIllegalArgumentException(IllegalArgumentException ex) {
+<b class="nc">&nbsp;        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());</b>
+&nbsp;    }
+&nbsp;    @ResponseStatus(HttpStatus.NOT_FOUND)
+&nbsp;    public class ResourceNotFoundException extends RuntimeException {
+<b class="nc">&nbsp;        public ResourceNotFoundException(String message) {</b>
+<b class="nc">&nbsp;            super(message);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 18:43</div>
+</div>
+</body>
+</html>

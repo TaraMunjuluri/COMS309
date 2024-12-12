@@ -1,0 +1,203 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MatchRestController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">onetomany.Matches</a>
+</div>
+
+<h1>Coverage Summary for Class: MatchRestController (onetomany.Matches)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MatchRestController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    4.3%
+  </span>
+  <span class="absValue">
+    (1/23)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package onetomany.Matches;
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.Parameter;
+&nbsp;import io.swagger.v3.oas.annotations.media.Content;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponses;
+&nbsp;import onetomany.MenteeSurvey.Mentee;
+&nbsp;import onetomany.MenteeSurvey.MenteeRepository;
+&nbsp;import onetomany.MentorSurvey.Mentor;
+&nbsp;import onetomany.MentorSurvey.MentorRepository;
+&nbsp;import onetomany.Users.User;
+&nbsp;import onetomany.Users.UserRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+&nbsp;import org.springframework.web.bind.annotation.PathVariable;
+&nbsp;import org.springframework.web.bind.annotation.RequestMapping;
+&nbsp;import org.springframework.web.bind.annotation.RestController;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/matches&quot;)
+<b class="fc">&nbsp;public class MatchRestController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private MatchedPairRepository matchedPairRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private UserRepository userRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private MentorRepository mentorRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private MenteeRepository menteeRepository;
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Retrieve matches for a given user&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Matches retrieved successfully&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;User not found&quot;, content = @Content)
+&nbsp;    })
+&nbsp;    @GetMapping(&quot;/{userId}&quot;)
+&nbsp;    public List&lt;MatchedPersonDTO&gt; getMatchedPersons(
+&nbsp;            @Parameter(description = &quot;ID of the user to retrieve matches for&quot;, required = true)
+&nbsp;            @PathVariable(&quot;userId&quot;) Long userId) {
+&nbsp;
+<b class="nc">&nbsp;        List&lt;MatchedPersonDTO&gt; matchedPersonDTOList = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;        // Retrieve the user or throw a custom exception if not found
+<b class="nc">&nbsp;        User user = userRepository.findById(userId)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;User not found with ID: &quot; + userId));</b>
+&nbsp;
+&nbsp;        // Find matches where the user is a mentor
+<b class="nc">&nbsp;        List&lt;MatchedPairMentorMentee&gt; matchesAsMentor = matchedPairRepository.findByMentor(user);</b>
+<b class="nc">&nbsp;        for (MatchedPairMentorMentee match : matchesAsMentor) {</b>
+<b class="nc">&nbsp;            User matchedMenteeUser = match.getMentee();</b>
+<b class="nc">&nbsp;            Mentee matchedMentee = menteeRepository.findByUser(matchedMenteeUser);</b>
+&nbsp;
+<b class="nc">&nbsp;            if (matchedMentee != null) {</b>
+<b class="nc">&nbsp;                matchedPersonDTOList.add(new MatchedPersonDTO(</b>
+<b class="nc">&nbsp;                        matchedMenteeUser.getUsername(),</b>
+<b class="nc">&nbsp;                        matchedMentee.getClassification().toString(),</b>
+<b class="nc">&nbsp;                        matchedMentee.getMajor()</b>
+&nbsp;                ));
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        // Find matches where the user is a mentee
+<b class="nc">&nbsp;        List&lt;MatchedPairMentorMentee&gt; matchesAsMentee = matchedPairRepository.findByMentee(user);</b>
+<b class="nc">&nbsp;        for (MatchedPairMentorMentee match : matchesAsMentee) {</b>
+<b class="nc">&nbsp;            User matchedMentorUser = match.getMentor();</b>
+<b class="nc">&nbsp;            Mentor matchedMentor = mentorRepository.findByUser(matchedMentorUser);</b>
+&nbsp;
+<b class="nc">&nbsp;            if (matchedMentor != null) {</b>
+<b class="nc">&nbsp;                matchedPersonDTOList.add(new MatchedPersonDTO(</b>
+<b class="nc">&nbsp;                        matchedMentorUser.getUsername(),</b>
+<b class="nc">&nbsp;                        matchedMentor.getClassification().toString(),</b>
+<b class="nc">&nbsp;                        matchedMentor.getMajor()</b>
+&nbsp;                ));
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return matchedPersonDTOList;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 18:43</div>
+</div>
+</body>
+</html>
