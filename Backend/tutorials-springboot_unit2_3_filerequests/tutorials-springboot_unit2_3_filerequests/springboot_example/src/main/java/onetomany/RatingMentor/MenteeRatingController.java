@@ -180,6 +180,17 @@ public class MenteeRatingController {
         }
     }
 
+    @GetMapping("/mentor/{mentorUsername}/ratings")
+    public ResponseEntity<?> getRatingsByMentorUsername(@PathVariable String mentorUsername) {
+        try {
+            List<MenteeRating> ratings = menteeRatingRepository.findByMentorUsername(mentorUsername);
+            return ResponseEntity.ok(ratings);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(e.getMessage()));
+        }
+    }
+
     @PostMapping("/rate")
     public ResponseEntity<?> rateMentorByUsername(
             @RequestParam String menteeUsername,
