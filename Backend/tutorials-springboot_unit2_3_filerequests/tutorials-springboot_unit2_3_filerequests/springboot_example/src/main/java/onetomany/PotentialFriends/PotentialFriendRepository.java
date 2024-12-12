@@ -1,18 +1,20 @@
-package onetomany.Friends;  // Change package to match entity
+package onetomany.PotentialFriends;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PotentialFriendRepository extends JpaRepository<onetomany.Friends.PotentialFriend, Long> {
-    List<onetomany.Friends.PotentialFriend> findByUserId(Long userId);
+public interface PotentialFriendRepository extends JpaRepository<PotentialFriend, Long> {
+    List<PotentialFriend> findByUserId(Long userId);
 
+    @Modifying
     @Transactional
     void deleteByUserId(Long userId);
 
-    Optional<onetomany.Friends.PotentialFriend> findByUserIdAndPotentialFriendId(Long userId, Long friendId);
+    // Add this method to find by both userId and potentialFriendId
+    Optional<PotentialFriend> findByUserIdAndPotentialFriendId(Long userId, Long potentialFriendId);
 }
